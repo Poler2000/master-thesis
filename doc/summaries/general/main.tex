@@ -1,0 +1,128 @@
+\documentclass{article}
+	
+\usepackage{xparse}
+	\usepackage[margin=2cm]{geometry}
+	\usepackage{enumerate} 
+    \usepackage{textcomp}
+	
+    \frenchspacing
+	\linespread{1.2}
+
+    \usepackage[polish]{babel}
+    \usepackage[utf8]{inputenc}
+    \usepackage[ruled,linesnumbered]{algorithm2e}
+    \usepackage{caption}
+    \usepackage{subcaption}
+
+    \usepackage{polski}
+
+	\usepackage{amsthm}
+	\usepackage{amsmath}
+	\usepackage{amsfonts}
+	\usepackage{float}
+	\usepackage{hhline}
+	\usepackage{graphicx}
+	\usepackage{multirow}
+	\usepackage{mathtools}
+
+\title{\textbf{Praca Magisterska \\
+    Wykaz i uwagi do literatury}}
+
+\author{Paweł Polerowicz}
+\date{Grudzień 2023}
+
+\begin{document}
+    \maketitle
+    \section{Zasadnicze struktury danych}
+        \subsection{Auxo\cite{Jiang_Chen_Jin_2023}}
+            \textbf{Autorzy:} Z. Jiang, H. Chen, and H. Jin \\
+            \textbf{Tytuł:} Auxo: A scalable and efficient graph stream summarization structure. \\
+            \textbf{Rok publikacji:} 2023 \\
+
+            Przedstawiona zostaje struktura Auxo. Jest ona w dużej mierze rozwinięciem idei TCM i GSS. Głównym założeniem nowej struktury jest wprowadzenie wielu macierzy haszy, tworzących drzewo prefiksowe. Podpisy wierzchołków są wbudowywane w strukturę drzewa, co pozwala zredukować zużytą pamięć. Czas aktualizowania i podstawowych zapytań jest logarytmiczny względem liczby krawędzi. Koszt pamięciowy autorzy dość niefortunnie określają jako $O(|E|(1 - log|E|))$. W rzeczywistości maksymalny rozmiar struktury jest ograniczony i zależy od długości użytych podpisów. 
+
+        \subsection{TCM\cite{Tang_Chen_Mitra_2016}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{GSS\cite{Gou_Zou_Zhao_Yang_2023}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+        
+        \subsection{GS4\cite{Ashrafi-Payaman_Kangavari_Hosseini_Fander_2020}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+        
+        \subsection{Scube\cite{Chen_Zhou_Chen_Jin_2022}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{Horae\cite{Chen_Zhou_Chen_Xiao_Jin_Li_2022}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+        
+        \subsection{gSketch\cite{Zhao_Aggarwal_Wang_2011}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+        
+        \subsection{gMatrix\cite{Khan_Aggarwal_2016}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+    \section{Najkrótsze ścieżki}
+        \subsection{All Pairs SP for undirected graphs\cite{Roditty_Zwick_2012}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{QbS\cite{Wang_Wang_Koehler_Lin_2021}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{SP2\cite{Dolgorsuren_Xu_Khan_Jeong_Lee_2016}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{Road networks\cite{Aggarwal_Gollapudi_Raghavender_Sinop_2021}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{$(1+\epsilon)$-approximate shortest paths\cite{Elkin_Trehan_2022}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+    \section{Literatura pomocnicza}
+        \subsection{Semi-streaming model\cite{Feigenbaum_Kannan_McGregor_Suri_Zhang_2005}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{Subgraph Search\cite{Li_Zou_Ozsu_Zhao_2019}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{Graph summarization survey\cite{Liu_Safavi_Dighe_Koutra_2018}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+        \subsection{Efficient Sketching algorithm\cite{Lemiesz_2023}}
+            \textbf{Autorzy: } \\
+            \textbf{Tytuł: } \\
+            \textbf{Rok publikacji: } \\
+
+    \bibliographystyle{abbrv} 
+    \bibliography{bibliography}
+\end{document}

@@ -1,3 +1,21 @@
+## referenced papers - should not be exposed 
 doc/literature
 
+## IDE
 /.idea/
+
+## latex
+*.aux
+*.ps
+*.log
+*.dvi
+*.tex~
+*.fdb_latexmk
+*.bbl
+*.fls
+*.synctex.gz
+*.blg
+*.lof 
+*.lol 
+*.lot
+*.out
