@@ -34,47 +34,55 @@
 \begin{document}
     \maketitle
     \section{Zasadnicze struktury danych}
+        \subsection{gSketch\cite{Zhao_Aggarwal_Wang_2011}}
+            \textbf{Autorzy: } P. Zhao, C. C. Aggarwal, and M. Wang\\
+            \textbf{Tytuł: } gSketch: On Query Estimation in Graph Streams\\
+            \textbf{Rok publikacji: } 2011 \\
+            Artykuł ten stanowi jedną z pierwszych prób zastosowania szkiców danych do obsługi prostych zapytań dotyczących grafu, takich jak częstość występowania danej krawędzi w strumieniu lub gęstość wybranego podgrafu. Autorzy proponują wykorzystanie probabilistycznej metody Count Min, opartej o dwuwymiarową tablicę do składowania częstotliwości krawędzi. Odpowiednie komórki są wyznaczane przez funkcje haszujące zastosowane na krawędziach. Algorytm wykorzystuje próbkę testową do podziału zbioru krawędzi na podzbiory, bazując na ich częstotliwości w taki sposób, aby efektywnie wykorzystać dostępną pamięć, a następnie przetwarza właściwy strumień danych. Metoda jest stratna, a praktycznym wyzwaniem jest odpowiednie wyważenie parametrów tak, aby zachować balans między zużytą pamięcią a dokładnością wyników.
+
+        \subsection{TCM\cite{Tang_Chen_Mitra_2016}}
+            \textbf{Autorzy: } N. Tang, Q. Chen, and P. Mitra\\
+            \textbf{Tytuł: } Graph Stream Summarization.
+            From Big Bang to Big Crunch\\
+            \textbf{Rok publikacji: } 2016\\
+            Autorzy proponują strukturę TCM do przechowywania informacji o strumieniowanym grafie. Ma ona postać macierzy o boku długości $m$, gdzie $m$ jest pewną stałą. W jej komórkach składowane są wagi krawędzi. Rząd i kolumna komórki odpowiadającej danej parze wierzchołków są wyznaczane przez wynik funkcji haszującej. Czas obliczania hasza jest stały, a co za tym idzie, złożoność czasowa zapytań i wstawiania nowych krawędzi również. Teoretyczna złożoność pamięciowa jest natomiast stała i wynosi $O(m^2)$. W praktycznych zastosowaniach wybór m zależy jednak często od liczby krawędzi i przejmuje się $m$ rzędu $O(\sqrt{|V|})$. Dokładność rezultatów może być niska ze względu na kolizje haszy i zależy od rozmiaru macierzy. Użyteczność tej struktury w bazowej formie jest dyskusyjna, stanowi ona jednak punkt wyjściowy dla bardziej zaawansowanych rozwiązań.
+
+        \subsection{gMatrix\cite{Khan_Aggarwal_2016}}
+            \textbf{Autorzy: } A. Khan and C. Aggarwal.\\
+            \textbf{Tytuł: } Query-friendly compression of graph streams\\
+            \textbf{Rok publikacji: } 2016\\
+            Autorzy spoglądają w kierunku gSketch, zauważając potencjał tej metody, ale jednocześnie celnie wskazując jej ograniczenia. Przede wszystkim, wymaga ona próbki testowej dobrze reprezentującej właściwości grafu. Jej skuteczne wyznaczenie może być trudne w wielkich grafach o dynamicznej strukturze. Dodatkowo, wspierane są głównie zapytania o częstotliwość występowania krawędzi, brakuje natomiast np. tych dotyczących osiągalności lub efektywnego wyznaczenia wierzchołków o szczególnie wysokiej częstotliwości. W odpowiedzi na te wyzwania zaproponowana zostaje 3-wymiarowa struktura gMatrix, gdzie dwa wymiary odpowiadają haszom wierzchołków, a trzeci numerowi użytej funkcji haszującej. Trzeci wymiar w tym przypadku pozwala zwiększyć dokładność zapytań, co odróżnia tę metodę od TCM. Podobnie jak tam, pamięć jest ograniczona przez wybrane rozmiary macierzy, a złożoność czasowa zależy od liczby użytych funkcji haszujących.  
+
+
+        \subsection{GSS\cite{Gou_Zou_Zhao_Yang_2019, Gou_Zou_Zhao_Yang_2023}}
+            \textbf{Autorzy: } X. Gou, L. Zou, C. Zhao, and T. Yang\\
+            \textbf{Tytuł: } Graph Stream Sketch: Summarizing Graph
+            Streams with High Speed and Accuracy\\
+            \textbf{Rok publikacji: } 2019 (2023)\\
+
+        \subsection{GS4\cite{Ashrafi-Payaman_Kangavari_Hosseini_Fander_2020}}
+            \textbf{Autorzy: } N. Ashrafi-Payaman, M. R. Kangavari, S. Hosseini, and A. M. Fander.\\
+            \textbf{Tytuł: } GS4: Graph stream summarization
+            based on both the structure and semantics\\
+            \textbf{Rok publikacji: } 2020\\
+
+        \subsection{Scube\cite{Chen_Zhou_Chen_Jin_2022}}
+            \textbf{Autorzy: } M. Chen, R. Zhou, H. Chen, and H. Jin.\\
+            \textbf{Tytuł: } Efficient summarization for skewed graph streams\\
+            \textbf{Rok publikacji: } 2022\\
+
+        \subsection{Horae\cite{Chen_Zhou_Chen_Xiao_Jin_Li_2022}}
+            \textbf{Autorzy: } M. Chen, R. Zhou, H. Chen, J. Xiao, H. Jin, and B. Li.\\
+            \textbf{Tytuł: } Horae: A graph stream summarization structure for
+            efficient temporal range query\\
+            \textbf{Rok publikacji: } 2022\\
+
         \subsection{Auxo\cite{Jiang_Chen_Jin_2023}}
             \textbf{Autorzy:} Z. Jiang, H. Chen, and H. Jin \\
             \textbf{Tytuł:} Auxo: A scalable and efficient graph stream summarization structure. \\
             \textbf{Rok publikacji:} 2023 \\
 
             Przedstawiona zostaje struktura Auxo. Jest ona w dużej mierze rozwinięciem idei TCM i GSS. Głównym założeniem nowej struktury jest wprowadzenie wielu macierzy haszy, tworzących drzewo prefiksowe. Podpisy wierzchołków są wbudowywane w strukturę drzewa, co pozwala zredukować zużytą pamięć. Czas aktualizowania i podstawowych zapytań jest logarytmiczny względem liczby krawędzi. Koszt pamięciowy autorzy dość niefortunnie określają jako $O(|E|(1 - log|E|))$. W rzeczywistości maksymalny rozmiar struktury jest ograniczony i zależy od długości użytych podpisów. 
-
-        \subsection{TCM\cite{Tang_Chen_Mitra_2016}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
-
-        \subsection{GSS\cite{Gou_Zou_Zhao_Yang_2023}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
-        
-        \subsection{GS4\cite{Ashrafi-Payaman_Kangavari_Hosseini_Fander_2020}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
-        
-        \subsection{Scube\cite{Chen_Zhou_Chen_Jin_2022}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
-
-        \subsection{Horae\cite{Chen_Zhou_Chen_Xiao_Jin_Li_2022}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
-        
-        \subsection{gSketch\cite{Zhao_Aggarwal_Wang_2011}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
-        
-        \subsection{gMatrix\cite{Khan_Aggarwal_2016}}
-            \textbf{Autorzy: } \\
-            \textbf{Tytuł: } \\
-            \textbf{Rok publikacji: } \\
 
     \section{Najkrótsze ścieżki}
         \subsection{All Pairs SP for undirected graphs\cite{Roditty_Zwick_2012}}
