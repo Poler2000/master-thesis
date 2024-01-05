@@ -3,6 +3,7 @@ doc/literature
 
 ## IDE
 /.idea/
+.vscode
 
 ## latex
 *.aux
