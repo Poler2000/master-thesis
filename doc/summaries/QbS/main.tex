@@ -45,7 +45,7 @@
     
     \subsection{Słowniczek pojęć}
 
-    \begin{tabular}{|l | l | } 
+    \begin{tabular}{|l | l |} 
         \hline
         Oznaczenie & Znaczenie \\
         \hline\hline
@@ -68,7 +68,7 @@
     \end{tabular}\\
     
     \subsection{Plan prezentacji}
-        W ramach niniejszej prezentacji zreferujemy artykuł \textit{Query-by-Sketch: Scaling Shortest Path Graph Queries on Very Large Networks}, przedstawiający metodę QbS. Składa się ona z trzech algorytmów. Pierwszy z nich służy jako przetwarzanie wstępne i są wykonywany raz i wyznacza etykietowanie $L$ dla grafu $G$. Drugi tworzy szkic danych dla pary wierzchołków $u$ i $v$ na podstawie etykietowania $L$. Ostatni wyznacza dokładną odpowiedź, wykorzystując przeszukiwanie kierowane szkicem. Złożoności algorytmów to kolejno $O(|R||E|)$, $O(|R|^4)$ (z możliwością ograniczenia do $O(|R|^2)$) oraz $O(|E| + |R||V|)$, gdzie R jest zbiorem punktów orientacyjnych.
+        W ramach niniejszej prezentacji zreferujemy artykuł \textit{Query-by-Sketch: Scaling Shortest Path Graph Queries on Very Large Networks}, przedstawiający metodę QbS. Składa się ona z trzech algorytmów. Pierwszy z nich służy jako przetwarzanie wstępne. Jest wykonywany raz i wyznacza etykietowanie $L$ dla grafu $G$. Drugi tworzy szkic danych dla pary wierzchołków $u$ i $v$ na podstawie etykietowania $L$. Ostatni wyznacza dokładną odpowiedź, wykorzystując przeszukiwanie kierowane szkicem. Złożoności algorytmów to kolejno $O(|R||E|)$, $O(|R|^4)$ (z możliwością ograniczenia do $O(|R|^2)$) oraz $O(|E| + |R||V|)$, gdzie R jest zbiorem punktów orientacyjnych.
 
     \subsection{Motywacja}
         Podczas poprzednich prezentacji omawialiśmy struktury wykorzystujące szkice danych do efektywnego pamięciowo przechowywania informacji o strumieniowanym grafie. W szczególności rozważaliśmy takie konstrukcje, które pozwalały na uzyskiwanie szybkich odpowiedzi na zapytania o istnienie i wagę krawędzi między dwoma wierzchołkami, a także łączną wagę krawędzi wchodzących i wychodzących z danego wierzchołka. Niemniej jednak często zależy nam na wykonywaniu bardziej skomplikowanych operacji. Jedną z typowych może być wyznaczanie najkrótszych ścieżek między wierzchołkami. Rozwiązania tego problemu mogą znaleźć swoje zastosowanie np. w nawigacji GPS lub w analizie sieci społecznościowych. W obu przypadkach mamy do czynienia z grafami o nierzadko ogromnych rozmiarach. Sprawia to, że klasyczne i dobrze przebadane algorytmy mogą okazać się nieskuteczne, ze względu na konieczność przeglądu zatrważającej liczby krawędzi lub wykorzystywania dodatkowej pamięci o niepraktycznym rozmiarze. Dodatkowo niejednokrotnie możemy być zainteresowani wyborem nie jednej ścieżki, lecz pewnego zbioru najkrótszych lub prawie najkrótszych ścieżek. Śledząc wysiłki autorów artykułu, spróbujemy znaleźć metodę wyznaczania grafu najkrótszych ścieżek w sposób wydajny czasowo i przy użyciu rozsądnej ilości pamięci. 
@@ -99,12 +99,13 @@
 
     \section{Przegląd poprzednich rozwiązań}
         
-    \subsection{Klasyczne algorytmy}
-
+        \subsection{Klasyczne algorytmy}
+            Algorytm Dijkstry - $O(|E| + |V|log(|V|))$ dla grafów ważonych. BFS - $O(|E|)$ dla nieważonych. Nieefektywne na wielkich grafach.
         \subsection{Algorytmy dokładne dla dużych grafów}
+            Np. PLL - etykietowanie 2-hop. IS-label - dla ważonych grafów, oparte o niezależne zbiory wierzchołków.
 
         \subsection{Algorytmy aproksymacyjne}
-
+            Niektórzy naukowcy porzucili wymagania co do dokładności odpowiedzi na rzecz aproksymacji. Jendym z pomysłów było np. wstępne wyliczenie ścieżek z każdego wierzchołka do każdego punktu orientacyjnego, a następnie zwracanie połączonych ścieżek do tychże punktów. 
             
     \section{QbS}
     
@@ -139,7 +140,14 @@
         Niech $G = (v, E)$ - graf, $R \subset V$ - zbiór punktów orientacyjnych spełniający $|R| \ll |V|$. Schemat QbS zaczyna się od przetwarzania wstępnego, którego celem jest znalezienie kompaktowej reprezentacji najkrótszych ścieżek pomiędzy punktami orientacyjnymi, zwanej meta-grafem grafu $G$. Następnie, bazując na tymże meta-grafie, tworzymy etykietowanie, każdemu wierzchołkowi przypisując każdemu wierzchołkowi taką etykietę, aby móc efektywnie policzyć szkic dla zapytania $SPG(u, v)$  dla dowolnych $u$ i $v$.
 
         \subsubsection*{Meta-graf}
-            Meta grafem nazywamy trójkę $M = (R, E_R, \sigma)$, gdzie $E_R \subset R \times R$ jest zbiorem krawędzi postaci $(r, r')$ spełniających warunek, że przynajmniej jedna najkrótsza ścieżka między $r$ i $r'$ w oryginalnym nie przechodzi przez żaden inny punkt orientacyjny. $\sigma: E_R \rightarrow \mathbb{N}$ przypisuje każdej krawędzi w $E_R$ wagę równą długości najkrótszej ścieżki. 
+            Meta grafem nazywamy trójkę $M = (R, E_R, \sigma)$, gdzie $E_R \subset R \times R$ jest zbiorem krawędzi postaci $(r, r')$ spełniających warunek, że przynajmniej jedna najkrótsza ścieżka między $r$ i $r'$ w oryginalnym nie przechodzi przez żaden inny punkt orientacyjny. $\sigma: E_R \rightarrow \mathbb{N}$ przypisuje każdej krawędzi w $E_R$ wagę równą długości najkrótszej ścieżki. Przykład ukazano na rysunku \hyperref[fig:meta]{4}.
+
+            \begin{figure}[!tbh]
+                \includegraphics[width=11cm]{img/meta-graph.png}
+                \centering
+                \label{fig:meta}
+                \caption{Pseudokod przeszukiwania kierowanego szkicem}
+            \end{figure}
 
         \subsubsection*{System etykietowania (ang. \textit{Labelling scheme})}
             System etykietowania $\mathcal{L} = (M,L)$ składa się z meta-grafu M oraz etykietowania, które przypisuje każdemu wierzchołkowi $u \in V \setminus R$ etykietę $L(u)$ taką że:
@@ -147,6 +155,8 @@
                 L(u) = \{(r, \delta_{ur}) : r \in R, \delta_{ur} = d_G(u,r), (\exists p \in P_{ur})(V(p) \cap R {r}) \}
             \]
             Innymi słowy, para $(r, \delta_{ur})$ jest częścią etykiety $L(u)$ tylko, jeśli istnieje co najmniej jedna najkrótsza ścieżka między $u$ i $r$, która nie zawiera innych punktów orientacyjnych. 
+
+        \subsubsection*{Algorytm 1} 
 
             Algorytm etykietowana ukazano na obrazku \hyperref[fig:alg2]{1}. Wykonujemy BFS dla każdego punktu orientacyjnego $r$. Wykorzystujemy dwie kolejki do przechowywania odwiedzonych wierzchołków, zależnie od tego, czy mają one zostać zaetykietowane z wykorzystaniem $r$, czy też nie. Wszystkie wierzchołki oprócz $r$ są na początku niezaetykietowane. Dla każdego wierzchołka w kolejce zaetykietowanych z $r$ na n-tym poziomie BFS rozpatrujemy nieodwiedzonych sąsiadów i oznaczamy ich jako odwiedzonych. Jeśli dany sąsiad jest punktem orientacyjnym to dodajemy krawędź do meta-grafu i ustawiamy głębokość jako dystans w funkcji $\sigma$. W przeciwnym przypadku dodajemy parę $(r, depth(v))$ do etykiety $L(V)$, a sam wierzchołek $v$ do kolejki wierzchołków zaetykietowanych z $r$. Następnie rozpatrujemy kolejkę niezaetykietowanych na n-tym poziomie i wszystkich nieodwiedzonych sąsiadów dodajemy do kolejki niezaetykietowanych. Powtarzamy na kolejnych poziomach aż do przetworzenia wszystkich wierzchołków. Przykład ukazano na rysunku \hyperref[fig:label]{4}
 
@@ -165,21 +175,60 @@
             \[
                 d_{uv}^T = min_{(r,r')}\{\delta_{ru} + d_M(r,r') + \delta_{r'v} : (r,\delta_{ru}) \in L(u), (r',\delta_{r'v}) \in L(v)\}
             \]
-            Oczywiście, zachodzi własność $d_{uv}^T \geq d_G(u,v)$. Algorytm ukazany na rysunku \hyperref[fig:alg3]{3} tworzy omawiany szkic. Najpierw, zbiory wierzchołków i krawędzi w szkicu są puste. Zaczynamy od sprawdzenia wszystkich par punktów orientacyjnych, wyznaczając najkrótszą ścieżkę z $u$ do $v$ przechodzącą przez oba te punkty używając etykiet i meta-grafu. Najkrótsza otrzymana ścieżka to $d_{uv}^T$. Następnie, dla wszystkich wyznaczonych ścieżek o takiej długości, dodajemy ich krawędzie do zbioru krawędzi szkicu, łącznie z krawędziami łączącymi $u$ i $v$ z punktami obserwacyjnymi. Analogicznie, do zbioru dodajemy wszystkie wierzchołki na tych ścieżkach.
+            Oczywiście, zachodzi własność $d_{uv}^T \geq d_G(u,v)$. 
+            
+        \subsubsection*{Algorytm 2} 
+            Algorytm ukazany na rysunku \hyperref[fig:alg3]{3} tworzy omawiany szkic. Najpierw, zbiory wierzchołków i krawędzi w szkicu są puste. Zaczynamy od sprawdzenia wszystkich par punktów orientacyjnych, wyznaczając najkrótszą ścieżkę z $u$ do $v$ przechodzącą przez oba te punkty używając etykiet i meta-grafu. Najkrótsza otrzymana ścieżka to $d_{uv}^T$. Następnie, dla wszystkich wyznaczonych ścieżek o takiej długości, dodajemy ich krawędzie do zbioru krawędzi szkicu, łącznie z krawędziami łączącymi $u$ i $v$ z punktami obserwacyjnymi. Analogicznie, do zbioru dodajemy wszystkie wierzchołki na tych ścieżkach.
     
     \subsection{Przeszukiwanie kierowane}
-        
-    \subsection{Poprawność}
-
-    \subsection{Złożoność pamięciowa}
+        Ostatnim i zasadniczym krokiem w procesie odpowiedzi na zapytanie jest właściwe przeszukiwanie. Aby ograniczyć liczbę przetwarzanych krawędzi, będziemy korzystać ze szkicu $S_{uv}$ utworzonego w poprzednim kroku. Dodatkowo przeszukiwanie możemy przeprowadzić na grafie $G[V \setminus R]$, a więc bez punktów orientacyjnych i krawędzi do nich prowadzących. Przy dobrym wyborze punktów orientacyjnych może to zauważalnie  ograniczyć rozmiar przeszukiwanej przestrzeni. Oczywiście długość najkrótszej ścieżki w takim ograniczonym grafie może być większa niż w oryginalnym, ale liczbę kroków przeszukiwania możemy ograniczyć przez obliczoną wcześniej wartość $d_{uv}^T$. $S_{uv}$ pozwala na wyznaczenie dwukierunkowej sekwencji poszukiwań. Konkretnie, dla $t \in \{u,v\}$ mamy 
+        \[
+            d_{t}^{*} = max_{(r,t) \in E_S} \sigma_S(r, t) - 1
+        \]
+        Wartość ta wyznacza liczbę kroków poszukiwań ze strony $u$ i $v$. Przeszukiwanie ma trzy fazy:
+        \begin{enumerate}
+            \item Dwukierunkowe przeszukiwanie BFS - 'naprzód' dla wierzchołka $u$ i 'wstecz' dla wierzchołka $v$. Kończy się ona po napotkaniu wspólnych wierzchołków lub przekroczeniu limitu kroków. 
+            \item Przeszukiwanie odwrotne, ktore odwraca poprzednie kroki, aby skontruować najkrótsze ścieżki w $G^{-}$. 
+            \item Wyszukiwanie odzyskujące (ang. \textit{Recovery search}) konstruujące ścieżki przechodzące przez $R$. 
+        \end{enumerate}
+        Oczywiście dwa ostatnie kroki wykonujemy kondycjonalnie, zależnie od wyniku pierwszego. Przechowujemy kolejki $P_u$ i $P_v$, przechowujące wierzchołki odwiedzone w przeszukiwaniu odpowiednio z $u$ i $v$ oraz głebokości poszukiwań $d_u$ i $d_v$. Kolejki $Q_u$ i $Q_v$ zawierają wierzchołki odwiedzone na poziomach $d_u$ i $d_v$. Na początku $P_u$ i $P_v$ są puste. W każdej iteracji pętli pierwszego kroku wybieramy $u$ albo $v$ bazując na głębokości poszukiwań i rozmiarze kolejek i powtarzamy do momentu znalezienia najkrótszych ścieżek lub osiągnięcia limitu. Jeśli znależliśmy w ten sposób ścieżkę, to wykonujemy przeszukiwanie wstecz. Na końcu sprawdzamy ścieżki zawierające punkty orientacyjne. Przykład zaprezentowano na rysunku \hyperref[fig:search]{6}.
+        \begin{figure}[!tbh]
+            \includegraphics[width=11cm]{img/search.png}
+            \centering
+            \label{fig:search}
+            \caption{Pseudokod procedury etykietowania}
+        \end{figure}
     
-    \subsection{Złożoność czasowa (szkic)}
+        
+    \subsubsection*{Algorytm 3} 
+        Odpowiedź $G_{uv}$ może więc być wyznaczona w następujący sposób (ozn, $G^{-} = G[V \setminus R]$).
 
+        $G_{uv} = $
+        $\begin{cases}
+            G_{uv}^{\mathcal{L}} & \textnormal{jeśli }d_{G^{-}}(u, v) > d_{uv}^T, \\
+            G_{uv}^{\mathcal{L}} \cup G_{uv}^{-} & \textnormal{jeśli }d_{G^{-}}(u, v) = d_{uv}^T, \\
+            G_{uv}^{-} & w p.p. \\
+
+        \end{cases}$\\
+        gdzie $G_{uv}^{\mathcal{L}}$ na najkrótsza ścieżka przechodząca przez co najmniej jeden punkt orientacyjny. 
+
+    \subsection{Poprawność (szkic)}
+    \begin{enumerate}
+        \item Należy pokazać, że wyznaczone etykietowanie spełnia definicję systemu etykietowania, co sprowadza się do zauważania, że algorytm do etykiety każdego wierzchołka dodaje tylko i wyłącznie te punkty orientacyjne, do których najkrótsza ścieżka nie prowadzi przez inne punkty orientacyjne. Jest to oczywiste po przeanalizowaniu pseudokodu.  
+        \item Trzeba udowodnić, iż szkic skonstruowany w drugim kroku QbS spełnia definicję szkicu dla $SPG(u,v)$. Jest to dość oczywiste, gdyż algorytm najpierw znajduje parę punktów minimalizującą $\{\delta_{ru} + d_M(r,r') + \delta_{r'v} : (r,\delta_{ru}) \in L(u), (r',\delta_{r'v}) \in L(v)\}$, a potem dodaje odpowiednie krawędzie do szkicu. 
+        \item Ostatecznie wykazujemy, że trzeci algorytm rzeczywiście konstruuje prawidłowy graf najkrótszych ścieżek $G_{uv}$. Oczywiście każda ścieżka nieprzechodząca przez zbiór punktów orientacyjnych może być skonstruowana przez przeszukiwanie $G^{-}$ z użyciem dwukierunkowego BFS. Jeśli ścieżka przechodzi przez $R$, to odpowiednie wierzchołki z $R$ znajdują się w $S_{uv}$ i ścieżki je zawierające są wyliczane w ostatnim kroku algorytmu.  
+    \end{enumerate}
+        
+    \subsection{Złożoność czasowa (szkic)}
+        W algorytmie etykietowania czas wykonania BFS jest $O(|E|)$, co daje łączną złożoność etykietowania $O(|R||E|)$. Przyjmujemy, że $|R| = O(1)$, np. $|R| = 20$. Złożoność szkicowania wynosi $O(|R|^4)$, ale może zostać zmniejszona do $O(|R|^2)$ przez wcześniejsze obliczenie i zapamiętanie najkrótszych ścieżek między parami punktów orientacyjnych na meta-grafie. Czas przeszukiwania to z kolei $O(|E| + |R||V|)$ lub też $O(|E^{*}| + |V|)$, gdzie $|E^{*}|$ jest liczbą krawędzi odchudzonego grafu.
     \subsection{Urównoleglenie}
         Łatwo pokazać, że dla danego zbioru punktów orientacyjnych $R$ w $G$, istnieje dokładnie jeden system etykietowania $\mathcal{L}$ spełniający definicję, jego wybór jest więc oczywiście deterministyczny. Pozwala to łatwe urównoleglenie algorytmu etykietowania.
 
+    \subsection{Złożoność pamięciowa}
+        Autorzy nie przeprowadzają dokładnej analizy złożoności pamięciowej. Łatwo jednak zauważyć, że dodatkowo wykorzystana pamięć nie przekracza w asymptotyce tej koniecznej do reprezentacji grafu. Można więc założyć, że wynosi ona $O(|E|)$. Eksperymenty zdają się wykazywać w tym wypadku złożoność liniową.
+
     \subsection{Zależność od liczby punktów orientacyjnych}
-    
+        Generalnie dla grafów w których stopnie wierzchołków są zróżnicowane, wybór większej liczby punktów orientacyjnych (w szczególności tych o wysokim stopniu), skraca czas zapytań. Inaczej sprawa ma się w grafach o dość jednostajnych stopniach, gdzie zwiększony czas obliczania szkicu może pogorszyć ogólne rezultaty. Oczywiście większa liczba punktów orientacyjnych zwiększa wykorzystanie pamięci 
     \section{Zakończenie}
     Dziękuję słuchaczom za uwagę i życzę miłego dnia. 
     
