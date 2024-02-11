@@ -137,10 +137,10 @@
     \subsection{Przykład}
      
     \subsection{Etykietowanie}
-        Niech $G = (v, E)$ - graf, $R \subset V$ - zbiór punktów orientacyjnych spełniający $|R| \ll |V|$. Schemat QbS zaczyna się od przetwarzania wstępnego, którego celem jest znalezienie kompaktowej reprezentacji najkrótszych ścieżek pomiędzy punktami orientacyjnymi, zwanej meta-grafem grafu $G$. Następnie, bazując na tymże meta-grafie, tworzymy etykietowanie, każdemu wierzchołkowi przypisując każdemu wierzchołkowi taką etykietę, aby móc efektywnie policzyć szkic dla zapytania $SPG(u, v)$  dla dowolnych $u$ i $v$.
+        Niech $G = (V, E)$ - graf, $R \subset V$ - zbiór punktów orientacyjnych spełniający $|R| \ll |V|$. Schemat QbS zaczyna się od przetwarzania wstępnego, którego celem jest znalezienie kompaktowej reprezentacji najkrótszych ścieżek pomiędzy punktami orientacyjnymi, zwanej meta-grafem grafu $G$. Następnie, bazując na tymże meta-grafie, tworzymy etykietowanie, każdemu wierzchołkowi przypisując taką etykietę, aby móc efektywnie policzyć szkic dla zapytania $SPG(u, v)$  dla dowolnych $u$ i $v$.
 
         \subsubsection*{Meta-graf}
-            Meta grafem nazywamy trójkę $M = (R, E_R, \sigma)$, gdzie $E_R \subset R \times R$ jest zbiorem krawędzi postaci $(r, r')$ spełniających warunek, że przynajmniej jedna najkrótsza ścieżka między $r$ i $r'$ w oryginalnym nie przechodzi przez żaden inny punkt orientacyjny. $\sigma: E_R \rightarrow \mathbb{N}$ przypisuje każdej krawędzi w $E_R$ wagę równą długości najkrótszej ścieżki. Przykład ukazano na rysunku \hyperref[fig:meta]{4}.
+            Meta grafem nazywamy trójkę $M = (R, E_R, \sigma)$, gdzie $E_R \subset R \times R$ jest zbiorem krawędzi postaci $(r, r')$ spełniających warunek, że przynajmniej jedna najkrótsza ścieżka między $r$ i $r'$ w oryginalnym grafie nie przechodzi przez żaden inny punkt orientacyjny. $\sigma: E_R \rightarrow \mathbb{N}$ przypisuje każdej krawędzi w $E_R$ wagę równą długości najkrótszej ścieżki. Przykład ukazano na rysunku \hyperref[fig:meta]{4}.
 
             \begin{figure}[!tbh]
                 \includegraphics[width=11cm]{img/meta-graph.png}
@@ -152,13 +152,13 @@
         \subsubsection*{System etykietowania (ang. \textit{Labelling scheme})}
             System etykietowania $\mathcal{L} = (M,L)$ składa się z meta-grafu M oraz etykietowania, które przypisuje każdemu wierzchołkowi $u \in V \setminus R$ etykietę $L(u)$ taką że:
             \[ 
-                L(u) = \{(r, \delta_{ur}) : r \in R, \delta_{ur} = d_G(u,r), (\exists p \in P_{ur})(V(p) \cap R {r}) \}
+                L(u) = \{(r, \delta_{ur}) : r \in R, \delta_{ur} = d_G(u,r), (\exists p \in P_{ur})(V(p) \cap R = \{r\}) \}
             \]
             Innymi słowy, para $(r, \delta_{ur})$ jest częścią etykiety $L(u)$ tylko, jeśli istnieje co najmniej jedna najkrótsza ścieżka między $u$ i $r$, która nie zawiera innych punktów orientacyjnych. 
 
         \subsubsection*{Algorytm 1} 
 
-            Algorytm etykietowana ukazano na obrazku \hyperref[fig:alg2]{1}. Wykonujemy BFS dla każdego punktu orientacyjnego $r$. Wykorzystujemy dwie kolejki do przechowywania odwiedzonych wierzchołków, zależnie od tego, czy mają one zostać zaetykietowane z wykorzystaniem $r$, czy też nie. Wszystkie wierzchołki oprócz $r$ są na początku niezaetykietowane. Dla każdego wierzchołka w kolejce zaetykietowanych z $r$ na n-tym poziomie BFS rozpatrujemy nieodwiedzonych sąsiadów i oznaczamy ich jako odwiedzonych. Jeśli dany sąsiad jest punktem orientacyjnym to dodajemy krawędź do meta-grafu i ustawiamy głębokość jako dystans w funkcji $\sigma$. W przeciwnym przypadku dodajemy parę $(r, depth(v))$ do etykiety $L(V)$, a sam wierzchołek $v$ do kolejki wierzchołków zaetykietowanych z $r$. Następnie rozpatrujemy kolejkę niezaetykietowanych na n-tym poziomie i wszystkich nieodwiedzonych sąsiadów dodajemy do kolejki niezaetykietowanych. Powtarzamy na kolejnych poziomach aż do przetworzenia wszystkich wierzchołków. Przykład ukazano na rysunku \hyperref[fig:label]{4}
+            Algorytm etykietowana ukazano na obrazku \hyperref[fig:alg2]{1}. Wykonujemy BFS dla każdego punktu orientacyjnego $r$. Wykorzystujemy dwie kolejki do przechowywania odwiedzonych wierzchołków, zależnie od tego, czy mają one zostać zaetykietowane z wykorzystaniem $r$, czy też nie. Wszystkie wierzchołki oprócz $r$ są na początku niezaetykietowane. Dla każdego wierzchołka w kolejce zaetykietowanych z $r$ na n-tym poziomie BFS rozpatrujemy nieodwiedzonych sąsiadów i oznaczamy ich jako odwiedzonych. Jeśli dany sąsiad jest punktem orientacyjnym to dodajemy krawędź do meta-grafu i ustawiamy głębokość jako dystans w funkcji $\sigma$. W przeciwnym przypadku dodajemy parę $(r, depth(v))$ do etykiety $L(V)$, a sam wierzchołek $v$ do kolejki wierzchołków zaetykietowanych z $r$. Następnie rozpatrujemy kolejkę niezaetykietowanych na n-tym poziomie i wszystkich nieodwiedzonych sąsiadów dodajemy do kolejki niezaetykietowanych. Powtarzamy na kolejnych poziomach aż do przetworzenia wszystkich wierzchołków. Przykład ukazano na rysunku \hyperref[fig:label]{5}
 
             \begin{figure}[!tbh]
                 \includegraphics[width=11cm]{img/labelling.png}
@@ -178,7 +178,7 @@
             Oczywiście, zachodzi własność $d_{uv}^T \geq d_G(u,v)$. 
             
         \subsubsection*{Algorytm 2} 
-            Algorytm ukazany na rysunku \hyperref[fig:alg3]{3} tworzy omawiany szkic. Najpierw, zbiory wierzchołków i krawędzi w szkicu są puste. Zaczynamy od sprawdzenia wszystkich par punktów orientacyjnych, wyznaczając najkrótszą ścieżkę z $u$ do $v$ przechodzącą przez oba te punkty używając etykiet i meta-grafu. Najkrótsza otrzymana ścieżka to $d_{uv}^T$. Następnie, dla wszystkich wyznaczonych ścieżek o takiej długości, dodajemy ich krawędzie do zbioru krawędzi szkicu, łącznie z krawędziami łączącymi $u$ i $v$ z punktami obserwacyjnymi. Analogicznie, do zbioru dodajemy wszystkie wierzchołki na tych ścieżkach.
+            Algorytm ukazany na rysunku \hyperref[fig:alg3]{2} tworzy omawiany szkic. Najpierw, zbiory wierzchołków i krawędzi w szkicu są puste. Zaczynamy od sprawdzenia wszystkich par punktów orientacyjnych, wyznaczając najkrótszą ścieżkę z $u$ do $v$ przechodzącą przez oba te punkty używając etykiet i meta-grafu. Najkrótsza otrzymana ścieżka to $d_{uv}^T$. Następnie, dla wszystkich wyznaczonych ścieżek o takiej długości, dodajemy ich krawędzie do zbioru krawędzi szkicu, łącznie z krawędziami łączącymi $u$ i $v$ z punktami obserwacyjnymi. Analogicznie, do zbioru dodajemy wszystkie wierzchołki na tych ścieżkach.
     
     \subsection{Przeszukiwanie kierowane}
         Ostatnim i zasadniczym krokiem w procesie odpowiedzi na zapytanie jest właściwe przeszukiwanie. Aby ograniczyć liczbę przetwarzanych krawędzi, będziemy korzystać ze szkicu $S_{uv}$ utworzonego w poprzednim kroku. Dodatkowo przeszukiwanie możemy przeprowadzić na grafie $G[V \setminus R]$, a więc bez punktów orientacyjnych i krawędzi do nich prowadzących. Przy dobrym wyborze punktów orientacyjnych może to zauważalnie  ograniczyć rozmiar przeszukiwanej przestrzeni. Oczywiście długość najkrótszej ścieżki w takim ograniczonym grafie może być większa niż w oryginalnym, ale liczbę kroków przeszukiwania możemy ograniczyć przez obliczoną wcześniej wartość $d_{uv}^T$. $S_{uv}$ pozwala na wyznaczenie dwukierunkowej sekwencji poszukiwań. Konkretnie, dla $t \in \{u,v\}$ mamy 

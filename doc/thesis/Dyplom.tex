@@ -898,7 +898,7 @@ Licencja nie dotyczy latexowego kodu szablonu. Sam szablon (tj.\ zbiór przygoto
 % Kolejne części dokumentu: streszczenie, spisy, skróty, rozdziały, dodatki
 %\chapterstyle{noNumbered}
 % STRESZCZENIE (proszę zajrzeć do środka na zakomentowane komendy)
-\include{streszczenie}
+\include{abstract}
 \pagestyle{outer}
 \clearpage
 % SPIS TREŚCI (zostanie wygenerowany automatycznie)
@@ -929,12 +929,12 @@ Licencja nie dotyczy latexowego kodu szablonu. Sam szablon (tj.\ zbiór przygoto
 \include{skroty} 
 % ROZDZIAŁY (kolejne rozdziały dołączane są z kolejnych plików)
 \chapterstyle{default}
-\include{rozdzial01}
-\include{rozdzial02}
-\include{rozdzial03}
-\include{rozdzial04}
-\include{rozdzial05}
-\include{rozdzial06}
+\include{chapter1}
+\include{chapter2}
+\include{chapter3}
+\include{chapter4}
+\include{chapter5}
+\include{chapter6}
 % LITERATURA (zostanie wygenerowana automatycznie)
 %UWAGA: bibliotekę referencji należy przygotować samemu. Dobrym do tego narzędziem jest JabRef.
 %       JabRef oferuje jednak większą liczbę typów rekordów niż obsługuje BibTeX.
@@ -952,13 +952,5 @@ Licencja nie dotyczy latexowego kodu szablonu. Sam szablon (tj.\ zbiór przygoto
 %       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
 \bibliography{dokumentacja}
 \appendix
-\include{dodatekA}
-\include{dodatekB}
-
-% Jeśli w pracy pojawiać się ma indeks, należy odkomentować poniższe linie
-%%\chapterstyle{noNumbered}
-%%\phantomsection % sets an anchor
-%%\addcontentsline{toc}{chapter}{Indeks rzeczowy}
-%%\printindex
 
 \end{document}
