@@ -4,4 +4,11 @@
 
 \section{Główne sposoby modelowania problemu}
 
+    \subsection{Strumienie grafów}
+
+
+
+    \subsection{Model półstrumieniowy TODO: Potwierdzić nazwę}\
+        Model półstrumieniowy (ang. \emph{semi-streaming model})\cite{Feigenbaum_Kannan_McGregor_Suri_Zhang_2005} jest wariantem klasycznego modelu strumieniowego, z dwiema głównymi różnicami. Po pierwsze, narzuca on konkretne ograniczenia na pamięć wykorzystywaną przez algorytm, najczęściej $O(|V| polylog(|V|))$, a więc dla gęstych grafów znacznie mniejszą niż rozmiar grafu. Po drugie, wejście może być skanowane wielokrotnie, zwykle stałą lub logarytmiczną liczbę razy. Model ten można uznać więc za rodzaj pomostu między klasyczną analizą grafów, w których dane znane są od początku i nie istnieją ograniczenia na dostęp do nich, a modelem strumieniowym, który nie pozwala na wielokrotne przeglądanie wcześniejszych krawędzi. Model ten jest często wybierany przez badaczy analizujących problemy grafowe takie, jak np.  wyznaczanie najkrótszych ścieżek \cite{Elkin_Trehan_2022} lub minimalnego drzewa rozpinającego \cite{Ahn_Guha_McGregor_2012} przy rygorystycznych ograniczeniach pamięciowych.
+
 \section{Definicja formalna}
