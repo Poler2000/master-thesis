@@ -40,12 +40,23 @@
 \section{Graph Spanners}
     TODO: np. \cite{Elkin_Trehan_2022}, QbS \cite{Wang_Wang_Koehler_Lin_2021}
 
-\section{Zanurzenia TODO: potwierdzić nazewnictwo}
-    Kolejną, dość rozległą i rozwijającą się metodologią w dziedzinie analizy grafów są zanurzenia grafów (\emph{ang. graph embeddings}). Nazwa odnosi się do reprezentowania wierzchołków przez wektory cech, a więc bardziej obrazowo, zanurzania grafu w niskowymiarowych przestrzeniach wektorowych. Wektory te mogą zachowywać między innymi kluczowe informacje topologiczne związane z połączeniami danego wierzchołka z jego sąsiadami. Przyjmują one najczęściej wartości rzeczywiste, a podobieństwo między wektorami może być mierzone na różne sposoby, np.  za pomocą podobieństwa cosinusów (\emph{ang. cosine similarity}) lub odległości Hamminga\cite{Lian_Zheng_Zheng_Ge_Cao_Tsang_Xie_2018}. Co istotne, tego typu reprezentacja pozwala na łatwe zastosowanie uczenia maszynowego do analizy danych. W ogólności zanurzenia są stosowane szczególnie często w takich zadaniach jak klasyfikacja węzłów, przewidywanie połączeń między nimi oraz rekonstrukcja grafu. Wśród algorytmów opartych na tej metodologii możemy wyróżnić kilka unikalnych podkategorii, cechujących się odmiennymi podejściami do tego, jak cechy są wybierane i przetwarzane. Praca \cite{Yang_Qu_Hussein_Rosso_Cudré-Mauroux_Liu_2023} stanowi stosunkowo aktualny i rozbudowany przegląd tego typu metod, ukazując przy okazji wpływ hiperparametrów na uzyskiwane wyniki, zwłaszcza dla metod opartych na faktoryzacji i próbkowaniu. Autorzy proponują też uogólnione techniki wykorzystujące te metodologie i dzielą się pewnymi wskazówkami co do wyboru hiperparametrów dla konkretnych scenariuszy.  
+\section{Zanurzenia/Osadzenia TODO: potwierdzić nazewnictwo}
+    Kolejną, dość rozległą i rozwijającą się metodologią w dziedzinie analizy grafów są zanurzenia grafów (\emph{ang. graph embeddings}). Nazwa odnosi się do reprezentowania wierzchołków przez wektory cech, a więc bardziej obrazowo, zanurzania grafu w niskowymiarowych przestrzeniach wektorowych. Wektory te mogą zachowywać między innymi kluczowe informacje topologiczne związane z połączeniami danego wierzchołka z jego sąsiadami. Przyjmują one najczęściej wartości rzeczywiste, a podobieństwo między wektorami może być mierzone na różne sposoby, np.  za pomocą podobieństwa cosinusów (\emph{ang. cosine similarity}) lub odległości Hamminga\cite{Lian_Zheng_Zheng_Ge_Cao_Tsang_Xie_2018}. Co istotne, tego typu reprezentacja pozwala na łatwe zastosowanie uczenia maszynowego do analizy danych. W ogólności zanurzenia są stosowane szczególnie często w takich zadaniach jak klasyfikacja węzłów, przewidywanie połączeń między nimi oraz rekonstrukcja grafu. Wśród algorytmów opartych na tej metodologii możemy wyróżnić kilka unikalnych podkategorii, cechujących się odmiennymi podejściami do tego, jak cechy są wybierane i przetwarzane. Praca \cite{Yang_Qu_Hussein_Rosso_Cudré-Mauroux_Liu_2023} stanowi stosunkowo aktualny i rozbudowany przegląd tego typu metod, ukazując przy okazji wpływ hiperparametrów na uzyskiwane wyniki, zwłaszcza dla metod opartych na faktoryzacji i próbkowaniu. Autorzy proponują też uogólnione techniki wykorzystujące te metodologie i dzielą się pewnymi wskazówkami co do wyboru hiperparametrów dla konkretnych scenariuszy. 
 
     \subsection{Faktoryzacja}
-        Metody opierające się na faktoryzacji, zakładają dekompozycję reprezentacji macierzowej grafu w taki sposób, aby uchwycić ukryte relacje między węzłami w przestrzeni o niższym wymiarze. Ma to na celu zachowanie właściwości strukturalnych grafu, takich jak bliskość węzłów i struktura sąsiedztwa. Jednak koszt obliczeniowych faktoryzacji macierzy może być bardzo wysoki w przypadku  dużych grafów, zarówno w kontekście wykorzystania pamięci, jak i czasu obliczeń.
-        TODO: np. GraRep\cite{Cao_Lu_Xu_2015}, HOPE\cite{Ou_Cui_Pei_Zhang_Zhu_2016}, NetMF\cite{Qiu_Dong_Ma_Li_Wang_Tang_2018}, ProNE\cite{Zhang_Dong_Wang_Tang_Ding_2019} 
+        Metody opierające się na faktoryzacji zakładają dekompozycję reprezentacji macierzowej grafu w taki sposób, aby uchwycić ukryte relacje między węzłami w przestrzeni o niższym wymiarze. Ma to na celu zachowanie właściwości strukturalnych grafu, takich jak bliskość węzłów i struktura sąsiedztwa. Jednak koszt obliczeniowych faktoryzacji macierzy może być bardzo wysoki w przypadku dużych grafów, zarówno w kontekście wykorzystania pamięci, jak i czasu obliczeń.
+
+        Jedną z istotniejszych metod opartych na fwaktoryzacji jest GraRep\cite{Cao_Lu_Xu_2015}. Wyróżnia się ona uwzględnieniem zarówno lokalnych, jak i globalnych informacji strukturalnych w zanurzeniach, mając na celu uchwycenie kompleksowej reprezentacji struktury grafu. Wykorzystywany model przechwytuje różne $k$-krokowe relacje między wierzchołkami grafu. Czyni to poprzez manipulowanie globalnymi macierzami przejścia zdefiniowanymi na grafie, bez angażowania procesów próbkowania. Autorzy proponują wykorzystanie różnych wartości $k$, a także definiują unikalne funkcje straty dla tychże wartości. Ostateczna reprezentacja dla każdego wierzchołka ma charakter globalny i powstaje z połączenia wielu wyuczonych modeli. Wykorzystanym sposobem dekompozycji jest rozkład według wartości osobliwych, szerzej znany jako SVD (\emph{Singular Value Decomposition}). Sprowadza się on do przedstawienia macierzy $A$ w postaci 
+        \[
+            A = U \Sigma V^T  
+        \]
+        gdzie $U$ i $V$ - macierze ortogonalne i $\Sigma$ - macierz diagonalna.
+         
+        HOPE\cite{Ou_Cui_Pei_Zhang_Zhu_2016} działa na podobnej zasadzie, faktoryzując macierze odpowiadające sąsiadom w odległości co najwyżej $k$ od danego wierzchołka z wykorzystaniem SVD. Autorzy biorą sobie jednak za cel zachowanie asymmetrycznej przechodniości. Przedstawia ona korelacje między skierowanymi krawędziami, a więc, istnienie skierowanej ścieżki z $u$ do $v$ może sugerować istnienie skierowanej krawędź z $u$ do $v$.  Prawdopodobieństwo ich istnienia jest wyliczane na podstawie indeksu Katza\cite{Katz_1953}. 
+        
+        NetMF\cite{Qiu_Dong_Ma_Li_Wang_Tang_2018} jest rozwiązaniem syntetycznym, generalizującym  metody próbkujące takie, jak DeepWalk, Node2Vec i LINE. Autorzy zauważają, że przy odrobinie wyobraźni sposób działania tych metod można przedstawić jako niejawne faktoryzacje macierzy. Na podstawie tej obserwacji wyznaczają oni jawne postaci tych macierzy. Dodatkowo, bazując na relacji między metodą DeepWalk i macierzy Laplace'a dla grafu (\emph{ang. Laplacian matrix}), autorzy proponują algorytm efektywnie aproksymujący jawną postać tej macierzy.
+        
+        Z kolei ProNE\cite{Zhang_Dong_Wang_Tang_Ding_2019} wykorzystuje techniki faktoryzacji rzadkich macierzy do początkowego przedstawienia zanurzeń. Następnie są one poprawiane z wykorzystaniem Cheegera wyższego rzędu w celu wygładzania wyników i globalnego grupowania informacji. Jak twierdzą autorzy, taki sposób przeprowadzania obliczeń może istotnie zwiększyć wydajność w praktycznych zastosowaniach.
 
     \subsection{Próbkowanie}
         Techniki oparte na próbkowaniu koncentrują się na wyborze reprezentatywnego zbioru par węzłów z grafu wejściowego, w celu uchwycenia jego podstawowych właściwości strukturalnych. Na ich podstawie określony model uczy się reprezentowania wierzchołków poprzez optymalizację stochastyczną. Zapewnienie zadowalającej jakości reprezentacji wyjściowej wymaga często próbkowania znacznej liczby par węzłów, a zatem wymaga dużych zasobów obliczeniowych, w szczególności czasu procesora.
@@ -54,10 +65,10 @@
         
         Node2Vec\cite{Grover_Leskovec_2016} rozwija ideę DeepWalk, wprowadzając dodatkowe parametry sterujące spacerem. Pozwala to na wybranie, jak szybko spacer może oddalać się od startowego wierzchołka, efektywnie regulując, jak bardzo spacer zbliżony jest do przeszukiwanie wszerz lub przeszukiwania wgłąb. Odpowiednie regulowanie tych parametrów sprzyja to lepszemu poznaniu struktury grafu, która mogłaby być trudna do uchwycenia przy zwykłym spacerze losowym. 
         
-        LINE\cite{Tang_Qu_Wang_Zhang_Yan_Mei_2015}, SDNE\cite{Wang_Cui_Zhu_2016}, VERSE\cite{Tsitsulin_Mottin_Karras_Müller_2018} 
+        LINE\cite{Tang_Qu_Wang_Zhang_Yan_Mei_2015}, VERSE\cite{Tsitsulin_Mottin_Karras_Müller_2018} 
 
     \subsection{Metody oparte na sieciach neuronowych}
-        TODO: np. DNE, DVNE, GCN, and GraphS-AGE
+        TODO: np. SDNE\cite{Wang_Cui_Zhu_2016}, DVNE\cite{Zhu_Cui_Wang_Zhu_2018}, GCN\cite{DBLP:journals/corr/KipfW16}, and GraphSAGE\cite{DBLP:journals/corr/HamiltonYL17} 
 
     \subsection{Szkice}
         TODO: np. NH-MF, NetHash, \#GNN, NodeSketch\cite{Yang_Rosso_Li_Cudre-Mauroux_2019}, SGSketch\cite{Yang_Qu_Yang_Wang_Cudre-Mauroux_2022}.
@@ -67,7 +78,34 @@
 
     \begin{table}[htbp]
         \centering
-        \caption{Your Table Title Here}
+        \caption{Klasyfikacja metod}
+        \begin{tabular}{l | c | c | c | c}
+        \toprule
+        \textbf{Method} & \textbf{Lossless} & \textbf{Złożoność pamięciowa} & \textbf{Edge query} & \textbf{Etc.} \\
+        \midrule
+        \multicolumn{5}{c}{Matrix-based} \\
+        \midrule
+        TCM & Yes/No & O(|V|) & O(|V|) & ... \\
+        GSS & Yes/No & O(|V|) & O(|V|) & ... \\
+        Scube & Yes/No & O(|V|) & O(|V|) & ... \\
+        Horae & Yes/No & O(|V|) & O(|V|) & ... \\
+        \midrule
+        \multicolumn{5}{c}{Embeddings} \\
+        \midrule
+        Method 3 & Yes/No & X & O(|V|) & ... \\
+        Method 4 & Yes/No & X & X & ... \\
+        \midrule
+        \multicolumn{5}{c}{MDL} \\
+        \midrule
+        Method 5 & Yes/No & O(|V|) & O(|V|) & ... \\
+        Method 6 & Yes/No & O(|V|) & O(|V|) & ... \\
+        \bottomrule
+        \end{tabular}
+    \end{table}
+
+    \begin{table}[htbp]
+        \centering
+        \caption{Złożoność czasowa zapytań}
         \begin{tabular}{l | c | c | c | c}
         \toprule
         \textbf{Method} & \textbf{Lossless} & \textbf{Node query} & \textbf{Edge query} & \textbf{Etc.} \\
