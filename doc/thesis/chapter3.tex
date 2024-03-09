@@ -87,47 +87,87 @@
         \subsubsection*{NodeSketch}
             Niezwykle ważnym i interesującym, także w kontekście niniejszej pracy, krokiem w rozwoju analizy wielkich grafów z wykorzystaniem szkiców jest algorytm NodeSketch\cite{Yang_Rosso_Li_Cudre-Mauroux_2019}. Autorzy wykorzystują rekursywne szkicowanie niezależne od danych, aby tworzyć szkice, które dla każdego wierzchołka zachowują informacje o jego sąsiedztwie wysokiego rzędu. Bardziej konkretnie, zaczynają oni od przedstawienia idei spójnego ważonego próbkowania. 
         
-        Niech $V^a, V^b \in \mathbb{R}_{+}^{D}$ - nieujemne wektory rozmiaru $D$. Wtedy ich podobieństwo min-max, zwane też ważonym indeksem Jaccarda możemy zdefiniować jako 
-        \[
-            Sim_{MM}(V^a, V^b) = \frac{\sum \limits_{i = 1}^D min(V_i^{a}, V_i^{b})}{\sum \limits_{i = 1}^D max(V_i^{a}, V_i^{b})}
-        \]
-        Możemy wobec tej wartości zastosować normalizację sum-to-one $\sum \limits_{i = 1}^D V_{i}^{a} = \sum \limits_{i = 1}^D V_{i}^{b} = 1$ i oznaczyć takie znormalizowane podobieństwo przez $Sim_{NMM}$. Jest to efektywny sposób mierzenie podobieństwa nieujemnych danych\cite{10.1145/2783258.2783406}. Zasadniczo spójne ważone próbkowanie sprowadza się do generowania próbek danych w taki sposób, aby prawdopodobieństwo wylosowania identycznych wartości dla obu wektorów było równe ich podobieństwu min-max. Próbki te są następnie traktowane jako szkic wektora wejściowego. Proponowany proces generowania próbek jest dość prosty. Zaczyna się on od wyboru funckji haszującej $h_j$, takiej, że $h_j(i) \sim Uniform(0,1)$. Za jej pomocą próbka $S_j$ wyznaczana jest jako:
-        \begin{equation} \label{eq:node_sketch_1}  
-            S_j = \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}
-        \end{equation}
-        Wybierając $L$ $(L \ll D)$ niezależnych funkcji haszujących i generując na ich podstawie próbki otrzymjemy szkic $S$ o rozmiarze $L$ wektora $V$. Ponadto, wynikowe szkice zachowują
+            Niech $V^a, V^b \in \mathbb{R}_{+}^{D}$ - nieujemne wektory rozmiaru $D$. Wtedy ich podobieństwo min-max, zwane też ważonym indeksem Jaccarda możemy zdefiniować jako 
+            \[
+                Sim_{MM}(V^a, V^b) = \frac{\sum \limits_{i = 1}^D min(V_i^{a}, V_i^{b})}{\sum \limits_{i = 1}^D max(V_i^{a}, V_i^{b})}
+            \]
+            Możemy wobec tej wartości zastosować normalizację sum-to-one $\sum \limits_{i = 1}^D V_{i}^{a} = \sum \limits_{i = 1}^D V_{i}^{b} = 1$ i oznaczyć takie znormalizowane podobieństwo przez $Sim_{NMM}$. Jest to efektywny sposób mierzenie podobieństwa nieujemnych danych\cite{10.1145/2783258.2783406}. Zasadniczo spójne ważone próbkowanie sprowadza się do generowania próbek danych w taki sposób, aby prawdopodobieństwo wylosowania identycznych wartości dla obu wektorów było równe ich podobieństwu min-max. Próbki te są następnie traktowane jako szkic wektora wejściowego. Proponowany proces generowania próbek jest dość prosty. Zaczyna się on od wyboru funckji haszującej $h_j$, takiej, że $h_j(i) \sim Uniform(0,1)$. Za jej pomocą próbka $S_j$ wyznaczana jest jako:
+            \begin{equation} \label{eq:node_sketch_1}  
+                S_j = \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}
+            \end{equation}
+            Wybierając $L$ $(L \ll D)$ niezależnych funkcji haszujących i generując na ich podstawie próbki otrzymujemy szkic $S$ o rozmiarze $L$ wektora $V$. Ponadto, wynikowe szkice zachowują
         
-        \begin{equation} \label{eq:node_sketch_2}  
-            Pr[S_{j}^{a} = S_{j}^{b}] = Sim_{NMM}(V^a, V^b), j = 1,2,\dots,L
-        \end{equation}
+            \begin{equation} \label{eq:node_sketch_2}  
+                Pr[S_{j}^{a} = S_{j}^{b}] = Sim_{NMM}(V^a, V^b), j = 1,2,\dots,L
+            \end{equation}
 
-        Na podstawie tego schematu, autorzy budują właściwy algorytm NodeSketch. Jego działanie rozpoczyna się od wygenerowania zagnieżdżeń dla wierzchołków na podstawie sąsiedztwa pierwszego i drugiego stopnia. Wykorzystuje do tego macierz sąsiedztwa SLA (\emph{Self-Loop-Augmented}) grafu. Różni się ona od zwykłej macierzy tym, że zawiera połączenia z każdego wierzchołka do niego samego, co pozwala prawidłowo zachowywać sąsiedztwo pierwszego rzędu. Innymi słowy, jeśli $A$ jest oryginalną macierzą sąsiedztwa, to macierz SLA ma postać 
-        \[
-            \tilde{A} = I + A
-        \], gdzie $I$ jest macierzą jednostkową. Zagnieżdżenia k-tego rzędu są generowane rekurencyjnie na podstawie macierzy SLA i zagnieżdżeń $(k - 1)$-wszego rzędu. 
+            Na podstawie tego schematu, autorzy budują właściwy algorytm NodeSketch. Jego działanie rozpoczyna się od wygenerowania zagnieżdżeń dla wierzchołków na podstawie sąsiedztwa pierwszego i drugiego stopnia. Wykorzystuje do tego macierz sąsiedztwa SLA (\emph{Self-Loop-Augmented}) grafu. Różni się ona od zwykłej macierzy tym, że zawiera połączenia z każdego wierzchołka do niego samego, co pozwala prawidłowo zachowywać sąsiedztwo pierwszego rzędu. Innymi słowy, jeśli $A$ jest oryginalną macierzą sąsiedztwa, to macierz SLA ma postać 
+            \[
+                \tilde{A} = I + A
+            \], gdzie $I$ jest macierzą jednostkową. Zagnieżdżenia k-tego rzędu są generowane rekurencyjnie na podstawie macierzy SLA i zagnieżdżeń $(k - 1)$-wszego rzędu. Ważną cechą spójnego ważonego próbkowania jest jednostajność generowanych próbek, co oznacza, że prawdopodobieństwo wybrania wartości $i$ jest proporcjonalne do $V_i$, a więc $Pr(S_j = i) = \frac{V_i}{\sum_{i} V_i}$ (TODO: Nie jestem pewien, czy w mianowniku powinno być sumowanie po $i$, ale tak jest w pracy). Z tej własności można wywnioskować, że jest rozkład elementów szkicu aproksymuje wektor $V$ w sposób nieobciążony. 
+            
+            Bazując na powyższych obserwacjach, autorzy przechodzą do właściwego sformułowania algorytmu. Dla każdego węzła $r$, obliczany jest przybliżony wektor SLA k-tego rzędu. Odbywa się to poprzez połączenie oryginalnego wektora SLA z wektorem (k-1)-wszego rzędu z odpowiednią wagą:
+            \begin{equation} \label{eq:node_sketch_3}  
+                \tilde{V}_{i}^{r}(k) = \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}
+            \end{equation}, gdzie $\Gamma(r)$ to zbiór sąsiadów wierzchołka $r$, a $S^{n}(k-1)$ jest szkicem (k-1)-wszego rzędu dla wierzchołka $n$. Dodatkowo parametr $\alpha$ pozwala na przypisanie mniejszego priorytetu relacjom wyższego rzędu między wierzchołkami. Następnie, szkic wierzchołka $r$ oznaczany jako $S^{r}(k)$ jest wyznaczany z równania \ref{eq:node_sketch_1}. Ostateczny szkic $S(k)$ jest po prostu wektorem szkiców elementów. Działanie algorytmu ukazuje pseudokod \ref{alg:node_sketch}.
 
-        \begin{equation} \label{eq:node_sketch_3}  
-            \tilde{V}_{i}^{r}(k) = \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}
-        \end{equation}
-
-        \begin{algorithm}
-            \caption{NodeSketch($\tilde{A},k,\alpha$)}\label{alg:node_sketch}
-            $X \gets x$\;
-            $N \gets n$\;
-            \uIf{$k > 2$}{
-                $S(k-1) \gets NodeSketch(\tilde{A},k - 1,\alpha)$\;
-                \ForEach{rząd $r$ w $\tilde{A}$}{
-                    $\tilde{V}^{r}(k) \gets Eq. \ref{eq:node_sketch_3}$\;
-                    $S_r(k) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r}(k))$\;
+            \begin{algorithm}
+                \caption{NodeSketch($\tilde{A},k,\alpha$)}\label{alg:node_sketch}
+                $X \gets x$\;
+                $N \gets n$\;
+                \uIf{$k > 2$}{
+                    $S(k-1) \gets NodeSketch(\tilde{A},k - 1,\alpha)$\;
+                    \ForEach{rząd $r$ w $\tilde{A}$}{
+                        $\tilde{V}^{r}(k) \gets Eq. \ref{eq:node_sketch_3}$\;
+                        $S_r(k) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r}(k))$\;
+                    }
                 }
-            }
-            \ElseIf{$k = 2$}{
-                \ForEach{rząd $r$ w $\tilde{A}$}{
-                    $S_r(2) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r})$\;
+                \ElseIf{$k = 2$}{
+                    \ForEach{rząd $r$ w $\tilde{A}$}{
+                        $S_r(2) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r})$\;
+                    }
                 }
-            }
-            \Return{$S(k)$}
-        \end{algorithm}
+                \Return{$S(k)$}
+            \end{algorithm}
+
+        \subsubsection*{SGSketch}
+            Choć NodeSketch okazuje się efektywny w wielu scenariuszach testowych, to nie da się ukryć, że jego możliwości, podobnie jak wielu omawianych wcześniej metod generowania zagnieżdżeń wierzchołków, są ograniczone. Po pierwsze, nie bierze on pod uwagę wag krawędzi, a tylko ich istnienie. Tymczasem waga połączenia może nieść ze sobą cenne informacje. Po drugie, konieczność znajomości macierzy sąsiedztwa SLA sprawia, że NodeSketch nie jest przystosowany do działania w formie On-Line, a więc reagowania na zmiany w grafie, jak np. ustanawianie nowych krawędzi. Ta obserwacja, choć z pozoru nieco rozczarowująca, może stać się iskrą rozpalającą dalsze rozważania i stanowiącą inspirację do budowy kolejnych, bardziej elastycznych rozwiązań. 
+
+            Jedną z prób stworzenia metody mogącej radzić sobie z ewoluującym strumieniem krawędzi jest, oparty na NodeSketch, algorytm SGSketch\cite{Yang_Qu_Yang_Wang_Cudre-Mauroux_2022}. Jego główna idea polega na stopniowym zapominaniu dawnych krawędzi i wykorzystaniu efektywnego, inkrementacyjnego mechanizmu aktualizacji wygenerowanych zagnieżdzeń.
+            
+            Niech $SG$ będzie strumieniowanym grafem. Typowa implementacja stopniowego zapominania krawędzi wywodzi się z prawa rozpadu naturalnego i polega na obliczaniu jej wagi, bazując na momencie wystąpienia w strumieniu. Możemy więc przyjąć wagę krawędzi, która pojawiła się w chwili $t$ jako $w_t = e^{\lambda(t_n - t)}$, gdzie $t_n$ jest momentem wystąpienia najnowszej krawędzi, a $\lambda$ jest parametrem sterującym szybkością zapominania. Stąd elementy macierzy sąsiedztwa wyznaczane są ze wzoru:
+            \begin{equation} \label{eq:sg_sketch_1}  
+                A_{i,j} = A_{j,i} = \mathop{max}_{t \leq t_n} e^{-\lambda (t_n - t)}\mathbbm{1}_{[(r_i, r_j)^{t} \in SG]}
+            \end{equation}
+            Taka forma zapominania ma charakter globalny, co oznacza, że  waga wszystkich istniejących krawędzi zmniejsza się w wyniku przetwarzania każdej nowej krawędzi. Może to prowadzić do kosztownych i niepotrzebnych zmian dla wierzchołków znajdujących się daleko od nowych krawędzi. Dlatego autorzy proponują zastosowanie lokalnej techniki zmniejszania wag. Formalnie, aby obliczyć wagę krawędzi $(r_i, r_j)$ zaobserwowanej w chwili $t$ dla wierzchołka $r_i$, wyznaczamy najpierw liczbę krawędzi wchodzących i wychodzących z $r_i$ w przedziale czasowym $(t,t_n]$: $\phi_{(t,t_n]}(r_i) = \vert$
+            \begin{equation} \label{eq:sg_sketch_2}  
+                \phi_{(t,t_n]}(r_i) = \vert \{(r_p, r_q)^{t'} \vert r_i \in (r_p, r_q), t' \in (t,t_n] \} \vert
+            \end{equation}
+            Ostatecznie, elementy macierzy mają postać:
+            \begin{equation} \label{eq:sg_sketch_3}  
+                A_{i,j} = \mathop{max}_{t \leq t_n} e^{-\lambda \phi_{(t,t_n]}(r_i)}\mathbbm{1}_{[(r_i, r_j)^{t} \in SG]}
+            \end{equation}
+
+            Działanie właściwego algorytmu SGSketch rozpoczyna się od wygenerowania początkowego szkicu. Odbywa się to sposób w zasadzie identyczny jak w algorytmie NodeSketch, z tą różnicą, że wykorzystywana jest macierz SLA z lokalnym, zapominaniem krawędzi. Zasada działania procedury aktualizacji szkicu ukazana jest w algorytmie \ref{alg:sg_sketch_update}. Argumentami wejściowymi jest macierz sąsiedztwa SLA $A$, aktualny szkic $S$, zbiór wierzchołków indykujących nową krawędź lub krawędzie $\Omega$, rząd $k$ oraz współczynnik $\alpha$. Zasadniczo, mechanizm jest podobny do generowania początkowego szkicu, ale przeliczane są zagnieżdżenia tylko tych elementów, które znajdują się w sąsiedztwie nowych krawędzi. Pozwala to na znaczną oszczędność w kwestii czasu obliczeń. 
+
+            \begin{algorithm}
+                \caption{SGSketchUpdate($\tilde{A},S,\Omega,k,\alpha$)}\label{alg:sg_sketch_update}
+                \uIf{$k > 2$}{
+                    zaktualizuj $S(k-1)$ i zbiór $\Omega$: $SGSketchUpdate(\tilde{A},S,\Omega,k-1,\alpha)$\;
+                    \ForEach{$r \in \Omega$}{
+                        $\tilde{V}^{r}(k) \gets Eq. \ref{eq:node_sketch_3}$\;
+                        $S_r(k) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r}(k))$\;
+                    }
+                }
+                \ElseIf{$k = 2$}{
+                    \ForEach{$r \in \Omega$}{
+                        $S_r(2) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r})$\;
+                    }
+                }
+                \ForEach{$r \in \Omega$}{
+                    $\Omega \gets \Omega \cup \Gamma(r)$\;
+                }
+            \end{algorithm}
 
 
 \section{Porównanie wspieranych operacji i ich złożoności}
