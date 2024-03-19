@@ -4,14 +4,24 @@
 
     W niniejszym przeglądzie literatury zagłębiamy się w sferę analizy dużych grafów ze szczególnym uwzględnieniem metod opartych na szkicach danych. Badamy ewoluujący krajobraz technik, algorytmów i aplikacji w tej dziedzinie, rzucając światło na metodologie stosowane w celu sprostania nieodłącznym wyzwaniom stawianym przez strumieniowe przesyłanie danych grafowych. Poprzez analizę najnowszych osiągnięć, staramy się zapewnić wgląd w znaczenie i potencjał analizy strumieni grafów w rozwiązywaniu złożonych zadań analitycznych w różnych dziedzinach, a także sformułować ogólne wnioski i wskazówki co do wyboru odpowiedniej metody do danego zastosowania. Dla lepszego ustrukturyzowania wiedzy omawiane algorytmy i struktury podzielone zostały na kilka kategorii, odpisanych dokładnie w dalszej części niniejszego rozdziału. Należy jednak pamiętać, że w niektórych przypadkach podział ten jest nieco umowny, gdyż różne podejścia i pomysły nierzadko przenikają się i inspirują wzajemnie, prowadząc do syntetycznych rozwiązań. 
 
-\section{Streszczenia danych/Sketch synopses TODO: Potwierdzić nazewnictwo}
-    Analiza strumieni danych jest szeroką dziedziną, nieograniczającą się oczywiście wyłącznie do danych grafowych. Istnieje wiele bardziej ogólnych, uniwersalnych metod, na których podstawie można budować rozwiązania bardziej wyspecjalizowane do konkretnych zadań. Doskonałym przykładem są streszczenia danych (\emph{ang. Sketch synopses}). Są to kompaktowe struktury zaprojektowane z myślą o wykorzystaniu ograniczonej ilości pamięci, umożliwiając jednocześnie aproksymację różnych statystyk i zapytań dotyczących strumienia danych, takich jak zliczanie elementów, wyznaczanie mediany, czy wykrywanie wartości odstających. Utrzymując mały szkic o stałym rozmiarze, struktury te umożliwiają analizę strumieni danych w czasie rzeczywistym bez konieczności przechowywania wszystkich elementów strumienia, co zapewnia wysoką wydajność nawet przy analizowaniu ogromnych strumieni.
+\section{\textcolor{red}{Szkice danych}}
+    Analiza strumieni danych jest szeroką dziedziną, nieograniczającą się oczywiście wyłącznie do danych grafowych. Istnieje wiele bardziej ogólnych, uniwersalnych metod, na których podstawie można budować rozwiązania bardziej wyspecjalizowane do konkretnych zadań. Doskonałym przykładem są \textcolor{red}{szkice danych} (\emph{ang. Sketch synopses}). Są to kompaktowe struktury zaprojektowane z myślą o wykorzystaniu ograniczonej ilości pamięci, umożliwiając jednocześnie aproksymację różnych statystyk i zapytań dotyczących strumienia danych, takich jak zliczanie elementów, wyznaczanie mediany, czy wykrywanie wartości odstających. Utrzymując mały szkic o stałym rozmiarze, struktury te umożliwiają analizę strumieni danych w czasie rzeczywistym bez konieczności przechowywania wszystkich elementów strumienia, co zapewnia wysoką wydajność nawet przy analizowaniu ogromnych strumieni.
     
-    Istotną w kontekście budowy dalszych rozwiązań strukturą danych jest szkic Count-Min\cite{Cormode_Muthukrishnan_2005}. W przeciwieństwie do wielu proponowanych wcześniej streszczeń zaprojekotwanych do badania konkretnej statystyki stanowi on dość uniwersalną strukturę, oferując wsparcie dla zapytań o częstość występowania elementu, zakresu elementów oraz iloczyn skalarny dwóch strumieni. Z kolei na ich podstawie można budować bardziej skomplikowane zapytania. Co ważne, Count-Min, choć zwraca przybliżone wyniki, to gwarantuje spełnienie pewnych założeń odnośnie dokładności. Konkretnie, wyraża się ją zazwyczaj w kontekście definiowanych przez użytkownika parametrów $\epsilon, \delta$, a więc wymagamy, aby błąd względny w odpowiedzi na zapytanie mieścił się w zakresie współczynnika $\epsilon$ z prawdopodobieństwem $\delta$. Count-Min opiera się na zastosowaniu dwuwymiarowej tablicy o wymiarach $w \times d$, gdzie $w = \lceil \frac{e}{\epsilon} \rceil$ oraz $d = \lceil \ln \frac{1}{\delta} \rceil$. Nietrudno zauważyć, że zależą one od wymaganej dokładności. Struktura dalej wykorzystuje $d$ niezależnych funkcji haszujących, mapujących elementy ze strumienia na kolumny tablicy. Każdy z napływających elementów wiąże się więc z aktualizacją jednej komórki w każdym wierszu tablicy. Wtedy, przykładowo częstotliwość elementu możemy aproksymować jako minimum z wartości odpowiadających mu komórek. 
+    Istotną w kontekście budowy dalszych rozwiązań strukturą danych jest szkic Count-Min\cite{Cormode_Muthukrishnan_2005}. W przeciwieństwie do wielu proponowanych wcześniej \textcolor{red}{szkiców} zaprojektowanych do badania konkretnej statystyki stanowi on dość uniwersalną strukturę, oferując wsparcie dla \textcolor{red}{kilku fundamentalnych zapytań. Konkretnie, wyrażając strumień danych jako $a = [a_1, a_2, \dots, a_n]$, gdzie $a_i$ oznacza liczbę wystąpień elementu $i$ w strumieniu, Count-Min może zwrócić aproksymacje następujących wartości:
+    \begin{itemize}
+        \item $\mathcal{Q}(i) = a_i$ -- częstość występowania pojedynczego elementu 
+        \item $\mathcal{Q}(l,r) = \sum\limits_{i = l}^{r} a_i$ -- łączna liczba wystąpień zakresu elementów 
+        \item $\mathcal{Q}(a,b) = a \cdot b = \sum \limits_{i = 1}^{n} a_i b_i$ -- iloczyn skalarny dwóch wektorów.
+    \end{itemize}}
+     Z kolei na ich podstawie można budować bardziej skomplikowane zapytania. Co ważne, Count-Min, choć zwraca przybliżone wyniki, to gwarantuje spełnienie pewnych założeń odnośnie dokładności. Konkretnie, wyraża się ją zazwyczaj w kontekście definiowanych przez użytkownika parametrów $\epsilon, \delta$, a więc wymagamy, aby błąd względny w odpowiedzi na zapytanie mieścił się w zakresie współczynnika $\epsilon$ z prawdopodobieństwem $\delta$. Count-Min opiera się na zastosowaniu dwuwymiarowej tablicy o wymiarach $w \times d$, gdzie $w = \lceil \frac{e}{\epsilon} \rceil$ oraz $d = \lceil \ln \frac{1}{\delta} \rceil$. Nietrudno zauważyć, że zależą one od wymaganej dokładności. Struktura dalej wykorzystuje $d$ niezależnych funkcji haszujących, mapujących elementy ze strumienia na kolumny tablicy. Każdy z napływających elementów wiąże się więc z aktualizacją jednej komórki w każdym wierszu tablicy. Wtedy, przykładowo częstotliwość elementu możemy aproksymować jako minimum z wartości odpowiadających mu komórek. 
 
-    Do innych wartych wzmianki metod możemy zaliczyć np. Lossy Counting\cite{Manku_Motwani_2012}, ukierunkowany na wskazywanie szczególnie często występujących elementów, czy AMS\cite{Alon_Matias_Szegedy_1996}, aproksymujący momenty częstotliwości (\emph{ang. frequency moments}).
+    Do innych wartych wzmianki metod możemy zaliczyć np. Lossy Counting\cite{Manku_Motwani_2012}, ukierunkowany na wskazywanie szczególnie często występujących elementów. \textcolor{red}{Z kolei AMS\cite{Alon_Matias_Szegedy_1996} skupia się na aproksymowaniu momentów częstotliwości (\emph{ang. frequency moments}), a więc wartości postaci:
+    \[
+        F_k = \sum\limits_{i = 1}^{n} a_i^k,
+    \]
+    gdzie n jest liczbą unikalnych elementów, $a_i$ jest liczbą wystąpień elementu $i$ w strumieniu, a $k$ jest numerem danego momentu. Momenty te niosą ze sobą istotne informacje statystyczne o przetwarzanych danych. Przykładowo $F_0$ to po prostu liczba unikalnych elementów, $F_1$ wyznacza długość strumienia, a $F_2$ można traktować jako miarę powtarzalności danych (\emph{ang. repeat rate})\cite{Good_1982}}. 
     
-    gSketch\cite{Zhao_Aggarwal_Wang_2011} stanowi jedną z pierwszych prób przeniesienia idei tych ogólnych metod do świata grafów. Obsługuje on proste zapytania dotyczących grafu, takie jak częstość występowania danej krawędzi w strumieniu lub gęstość wybranego podgrafu. Autorzy wychodzą od metody Count-Min, wykorzystując jej dwuwymiarową tablicę do składowania częstotliwości krawędzi. Dodatkowo, algorytm wykorzystuje próbkę testową do podziału zbioru krawędzi na podzbiory, bazując na ich częstotliwości w taki sposób, aby efektywnie wykorzystać dostępną pamięć, a następnie przetwarza właściwy strumień danych. To przetwarzanie wstępne daje cenny wgląd w charakterystykę grafu, ale należy pamiętać, że wyznaczanie reprezentacyjnej dla danego zbioru próbki nie zawsze jest trywialne. gSketch, podobnie jak Count-Min jest metodą stratną, a praktycznym wyzwaniem jest odpowiednie wyważenie parametrów tak, aby zachować balans między zużytą pamięcią a dokładnością wyników.
+    gSketch\cite{Zhao_Aggarwal_Wang_2011} stanowi jedną z pierwszych prób przeniesienia idei tych ogólnych metod do świata grafów. Obsługuje on proste zapytania dotyczących grafu, takie jak częstość występowania danej krawędzi w strumieniu lub gęstość wybranego podgrafu. Autorzy wychodzą od metody Count-Min, wykorzystując jej dwuwymiarową tablicę do składowania częstotliwości krawędzi. Dodatkowo, algorytm wykorzystuje próbkę testową do podziału zbioru krawędzi na podzbiory, bazując na ich częstotliwości w taki sposób, aby efektywnie wykorzystać dostępną pamięć, a następnie przetwarza właściwy strumień danych. To przetwarzanie wstępne daje cenny wgląd w charakterystykę grafu, ale należy pamiętać, \textcolor{red}{że wyznaczanie reprezentacyjnej dla danego zbioru próbki testowej nie zawsze jest trywialne. Szczególnie w kontekście strumieniowanych danych grafowych, jakiekolwiek istotne informacje o grafie mogą być niedostępne w momencie rozpoczęcia jego przetwarzania. Z kolei wybór podzioru krawędzi ze strumienia jako próbki może nie reprezentować całościowej charakterystyki grafu.} gSketch, podobnie jak Count-Min jest metodą stratną, a praktycznym wyzwaniem jest odpowiednie wyważenie parametrów tak, aby zachować balans między zużytą pamięcią a dokładnością wyników.
     
     Choć metody takie jak gSketch mogą efektywnie zapamiętywać informacje dotyczące częstotliwości występowania krawędzi, to tracą przy tym wiedzę o strukturze grafu. Przykładowo, trudno za ich pomocą odpowiedzieć, czy istnieje ścieżka między danymi dwoma wierzchołkami. Jedną z prób rozwiązania tego problemu jest struktura gMatrix\cite{Khan_Aggarwal_2016}. Wykorzystuje ona, podobnie jak gSketch, zasadę działania Min-Count. Jednak w tym wypadku tablica zliczająca elementy wzbogaciła się o trzeci wymiar. Konkretnie, długość i szerokość tablicy odpowiadają haszom wierzchołków, a jej głębokość związana jest ponownie z liczbą funkcji haszujących. Struktura może więc wspierać zapytania związane zarówno z krawędziami, jak i wierzchołkami. gMatrix wspiera również wykrywanie szczególnie często występujących krawędzi i wierzchołków, a więc tych, których częstotliwość przekracza dany parametr $F$. Wymaga to jednak, aby wybrane funkcje haszujące były odwracalne. Wtedy wystarczy wybrać komórki o odpowiednio dużych wartościach i obliczyć odwrotności haszy, aby odzyskać informacje o wierzchołkach. Podobnie, można rozważać osiągalność między wierzchołkami, wybierając krawędzie o częstotliwości występowania przekraczającej pewne $F$ i przetwarzając je używając tradycyjnych algorytmów. Zwłaszcza w przypadku grafów o nierównej gęstości, możemy w ten sposób znacznie ograniczyć liczbę badanych krawędzi, zachowując wciąż odpowiednie ograniczenia na prawdopodobieństwo błędu.
 
@@ -70,8 +80,21 @@
         Z kolei ProNE\cite{Zhang_Dong_Wang_Tang_Ding_2019} wykorzystuje techniki faktoryzacji rzadkich macierzy do początkowego przedstawienia zagnieżdżeń. Następnie są one poprawiane z wykorzystaniem Cheegera wyższego rzędu w celu wygładzania wyników i globalnego grupowania informacji. Jak twierdzą autorzy, taki sposób przeprowadzania obliczeń może istotnie zwiększyć wydajność w praktycznych zastosowaniach.
 
     \subsection{Metody oparte na sieciach neuronowych}
-        TODO: np. SDNE\cite{Wang_Cui_Zhu_2016}, DVNE\cite{Zhu_Cui_Wang_Zhu_2018}, GCN\cite{DBLP:journals/corr/KipfW16}, and GraphSAGE\cite{DBLP:journals/corr/HamiltonYL17} 
+        \textcolor{red}{
+        Większość algorytmów opisywanych w tym podrozdziale wykorzystuje sieci neuronowe w mniejszym lub większym stopniu. Jednak często nie stanowią one istoty rozwiązania. Przykładowo, mogą one być eksploatowane tylko na dalszym etapie rozwiązania, np. do samej klasyfikacji wierzchołków, podczas gdy właściwe wektory zagnieżdzeń są generowane w inny sposób. Nic nie stoi jednak na przeszkodzie, aby i do tego zadania zaprząc moc sieci neuronowych. Istnieje wiele rozwiązań, które budują zaawansowane modele sieci, zdolne radzić sobie z danymi grafowymi, bez konieczności użycia kosztownych faktoryzacji macierzy, czy próbkowania.}
 
+        \textcolor{red}{
+        Jednym z przykładów tego podejścia jest SDNE\cite{Wang_Cui_Zhu_2016}. Jest to metoda wykorzystująca głęboki, wielowarstwowy model dostosowany do uczenia pół-nadzorowanego. Konkretnie, część nadzorowana bada sąsiedztwo pierwszego rzędu między wierzchołkami, ucząc się lokalnej struktury grafu. Z kolei w uczeniu nienadzorowanym, mającym na celu wychwycenie globalnych informacji, SDNE używa sąsiedztwa drugiego rzędu. Autorzy proponują również użycie autoenkodera, aby minimalizować błędy rekonstrukcji danych. Taki model pozwala na zachowanie kompleksowej struktury grafu.}
+        
+        \textcolor{red}{
+        DVNE\cite{Zhu_Cui_Wang_Zhu_2018} wyróżnia się na tle innych rozwiązań tym, że generuje zagnieżdżenia wierzchołków w przestrzeni Wassersteina. Dokładniej, autorzy wykorzystują dystans 2-Wassersteina jako miarę podobieństwa między rozkładami prawdopodobieństwa, a więc, w tym przypadku, wygenerowanymi zagnieżdżeniami oraz prawdziwymi danymi. Miara ta dobrze zachowuje tranzytywność oraz może modelować niepewność wierzchołków, powiązaną z wariancją rozkładu. Proces uczenia postulowany w DVNE jest uczeniem nienadzorowanym.}
+        
+        \textcolor{red}{
+        GCN\cite{DBLP:journals/corr/KipfW16} jest kolejnym przykładem uczenia pół-nadzorowanego. W tym przypadku autorzy przyglądają się głównie zadaniu klasyfikacji wierzchołków. W tym celu definiują sprytną zasadę propagacji w konwolucyjnej sieci neuronowej, pozwalającą na jej działanie bezpośrednio na macierzy sąsiedztwa. Inspiracją są w tym przypadku metody aproksymacji spektralnych splotów grafów.}
+        
+        \textcolor{red}{
+        GraphSAGE\cite{DBLP:journals/corr/HamiltonYL17} wykorzystuje uczenie z nadzorem. Bierze pod uwagę nie tylko topologię grafu, ale także cechy wierzchołków. W przeciwieństwie do większości podobnych metod GraphSAGE nie generuje unikalnego wektora zagnieżdżenia dla każdego wierzchołka. Zamiast tego, trenuje zbiór funkcji agregujących informacje o cechach z lokalnego sąsiedztwa węzła. Mogą one być potem stosowane dla zupełnie nowych wierzchołków.}
+        
     \subsection{Szkice}
         Szczególnie istotne z perspektywy niniejszej pracy są techniki zagnieżdżania oparte na szkicach danych. Ich głównym założeniem jest tworzenie kompaktowych szkiców dla oryginalnych wielowymiarowych danych, przy jednoczesnym zachowaniu pewnej miary podobieństwa między wierzchołkami. Wyjściowe zagnieżdzenia są najczęściej generowane w przestrzeni Hamminga. Metody te opierają się one zastosowaniu zachowujących podobieństwo technik haszowania w celu generowania zagnieżdzeń węzłów. Wykorzystywane przez nie haszowanie może być zależne albo niezależne od danych. W literaturze te warianty bywają również opisywane jako odpowiednio \emph{learning-to-hash} i \emph{locality sensitive hashing}\cite{wang2017survey}.  
 
@@ -86,44 +109,42 @@
         
             Niech $V^a, V^b \in \mathbb{R}_{+}^{D}$ - nieujemne wektory rozmiaru $D$. Wtedy ich podobieństwo min-max, zwane też ważonym indeksem Jaccarda możemy zdefiniować jako 
             \[
-                Sim_{MM}(V^a, V^b) = \frac{\sum \limits_{i = 1}^D min(V_i^{a}, V_i^{b})}{\sum \limits_{i = 1}^D max(V_i^{a}, V_i^{b})}
+                Sim_{MM}(V^a, V^b) = \frac{\sum \limits_{i = 1}^D min(V_i^{a}, V_i^{b})}{\sum \limits_{i = 1}^D max(V_i^{a}, V_i^{b})}.
             \]
             Możemy wobec tej wartości zastosować normalizację sum-to-one $\sum \limits_{i = 1}^D V_{i}^{a} = \sum \limits_{i = 1}^D V_{i}^{b} = 1$ i oznaczyć takie znormalizowane podobieństwo przez $Sim_{NMM}$. Jest to efektywny sposób mierzenia podobieństwa nieujemnych danych\cite{10.1145/2783258.2783406}. Zasadniczo spójne ważone próbkowanie sprowadza się do generowania próbek danych w taki sposób, aby prawdopodobieństwo wylosowania identycznych wartości dla obu wektorów było równe ich podobieństwu min-max. Próbki te są następnie traktowane jako szkic wektora wejściowego. Proponowany proces generowania próbek jest dość prosty. Zaczyna się on od wyboru funckji haszującej $h_j$, takiej, że $h_j(i) \sim Uniform(0,1)$. Za jej pomocą próbka $S_j$ wyznaczana jest jako:
             \begin{equation} \label{eq:node_sketch_1}  
-                S_j = \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}
+                S_j = \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}.
             \end{equation}
             Wybierając $L$ $(L \ll D)$ niezależnych funkcji haszujących i generując na ich podstawie próbki otrzymujemy szkic $S$ o rozmiarze $L$ wektora $V$. Ponadto, wynikowe szkice zachowują własność:
 
             \begin{equation} \label{eq:node_sketch_2}  
-                Pr[S_{j}^{a} = S_{j}^{b}] = Sim_{NMM}(V^a, V^b), j = 1,2,\dots,L
+                Pr[S_{j}^{a} = S_{j}^{b}] = Sim_{NMM}(V^a, V^b), j = 1,2,\dots,L.
             \end{equation}
 
             Na podstawie tego schematu, autorzy budują właściwy algorytm NodeSketch. Jego działanie rozpoczyna się od wygenerowania zagnieżdżeń dla wierzchołków na podstawie sąsiedztwa pierwszego i drugiego stopnia. Wykorzystuje do tego macierz sąsiedztwa SLA (\emph{Self-Loop-Augmented}) grafu. Różni się ona od zwykłej macierzy tym, że zawiera połączenia z każdego wierzchołka do niego samego, co pozwala prawidłowo zachowywać sąsiedztwo pierwszego rzędu. Innymi słowy, jeśli $A$ jest oryginalną macierzą sąsiedztwa, to macierz SLA ma postać:
             \[
-                \tilde{A} = I + A
+                \tilde{A} = I + A,
             \]
             gdzie $I$ jest macierzą jednostkową. Zagnieżdżenia k-tego rzędu są generowane rekurencyjnie na podstawie macierzy SLA i zagnieżdżeń $(k - 1)$-wszego rzędu. Ważną cechą spójnego ważonego próbkowania jest jednostajność generowanych próbek, co oznacza, że prawdopodobieństwo wybrania wartości $i$ jest proporcjonalne do $V_i$, a więc $Pr(S_j = i) = \frac{V_i}{\sum_{i} V_i}$ (TODO: Nie jestem pewien, czy w mianowniku powinno być sumowanie po $i$, ale tak jest w pracy). Z tej własności można wywnioskować, że rozkład elementów szkicu aproksymuje wektor $V$ w sposób nieobciążony. 
             
             Bazując na powyższych obserwacjach, autorzy przechodzą do właściwego sformułowania algorytmu. Dla każdego węzła $r$, obliczany jest przybliżony wektor SLA k-tego rzędu. Odbywa się to poprzez połączenie oryginalnego wektora SLA z wektorem (k-1)-wszego rzędu z odpowiednią wagą:
             \begin{equation} \label{eq:node_sketch_3}  
-                \tilde{V}_{i}^{r}(k) = \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}
+                \tilde{V}_{i}^{r}(k) = \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]},
             \end{equation}
             gdzie $\Gamma(r)$ to zbiór sąsiadów wierzchołka $r$, a $S^{n}(k-1)$ jest szkicem (k-1)-wszego rzędu dla wierzchołka $n$. Dodatkowo parametr $\alpha$ pozwala na przypisanie mniejszego priorytetu relacjom wyższego rzędu między wierzchołkami. Następnie, szkic wierzchołka $r$ oznaczany jako $S^{r}(k)$ jest wyznaczany z równania \ref{eq:node_sketch_1}. Ostateczny szkic $S(k)$ jest po prostu wektorem szkiców elementów. Działanie algorytmu ukazuje pseudokod \ref{alg:node_sketch}.
 
             \begin{algorithm}
                 \caption{NodeSketch($\tilde{A},k,\alpha$)}\label{alg:node_sketch}
-                $X \gets x$\;
-                $N \gets n$\;
                 \uIf{$k > 2$}{
                     $S(k-1) \gets NodeSketch(\tilde{A},k - 1,\alpha)$\;
                     \ForEach{rząd $r$ w $\tilde{A}$}{
-                        $\tilde{V}^{r}(k) \gets Eq. \ref{eq:node_sketch_3}$\;
-                        $S_r(k) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r}(k))$\;
+                        $\color{red} \tilde{V}_{i}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;
+                        $\color{red} S_{j}^{r}(k) \gets \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \ElseIf{$k = 2$}{
                     \ForEach{rząd $r$ w $\tilde{A}$}{
-                        $S_r(2) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r})$\;
+                        $\color{red} S_{j}^{r}(2) \gets \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \Return{$S(k)$}
@@ -136,31 +157,31 @@
             
             Niech $SG$ będzie strumieniowanym grafem. Typowa implementacja stopniowego zapominania krawędzi wywodzi się z prawa rozpadu naturalnego i polega na obliczaniu jej wagi, bazując na momencie wystąpienia w strumieniu. Możemy więc przyjąć wagę krawędzi, która pojawiła się w chwili $t$ jako $w_t = e^{\lambda(t_n - t)}$, gdzie $t_n$ jest momentem wystąpienia najnowszej krawędzi, a $\lambda$ jest parametrem sterującym szybkością zapominania. Stąd elementy macierzy sąsiedztwa wyznaczane są ze wzoru:
             \begin{equation} \label{eq:sg_sketch_1}  
-                A_{i,j} = A_{j,i} = \mathop{max}_{t \leq t_n} e^{-\lambda (t_n - t)}\mathbbm{1}_{[(r_i, r_j)^{t} \in SG]}
+                A_{i,j} = A_{j,i} = \mathop{max}_{t \leq t_n} e^{-\lambda (t_n - t)}\mathbbm{1}_{[(r_i, r_j)^{t} \in SG]}.
             \end{equation}
             Taka forma zapominania ma charakter globalny, co oznacza, że  waga wszystkich istniejących krawędzi zmniejsza się w wyniku przetwarzania każdej nowej krawędzi. Może to prowadzić do kosztownych i niepotrzebnych zmian dla wierzchołków znajdujących się daleko od nowych krawędzi. Dlatego autorzy proponują zastosowanie lokalnej techniki zmniejszania wag. Formalnie, aby obliczyć wagę krawędzi $(r_i, r_j)$ zaobserwowanej w chwili $t$ dla wierzchołka $r_i$, wyznaczamy najpierw liczbę krawędzi wchodzących i wychodzących z $r_i$ w przedziale czasowym $(t,t_n]$: 
             \begin{equation} \label{eq:sg_sketch_2}  
-                \phi_{(t,t_n]}(r_i) = \vert \{(r_p, r_q)^{t'} \vert r_i \in (r_p, r_q), t' \in (t,t_n] \} \vert
+                \phi_{(t,t_n]}(r_i) = \vert \{(r_p, r_q)^{t'} \vert r_i \in (r_p, r_q), t' \in (t,t_n] \} \vert.
             \end{equation}
             Ostatecznie, elementy macierzy mają postać:
             \begin{equation} \label{eq:sg_sketch_3}  
-                A_{i,j} = \mathop{max}_{t \leq t_n} e^{-\lambda \phi_{(t,t_n]}(r_i)}\mathbbm{1}_{[(r_i, r_j)^{t} \in SG]}
+                A_{i,j} = \mathop{max}_{t \leq t_n} e^{-\lambda \phi_{(t,t_n]}(r_i)}\mathbbm{1}_{[(r_i, r_j)^{t} \in SG]}.
             \end{equation}
 
-            Działanie właściwego algorytmu SGSketch rozpoczyna się od wygenerowania początkowego szkicu. Odbywa się to sposób w zasadzie identyczny jak w algorytmie NodeSketch, z tą różnicą, że wykorzystywana jest macierz SLA z lokalnym zapominaniem krawędzi. Zasada działania procedury aktualizacji szkicu ukazana jest w pseudokodzie \ref{alg:sg_sketch_update}. Argumentami wejściowymi jest macierz sąsiedztwa SLA $A$, aktualny szkic $S$, zbiór wierzchołków indykujących nową krawędź lub krawędzie $\Omega$, rząd $k$ oraz współczynnik $\alpha$. Zasadniczo, mechanizm jest podobny do generowania początkowego szkicu, ale przeliczane są zagnieżdżenia tylko tych elementów, które znajdują się w sąsiedztwie nowych krawędzi. Pozwala to na znaczną oszczędność w kwestii czasu obliczeń. 
+            Działanie właściwego algorytmu SGSketch rozpoczyna się od wygenerowania początkowego szkicu. Odbywa się to sposób w zasadzie identyczny jak w algorytmie NodeSketch, z tą różnicą, że wykorzystywana jest macierz SLA z lokalnym zapominaniem krawędzi. Zasada działania procedury aktualizacji szkicu ukazana jest w pseudokodzie \ref{alg:sg_sketch_update}. Argumentami wejściowymi jest macierz sąsiedztwa SLA $A$, aktualny szkic $S$, zbiór wierzchołków \textcolor{red}{indukujących} nową krawędź lub krawędzie $\Omega$, rząd $k$ oraz współczynnik $\alpha$. Zasadniczo, mechanizm jest podobny do \textcolor{red}{pierwszego generowania szkicu, ale w tym przypadku większość wartości jest już znana, a przeliczane są} zagnieżdżenia tylko tych elementów, które znajdują się w sąsiedztwie nowych krawędzi. Pozwala to na znaczną oszczędność w kwestii czasu obliczeń. 
 
             \begin{algorithm}
                 \caption{SGSketchUpdate($\tilde{A},S,\Omega,k,\alpha$)}\label{alg:sg_sketch_update}
                 \uIf{$k > 2$}{
                     zaktualizuj $S(k-1)$ i zbiór $\Omega$: $SGSketchUpdate(\tilde{A},S,\Omega,k-1,\alpha)$\;
                     \ForEach{$r \in \Omega$}{
-                        $\tilde{V}^{r}(k) \gets Eq. \ref{eq:node_sketch_3}$\;
-                        $S_r(k) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r}(k))$\;
+                        $\color{red} \tilde{V}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;
+                        $\color{red} S_{j}^{r}(k) \gets \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \ElseIf{$k = 2$}{
                     \ForEach{$r \in \Omega$}{
-                        $S_r(2) \gets Eq. \ref{eq:node_sketch_1}(\tilde{V}^{r})$\;
+                        $\color{red} S_{j}^{r}(2) \gets  \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \ForEach{$r \in \Omega$}{
