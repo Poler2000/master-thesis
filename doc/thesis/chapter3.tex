@@ -39,13 +39,190 @@
 
     Jedną z pierwszych realizacji tej idei jest struktura TCM\cite{Tang_Chen_Mitra_2016}. Ma ona postać macierzy o boku długości $m$, gdzie $m$ jest pewną stałą. Podobnie jak w klasycznej macierzy sąsiedztwa, w jej komórkach składowane są wagi krawędzi. Zasadniczą różnicą jest natomiast sposób wyznaczania rzędu i kolumny odpowiadających danej parze wierzchołków. Są one bowiem wyznaczane przez wynik funkcji haszującej $H : V \rightarrow [1..m]$. Czas obliczania hasza jest stały, a co za tym idzie, złożoność czasowa zapytań i dodawania nowych krawędzi również. Teoretyczna złożoność pamięciowa także jest stała i wynosi $O(m^2)$. W praktycznych zastosowaniach wybór $m$ zależy jednak często od liczby krawędzi i przejmuje się najczęściej $m$ rzędu $O(\sqrt{|V|})$. Dokładność rezultatów zależy od rozmiaru macierzy i może być niska ze względu na kolizje haszy. Łatwo zauważyć, że jeśli $m$ jest istotnie mniejsze od $|V|$ to może do nich dochodzić często, co powoduje traktowanie różnych krawędzi jako kolejnych instancji tego samego połączenia. Autorzy, świadomi tego ograniczenia, proponują zastosowanie kilku parami niezależnych funkcji haszujących i stworzenie na ich podstawie wielu szkiców grafu. Przykładowo, jeśli badaną zmienną jest suma wag kolejnych instancji krawędzi między danymi dwoma wierzchołkami, to algorytm może sprawdzić odpowiednie komórki dla wszystkich szkiców, a następnie zwrócić minimalną wartość. Podejście to pozwala na analizę większych grafów niż w przypadku pojedynczego szkicu, ale ostatecznie nie rozwiązuje całkowicie problemu. Użyteczność struktury TCM w bazowej formie jest dyskusyjna, stanowi ona jednak punkt wyjściowy dla bardziej zaawansowanych rozwiązań.
 
-    Strukturą opartą na koncepcie podobnym do TCM jest \emph{Graph Stream Sketch} (GSS)\cite{Gou_Zou_Zhao_Yang_2019}. Celem autorów było stworzenie metody oferującej lepszą skalowalność dla wielkich grafów. Podobnie jak w TCM, funkcja haszująca mapuje zbiór wierzchołków na pewien mniejszy zbiór $M$-elementowy. Rozmiar macierzy jest natomiast równy $m$, $m < M$. Główną zmianą jest wprowadzenie dodatkowych cech opisujących wierzchołki. Na podstawie hasza $H(v)$ wyznaczany jest  podpis wierzchołka $f(v) (0 \leq f(v) < F)$, gdzie $M = m \times F$ i $f(v) = H(v)\%F$, a także adres $h(v) = \lfloor \frac{H(v)}{F} \rfloor$. Adresy służą do wyznaczania rzędu i kolumny komórek. Komórki te mają postać krotki lub, bardziej obrazowo, kubełka, w którym przechowywana jest para podpisów wierzchołków tworzących krawędź oraz kumulatywna waga krawędzi. Przechowywanie podpisów w komórkach pozwala zredukować ryzyko kolizji haszy. Łatwo bowiem zauważyć, że nawet jeśli dwa różne wierzchołki mają taki sam adres, to istnieje duża szansa, że ich podpisy są różne. Z tego względu nowa krawędź jest dodawana do kubełka tylko w wypadku, gdy jest on pusty lub gdy istniejące w nim podpisy są zgodne z podpisami wierzchołków krawędź tą tworzących. W przeciwnym przypadku jest ona zapisywana w dodatkowym buforze, mającym postać listy sąsiedztwa pełnych haszy. Pozwala on na dodawanie nowych krawędzi z niskim ryzykiem kolizji, nawet jeśli sama macierz jest już zapełniona. Należy natomiast zauważyć, że część macierzowa struktury jest bardziej efektywna czasowo, oferując stały czas odpowiedzi na zapytanie, podczas gdy dla bufora jest on liniowy względem liczby wierzchołków. Dokładność odpowiedzi w części macierzowej zależy od długości podpisów. Potencjalnym problemem GSS jest niskie wykorzystanie pamięci w macierzy. Przy kolizji adresów nowe krawędzie mogą trafiać do bufora, mimo, że w samej macierzy pozostaje wiele pustych komórek. Aby temu zaradzić, autorzy proponują haszowanie krzyżowe (\emph{ang. square-hashing}). Zakłada ono obliczanie dla każdego wierzchołka sekwencji niezależnych adresów. Podczas wstawiania nowych krawędzi algorytm sprawdza nie jedną komórkę macierzy, a kilka, zgodnie z sekwencją adresów i wybiera pierwszą spełniającą wymagania co do zgodności podpisów. Istnieje probabilistyczne ograniczenie na błąd względny zapytań postaci $Pr(\tilde{f}(s,d) - f(s,d) / \bar{w} > \delta) \leq \frac{|E|}{\delta m^2 4^{f}}$, gdzie $\tilde{f}(s,d)$ jest zwróconą sumą wag krawędzi $(s,d)$, $f(s,d)$ jej rzeczywistą wartością, $\bar{w}$ średnią wagą krawędzi, a $f$ długością podpisu.
+    Strukturą opartą na koncepcie podobnym do TCM jest \emph{Graph Stream Sketch} (GSS)\cite{Gou_Zou_Zhao_Yang_2019}. Celem autorów było stworzenie metody oferującej lepszą skalowalność dla wielkich grafów. Podobnie jak w TCM, funkcja haszująca mapuje zbiór wierzchołków na pewien mniejszy zbiór $M$-elementowy. \textcolor{red}{Wymiary skompresowanej macierzy sąsiedztwa wynoszą notomiast $m \times m$, $m < M$}. Główną zmianą jest wprowadzenie dodatkowych cech opisujących wierzchołki. Na podstawie hasza $H(v)$ wyznaczany jest  podpis wierzchołka $f(v) (0 \leq f(v) < F)$, gdzie $M = m \times F$ i $f(v) = H(v)\%F$, a także adres $h(v) = \lfloor \frac{H(v)}{F} \rfloor$. Adresy służą do wyznaczania rzędu i kolumny komórek. Komórki te mają postać krotki lub, bardziej obrazowo, kubełka, w którym przechowywana jest para podpisów wierzchołków tworzących krawędź oraz kumulatywna waga krawędzi. Przechowywanie podpisów w komórkach pozwala zredukować ryzyko kolizji haszy. Łatwo bowiem zauważyć, że nawet jeśli dwa różne wierzchołki mają taki sam adres, to istnieje duża szansa, że ich podpisy są różne. Z tego względu nowa krawędź jest dodawana do kubełka tylko w wypadku, gdy jest on pusty lub gdy istniejące w nim podpisy są zgodne z podpisami wierzchołków krawędź tą tworzących. W przeciwnym przypadku jest ona zapisywana w dodatkowym buforze, mającym postać listy sąsiedztwa pełnych haszy. Pozwala on na dodawanie nowych krawędzi z niskim ryzykiem kolizji, nawet jeśli sama macierz jest już zapełniona. Należy natomiast zauważyć, że część macierzowa struktury jest bardziej efektywna czasowo, oferując stały czas odpowiedzi na zapytanie, podczas gdy dla bufora jest on liniowy względem liczby wierzchołków. Dokładność odpowiedzi w części macierzowej zależy od długości podpisów. Potencjalnym problemem GSS jest niskie wykorzystanie pamięci w macierzy. Przy kolizji adresów nowe krawędzie mogą trafiać do bufora, mimo, że w samej macierzy pozostaje wiele pustych komórek. Aby temu zaradzić, autorzy proponują haszowanie krzyżowe (\emph{ang. square-hashing}). Zakłada ono obliczanie dla każdego wierzchołka sekwencji niezależnych adresów. Podczas wstawiania nowych krawędzi algorytm sprawdza nie jedną komórkę macierzy, a kilka, zgodnie z sekwencją adresów i wybiera pierwszą spełniającą wymagania co do zgodności podpisów. Istnieje probabilistyczne ograniczenie na błąd względny zapytań postaci $Pr(\tilde{f}(s,d) - f(s,d) / \bar{w} > \delta) \leq \frac{|E|}{\delta m^2 4^{f}}$, gdzie $\tilde{f}(s,d)$ jest zwróconą sumą wag krawędzi $(s,d)$, $f(s,d)$ jej rzeczywistą wartością, $\bar{w}$ średnią wagą krawędzi, a $f$ długością podpisu.
+
+    \begin{figure}[htb]
+        \centering % Centers the tikzpicture
+        \begin{tikzpicture}
+            % Graph
+            \begin{scope}[>=stealth, % Arrow tip style
+                every edge/.style={draw,->}, % Makes all edges arrows
+                every node/.style={fill=white}]
+              \node[circle, draw] (a) at (2,2) {a};
+              \node[circle, draw] (b) at (0,0) {b};
+              \node[circle, draw] (c) at (4,2) {c}; 
+              \node[circle, draw] (d) at (0,2) {d}; 
+              \node[circle, draw] (e) at (2,0) {e}; 
+              \node[circle, draw] (f) at (4,0) {f}; 
+              \node[circle, draw] (g) at (2,4) {g}; 
+          
+              \path[->] (a) edge node {5} (c)
+              (a) edge node {1} (g)
+              (a) edge node {1} (e)
+              (a) edge node {1} (b)
+              (a) edge node {1} (f)
+              (b) edge node {1} (d)
+              (c) edge node {2} (f)
+              (d) edge node {2} (a)
+              (d) edge node {1} (f)
+              (e) edge node {2} (b)
+              (f) edge node {3} (e);
+            \end{scope}
+            
+            % Adjacency table
+            \node [right=2.5cm of a] (adj_table) {
+              \begin{tabular}{|c|c|c|c|c|c|c|c|}
+                \hline
+                Node & a & b & c & d & e & f & g \\ \hline
+                H(v) & 2 & 15 & 5 & 28 & 10 & 18 & 5 \\ \hline
+                h(v), f(v) & 0,2 & 1,7 & 0,5 & 3,4 & 1,2 & 2,2 & 0,5 \\ \hline
+              \end{tabular}
+            };
+        \end{tikzpicture}
+        \caption{\textcolor{red}{Graf wraz z odpowiadającymi . Przykład zaczerpnięty z \cite{Gou_Zou_Zhao_Yang_2019}.}}
+        \label{fig:gss_graph}
+        \end{figure} 
+
+        \begin{figure}[htb]
+            \centering
+            \begin{tikzpicture}[scale=0.8, every node/.style={scale=0.8},legend node/.style={minimum height=5mm, minimum width=5mm, draw},
+                legend text/.style={right}] 
+              % Define row and column labels
+              \foreach \x in {0,1,2,3} {
+                  % Column labels
+                  \node at (\x*2+1,8) {\x};
+              }
+              \foreach \y in {0,1,2,3} {
+                  % Row labels
+                  \node at (-1,6.75-\y*1.5) {\y};
+              }
+
+              \draw (0,6) rectangle (2,7.5);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (0.5,6.75) {2,5};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (1.5,6.75) {6};
+              
+              % Second cell
+              \draw (2,6) rectangle (4,7.5);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (2.5,6.75) {2,7};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (3.5,6.75) {1};
+              
+              % Third cell
+              \draw (4,6) rectangle (6,7.5);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (4.5,6.75) {2,2};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (5.5,6.75) {1};
+              
+              % Fourth cell
+              \draw (6,6) rectangle (8,7.5);
+            
+              \draw (0,4.5) rectangle (2,6);
+              \draw (2,4.5) rectangle (4,6);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (2.5,5.25) {2,7};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (3.5,5.25) {2};
+
+              \draw (4,4.5) rectangle (6,6);
+              \draw (6,4.5) rectangle (8,6);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (6.5,5.25) {7,4};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (7.5,5.25) {1};
+
+              \draw (0,3) rectangle (2,4.5);
+              \draw (2,3) rectangle (4,4.5);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (2.5,3.75) {2,2};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (3.5,3.75) {3};
+
+              \draw (4,3) rectangle (6,4.5);
+              \draw (6,3) rectangle (8,4.5);
+
+              \draw (0,1.5) rectangle (2,3);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (0.5,2.25) {4,2};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (1.5,2.25) {2};
+
+              \draw (2,1.5) rectangle (4,3);
+              \draw (4,1.5) rectangle (6,3);
+              \node[draw, circle, inner sep=2pt, fill=cyan] at (04.5,2.25) {4,2};
+              \node[draw, circle, inner sep=2pt, fill=yellow] at (5.5,2.25) {1};
+              \draw (6,1.5) rectangle (8,3);
+
+                % Legend
+                        \draw[rounded corners] (9,5.25) rectangle (10.5,6.75);
+                        \node[draw, circle, inner sep=2pt, fill=green] at (9.75,6) {2};
+                        \draw[rounded corners] (12,5.25) rectangle (14,6.75);
+                        \node[draw, circle, inner sep=2pt, fill=green] at (12.5,6) {10};
+                        \node[draw, circle, inner sep=2pt, fill=yellow] at (13.5,6) {1};
+                        \draw[rounded corners] (9,2.25) rectangle (10.5,3.75);
+                        \node[draw, circle, inner sep=2pt, fill=green] at (9.75,3) {5};
+                        \draw[rounded corners] (12,2.25) rectangle (14,3.75);
+                        \node[draw, circle, inner sep=2pt, fill=green] at (12.5,3) {18};
+                        \node[draw, circle, inner sep=2pt, fill=yellow] at (13.5,3) {1};
+          
+                        \draw[->]        (10.5,6)   -- (12,6);
+                        \draw[->]        (10.5,3)   -- (12,3);
+                        \draw[->]        (9.75,5.25)   -- (9.75,3.75);
+
+  \node at (7,0) (legend) {
+    \begin{tikzpicture}
+      % Legend entries
+      \node[legend node, circle, fill=cyan] (l1) {f(s),f(d)}; % Example of rounded node
+      \node[legend text] (l1l) at (l1.east) {Podpis krawędzi $<s,d>$};
+      
+      \node[legend node, circle, right=of l1l, fill=yellow] (l2) {w}; % Example of circle node
+      \node[legend text] (l2l) at (l2.east) {Waga krawędzi};
+      
+      \node[legend node, circle, right=of l2l, fill=green] (l3) {H(v)}; % Example of a simple node
+      \node[legend text] at (l3.east) {Hasz wierzchołka $v$};
+    \end{tikzpicture}
+  };
+
+            \end{tikzpicture}
+            \caption{\textcolor{red}{Struktura GSS dla grafu przedsawionego na rysunku \ref{fig:gss_graph}}. W tym przypadku krawędzie $<a,e>$ oraz $<c,f>$ są składowane w buforze, gdyż }
+            \label{fig:gss_structure}
+            \end{figure}
+
+
 
     Większość struktur służących podsumowujących strumieniowane grafy nie przechowuje informacji o czasie wystąpienia krawędzi. Nie wspierają one więc zapytań z zakresem czasowym, a więc np., czy dana krawędź wystąpiła w zakresie $[t, t + L)$. Tego typu zapytania mogą być kluczowe np. w przypadku analizy danych dotyczących rozprzestrzeniania się wirusów (TODO: Citation needed). Problem ten podejmuje praca proponująca strukturę Horae\cite{Chen_Zhou_Chen_Xiao_Jin_Li_2022}. W jej wypadku krawędź $e_i = (<s_i, d_i>, w_i, t_i)$ jest wstawiana do komórki o adresie $(h(s_i | \gamma(t_i)), h(d_i | \gamma(t_i)))$, gdzie $\gamma(t_i) = \lfloor \frac{t_i}{gl} \rfloor$ i $gl$ jest długością przedziałów czasowych. Intuicyjnie, zapytanie o pojawienie się krawędzi w zakresie czasowym $[T_b, T_e]$ moze być transformowane w sekwencję zapytań o pojedyncze zakresy, których wyniki są sumowane, a więc $Q([T_b, T_e]) = Q([T_b]), Q([T_{b+1}]), \dots Q([T_e])$. Jednak dla takiego algorytmu złożoność czasowa jest liniowa względem liczby zakresów. Autorzy starają sie poprawić ten aspekt, zauważajac, iż przedział długości $L$ może zostać zdekomponowany do co najwyżej $2\log{L}$ podprzedziałów podsiadających dwie szczególne cechy. Po pierwsze, wszystkie zakresy czasowe w danym podprzedziale mają wspólny prefiks binarny. Po drugie, prefiksy różnych podprzedziałów mają różne długości. Z tego względu Horae zapamiętuje $O(\log(T))$ identycznych skompresowanych macierzy, gdzie $T$ jest liczbą rozróżnialnych zakresów czasowych. Każda z nich jest utożsamiana z jedną warstwą struktury. Warstwy odpowiadają z kolei różnym długościom prefiksów. Dzięki temu zamiast wykonywać liniową względem długości przedziału czasowego liczbę zapytań, wystarczy zdekomponować przedział na podprzedziały i na ich podstawie wykonać co najwyżej jedno zapytanie na warstwę. 
     
     Metody oparte na macierzach w większości przypadków nie czynią założeń co do struktury grafu. Takie ogólne podejście oczywiście zapewnia wysoką uniwersalność, jednak w niektórych przypadkach może być nieefektywne. Przykładowo, jeśli wierzchołki w grafie są mocno zróżnicowane pod względem stopnia, a więc bardziej obrazowo, da się wyróżnić obszary gęste i rzadkie w grafie, to kolizje haszy mogą zdarzać się często. Struktura Scube\cite{Chen_Zhou_Chen_Jin_2022} używa probabilistycznego zliczania do identyfikacji wierzchołków wysokiego stopnia. Przeznaczane jest dla nich więcej kubełków w macierzy niż dla wierzchołków o niskich stopniach, co pozwala bardziej efektywnie zarządzać zapełnieniem macierzy. 
 
     Metody takie jak GSS czy Horae, choć często dają przyzwoite wyniki przy odpowiednim dobraniu parametrów do badanego grafu, to ostatecznie cierpią z uwagi na ograniczoną skalowalność. Jedną z prób odpowiedzi na ten problem jest struktura AUXO\cite{Jiang_Chen_Jin_2023}. Korzysta ona z macierzy przechowujących podpisy wierzchołków, podobnie jak GSS. Jednak, zamiast wstawiać nadmiarowe krawędzie do bufora o liniowym czasie dostępu, AUXO wykorzystuje wiele macierzy ustawionych w strukturę drzewa. Konkretnie, jest to binarne lub czwórkowe drzewo prefiksowe, w którego strukturę zaszyte zostały prefiksy podpisów wierzchołków. W ten sposób na każdym kolejnym poziomie drzewa podpisy przechowywane w komórkach mogą być coraz krótsze, gdyż informacja ta jest wbudowana w kształt struktury. Pozwala to osiągnąć logarytmiczny względem liczby krawędzi czas odpowiedzi na zapytania. Warto zauważyć, że złożoność pamięciowa jest ograniczona przez długość podpisów, która wyznacza maksymalną głębokość drzewa. Niemniej jednak liczba możliwych do przetworzenia krawędzi jest eksponencjalna w stosunku do liczby bitów podpisu, więc stosunkowo łatwo można dobrać wystarczające wartości. W praktycznych zastosowaniach autorzy wskazują, nieco niefortunnie, na złożoność pamięciową zbliżoną asymptotycznie do $O(|E|(1 - \log(E)))$. Jak widać, AUXO osiąga efektywność pamięciową i skalowalność kosztem zwiększenia złożoności czasowej, co może być potencjalną wadą tego rozwiązania.
+
+    \begin{figure}[htb]
+    \centering
+    \begin{tikzpicture}[%
+        node distance=1.5cm and 3cm,
+        mynode/.style={draw, rectangle, minimum size=5mm},
+        arrow/.style={-Stealth},
+        level 1/.style={sibling distance=35mm, level distance=20mm},
+        level 2/.style={sibling distance=20mm, level distance=20mm},
+        label node/.style={draw=none, rectangle},
+        every label/.style={text width=2cm, align=center}
+    ]
+    
+    % Nodes
+    \node[mynode] (a) {$M_{0}$}
+        child {node[mynode] (b) {$M_{1}^{\emptyset,0}$} 
+            child {node[mynode] (d) {$M_{2}^{0,0}$} edge from parent[arrow] node[left] {0}}
+            child {node[mynode] (e) {$M_{2}^{1,0}$} edge from parent[arrow] node[right] {1}}
+            edge from parent[arrow] node[left] {0} 
+        }
+        child {node[mynode] (c) {$M_{1}^{\emptyset,1}$} 
+            child {node[mynode] (f) {$M_{2}^{0,1}$} edge from parent[arrow] node[left] {0}}
+            child {node[mynode] (g) {$M_{2}^{1,1}$} edge from parent[arrow] node[right] {1}}
+            edge from parent[arrow] node[right] {1}
+        };
+    
+    % Level labels and arrows
+    \node[label node] (label_0) [left=0.5cm of a] {<010,011>};
+    \node[label node] (l1) [left=0.5cm of b] {<010,11>};
+    \node[label node] (l2) [left=0.5cm of d] {<10,11>};
+    
+    % Connect the level labels with arrows
+    \draw[arrow] (label_0) -- (l1);
+    \draw[arrow] (l1) -- (l2);
+    
+    \end{tikzpicture}
+    \caption{\textcolor{red}{Struktura GSS dla grafu przedsawionego na rysunku \ref{fig:gss_graph}}. W tym przypadku krawędzie $<a,e>$ oraz $<c,f>$ są składowane w buforze, gdyż }
+    \label{fig:auxo_structure}
+\end{figure}
 
 \section{zanurzenia/Osadzenia/zanurzenia TODO: potwierdzić nazewnictwo}
     Kolejną, dość rozległą i rozwijającą się metodologią w dziedzinie analizy grafów są zanurzenia grafów (\emph{ang. graph embeddings}). Nazwa odnosi się do reprezentowania wierzchołków przez wektory cech, a więc bardziej obrazowo, zanurzania grafu w niskowymiarowych przestrzeniach wektorowych. Wektory te mogą zachowywać między innymi kluczowe informacje topologiczne związane z połączeniami danego wierzchołka z jego sąsiadami. Przyjmują one najczęściej wartości rzeczywiste, a podobieństwo między wektorami może być mierzone na różne sposoby, np.  za pomocą podobieństwa cosinusów (\emph{ang. cosine similarity}) lub odległości Hamminga\cite{Lian_Zheng_Zheng_Ge_Cao_Tsang_Xie_2018}. \textcolor{red}{W tym konktekście, przez podobieństwo lub bliskość wierzchołków rozumieć będziemy ich wzajemne położenie w grafie. W szczególności, podobieństwo pierwszego rzędu zależy od liczby i czasem również wagi bezpośrednich połączeń między wierzchołkami, podczas gdy bliskość drugiego rzędu bierze pod uwagę połączenia poprzez jeden wierzchołek pośredni.} Co istotne, tego typu reprezentacja pozwala na łatwe zastosowanie uczenia maszynowego do analizy danych. W ogólności zanurzenia są stosowane szczególnie często w takich zadaniach jak klasyfikacja węzłów, przewidywanie połączeń między nimi oraz rekonstrukcja grafu. Wśród algorytmów opartych na tej metodologii możemy wyróżnić kilka unikalnych podkategorii, cechujących się odmiennymi podejściami do tego, jak cechy są wybierane i przetwarzane. Praca \cite{Yang_Qu_Hussein_Rosso_Cudré-Mauroux_Liu_2023} stanowi stosunkowo aktualny i rozbudowany przegląd tego typu metod, ukazując przy okazji wpływ hiperparametrów na uzyskiwane wyniki, zwłaszcza dla metod opartych na faktoryzacji i próbkowaniu. \textcolor{red}{Dla tych dwóch kategorii rozwiązań, autorzy proponują też uogólnione algorytmy, których szczegółowe działanie może być łatwo regulowane za pomocą paramterów.} Autorzy dzielą się również pewnymi wskazówkami co do wyboru hiperparametrów dla konkretnych scenariuszy. 
