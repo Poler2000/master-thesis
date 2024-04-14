@@ -1,29 +1,20 @@
 module NodeSketch
 
 include("ExpSketch.jl")
+include("Logger.jl")
 
 using DataStructures
 using SparseArrays
 using .ExpSketch
+using .Logger
 
 export SLA, Sketch
 export nodesketch, fastexp_nodesketch
 
 struct Sketch
     embeddings::Matrix{Float64}
+    keys::Matrix{Integer}
 end
-
-#function calculate_single_sample(hash::Function, element::Number, i::Number)
-#    return -log(hash(i)) / element
-#end
-
-#function generate_sample(row, config::Config, j)
-#    return argmin(i -> calculate_single_sample(config.hashes[j], row[i], i), 1:length(row))
-#end
-
-#function generate_sample_precalculated(row, hash_matrix, j)
-#    return argmin(i -> (hash_matrix[i, j] / row[i]), 1:length(row))
-#end
 
 function generate_sample(row, hash_matrix, j, neighbours)
     return argmin(i -> (hash_matrix[i, j] / row[i]), neighbours)
@@ -51,7 +42,6 @@ function fastexp_nodesketch(
     
     # Although it's more intuitive to iterate row-wise, 
     # column-wise processing is slightly more efficient due to sparse matrix implementation
-    println("hello")
     sla = to_sla(sparse(A'))
     h = x -> (hash((x, 1)) % Int64(1e9)) / 1e9
 
@@ -66,7 +56,7 @@ function nodesketch_core(
     hash_matrix::AbstractMatrix{<:Number})::Sketch
 
     col_count = size(A, 2)
-    sketch = Sketch(zeros(sketch_dimensions, col_count))
+    sketch = Sketch(zeros(sketch_dimensions, col_count), zeros(sketch_dimensions, col_count))
 
     if order > 2
         sketch = nodesketch_core(A, order - 1, sketch_dimensions, alpha, hash_matrix)
@@ -75,16 +65,16 @@ function nodesketch_core(
             v = Vector{Float64}(undef,col_count)
             neighbours = findall(x -> x != 0, col)
 
-            mydict = Dict(i => 0 for i in 0:col_count)
+            element_dict = Dict(i => 0 for i in 0:col_count)
 
             for n in neighbours
                 for j in 1:sketch_dimensions
-                    mydict[sketch.embeddings[j, n]] += 1
+                    element_dict[sketch.embeddings[j, n]] += 1
                 end
             end
 
             for l in 1:col_count
-                s = mydict[l]
+                s = element_dict[l]
                 s *= alpha / sketch_dimensions
                 v[l] = s + col[l]
             end
@@ -121,26 +111,24 @@ function fastexp_nodesketch_core(
     h::Function)::Sketch
 
     col_count = size(A, 2)
-    sketch = Sketch(zeros(sketch_dimensions, col_count))
-    println("hello")
+    sketch = Sketch(zeros(sketch_dimensions, col_count), zeros(sketch_dimensions, col_count))
 
     if order > 2
-        sketch = fastexp_nodesketch_core(A, order - 1, sketch_dimensions, alpha, hash)
+        sketch = fastexp_nodesketch_core(A, order - 1, sketch_dimensions, alpha, h)
         for (i, col) in enumerate(eachcol(A))
             println(i)
             v = Vector{Float64}(undef,col_count)
             neighbours = findall(x -> x != 0, col)
 
-            mydict = Dict(i => 0 for i in 0:col_count)
-
+            element_dict = Dict(i => 0 for i in 0:col_count)
             for n in neighbours
                 for j in 1:sketch_dimensions
-                    mydict[sketch.embeddings[j, n]] += 1
+                    element_dict[sketch.keys[j, n]] += 1
                 end
             end
 
             for l in 1:col_count
-                s = mydict[l]
+                s = element_dict[l]
                 s *= alpha / sketch_dimensions
                 v[l] = s + col[l]
             end
@@ -148,10 +136,12 @@ function fastexp_nodesketch_core(
             neighbours = [ExpSketch.StreamElement(index, weight) 
             for (index, weight) in enumerate(v) if weight != 0]
 
-            sketch.embeddings[:, i] = ExpSketch.fast_expsketch(
+            expsketch = ExpSketch.fast_expsketch(
                 neighbours, 
                 sketch_dimensions, 
-                hash)
+                h)
+            sketch.embeddings[:, i] = expsketch[1]
+            sketch.keys[:, i] = expsketch[2]
         end
     elseif order == 2
         for (i, col) in enumerate(eachcol(A))
@@ -160,13 +150,14 @@ function fastexp_nodesketch_core(
             neighbours = [ExpSketch.StreamElement(index, weight) 
                 for (index, weight) in enumerate(col) if weight != 0]
 
-            sketch.embeddings[:, i] = ExpSketch.expsketch(
+            expsketch = ExpSketch.fast_expsketch(
                 neighbours, 
-                sketch_dimensions,
+                sketch_dimensions, 
                 h)
+            sketch.embeddings[:, i] = expsketch[1]
+            sketch.keys[:, i] = expsketch[2]
         end
     end
-
     return sketch
 end
 

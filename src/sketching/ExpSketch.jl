@@ -38,6 +38,7 @@ end
 function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
     permInit = collect(1:m)
     M = fill(Inf, m)
+    keys = zeros(m)
     maxValue = Inf
 
     for element in stream
@@ -69,7 +70,10 @@ function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
                 updateMax = true
             end
 
-            M[j] = min(M[j], S)
+            if S < M[j]
+                keys[j] = element.id
+                M[j] = S
+            end
         end
 
         if updateMax
@@ -77,7 +81,7 @@ function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
         end
     end
     
-    return M
+    return (M, keys)
 end
 
 end
