@@ -61,7 +61,7 @@ function nodesketch_core(
     if order > 2
         sketch = nodesketch_core(A, order - 1, sketch_dimensions, alpha, hash_matrix)
         for (i, col) in enumerate(eachcol(A))
-            println(i)
+            #println("$i, $order")
             v = Vector{Float64}(undef,col_count)
             neighbours = findall(x -> x != 0, col)
 
@@ -77,17 +77,30 @@ function nodesketch_core(
                 s = element_dict[l]
                 s *= alpha / sketch_dimensions
                 v[l] = s + col[l]
+                #if v[l] > 0
+                #    println("weight: $(v[l]) ")
+                #end
             end
+
+            hello = copy(sketch.embeddings[:, i])
             sketch.embeddings[:, i] = sketch_single_node(v, hash_matrix, sketch_dimensions)
+            println(hello == sketch.embeddings[:, i])
         end
     elseif order == 2
         for (i, col) in enumerate(eachcol(A))
-            println("$i, $order")
+            #println("$i, $order")
 
             sketch.embeddings[:, i] = sketch_single_node(col, hash_matrix, sketch_dimensions)
         end
     end
 
+    #for y in 1:8
+    #    for x in 1:8
+    #        print("$(sketch.embeddings[x, y]) ")
+    #    end
+    #    println()
+    #end
+    #println()
     return sketch
 end
 
@@ -116,32 +129,76 @@ function fastexp_nodesketch_core(
     if order > 2
         sketch = fastexp_nodesketch_core(A, order - 1, sketch_dimensions, alpha, h)
         for (i, col) in enumerate(eachcol(A))
-            println(i)
-            v = Vector{Float64}(undef,col_count)
+            println("$i, $order")
+            #v = Vector{Float64}(undef,col_count)
             neighbours = findall(x -> x != 0, col)
 
-            element_dict = Dict(i => 0 for i in 0:col_count)
+            #element_dict = Dict(i => 0 for i in 0:col_count)
+            #for n in neighbours
+            #    for j in 1:sketch_dimensions
+            #        element_dict[sketch.keys[j, n]] += 1
+            #    end
+            #end
+#
+            #for l in 1:col_count
+            #    s = element_dict[l]
+            #    s *= alpha / sketch_dimensions
+            #    v[l] = s + col[l]
+            #    #if v[l] > 0
+            #    #    println("weight: $(v[l]) ")
+            #    #end
+            #end
+#
+#
+            #neighbours = [ExpSketch.StreamElement(index, weight) 
+            #for (index, weight) in enumerate(v) if weight != 0]
+#
+            ##println(length(neighbours))
+            ##hello = copy(sketch.embeddings[:, i])
+#
+            #expsketch = ExpSketch.fast_expsketch(
+            #    neighbours, 
+            #    sketch_dimensions, 
+            #    h)
+            #sketch.embeddings[:, i] = expsketch[1]
+            #sketch.keys[:, i] = expsketch[2]
+            ##println(hello == sketch.embeddings[:, i])
+
+            #v = zeros(sketch_dimensions)
+            #for n in neighbours
+            #    for j in 1:sketch_dimensions
+            #        v[j] = min(sketch.embeddings[j, i], sketch.embeddings[j, n])
+            #    end
+            #end
+            #sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
+
             for n in neighbours
+                v = zeros(sketch_dimensions)
                 for j in 1:sketch_dimensions
-                    element_dict[sketch.keys[j, n]] += 1
+                    v[j] = min(sketch.embeddings[j, i], sketch.embeddings[j, n])
                 end
+                sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
             end
 
-            for l in 1:col_count
-                s = element_dict[l]
-                s *= alpha / sketch_dimensions
-                v[l] = s + col[l]
-            end
+            #v = zeros(sketch_dimensions)
+            #for n in neighbours
+            #    for j in 1:sketch_dimensions
+            #        v[j] += sketch.embeddings[j, n]
+            #    end
+            #end
+            #sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
 
-            neighbours = [ExpSketch.StreamElement(index, weight) 
-            for (index, weight) in enumerate(v) if weight != 0]
-
-            expsketch = ExpSketch.fast_expsketch(
-                neighbours, 
-                sketch_dimensions, 
-                h)
-            sketch.embeddings[:, i] = expsketch[1]
-            sketch.keys[:, i] = expsketch[2]
+            #v = zeros(sketch_dimensions)
+            #for n in neighbours
+            #    s = 0
+            #    for j in 1:sketch_dimensions
+            #        if sketch.embeddings[j, n] == sketch.embeddings[j, i]
+            #            s += 1
+            #        end
+            #    end
+            #    v .+= s .* sketch.embeddings[:, n]
+            #end
+            #sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
         end
     elseif order == 2
         for (i, col) in enumerate(eachcol(A))
@@ -167,6 +224,7 @@ function sketch_single_node(
     sketch_dimensions::Integer)::Array{<:Number}
 
     neighbours = findall(x -> x != 0, col)
+    #println(length(neighbours))
 
     sketch = Float64[generate_sample(col, hash_matrix, j, neighbours) for j in 1:sketch_dimensions]
 

@@ -7,15 +7,15 @@ using .NodeSketch
 using .DataManager
 
 
-dataset = "blogcatalog"
+dataset = "dblp"
 matrix = DataManager.load_matrix("../data/$dataset.mat")
 
-alpha = 0.0002
+alpha = 0.001
 order = 4
 sketch_dimensions = 128
 
-sketch = NodeSketch.nodesketch(matrix, order, sketch_dimensions, alpha).embeddings
-#sketch = NodeSketch.fastexp_nodesketch(matrix, order, sketch_dimensions, alpha).embeddings
+#sketch = NodeSketch.nodesketch(matrix, order, sketch_dimensions, alpha).embeddings
+sketch = NodeSketch.fastexp_nodesketch(matrix, order, sketch_dimensions, alpha).embeddings
 
 for y in 1:100
     for x in 1:8
@@ -27,5 +27,5 @@ end
 embs = sketch'
 dense_matrix = Matrix(embs)
 
-DataManager.save_matrix(dense_matrix, "results2_$(dataset)_$order.mat")
+DataManager.save_matrix(dense_matrix, "results_$(dataset)_$order.mat")
 
