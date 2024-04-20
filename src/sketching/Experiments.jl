@@ -13,7 +13,7 @@ module Experiments
     export run_embeddings_var_order, run_embeddings_var_size, run_embeddings_var_alpha, run_all
 
     function run_all()
-        default_alpha = 0.001
+        default_alpha = 0.002
         default_k = 4
         default_size = 128
 

@@ -114,23 +114,23 @@ function fastexp_nodesketch_core(
             end
             neighbours = findall(x -> x != 0, col)
 
-            for n in neighbours
-                v = zeros(sketch_dimensions)
-                for j in 1:sketch_dimensions
-                    v[j] = min(sketch.embeddings[j, i], sketch.embeddings[j, n])
-                end
-                sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
-            end
-
             # Alternative implementation, performed slightly worse in initial testing
-            
-            #v = zeros(sketch_dimensions)
+
             #for n in neighbours
+            #    v = zeros(sketch_dimensions)
             #    for j in 1:sketch_dimensions
             #        v[j] = min(sketch.embeddings[j, i], sketch.embeddings[j, n])
             #    end
+            #    sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
             #end
-            #sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
+            
+            v = zeros(sketch_dimensions)
+            for n in neighbours
+                for j in 1:sketch_dimensions
+                    v[j] = min(sketch.embeddings[j, i], sketch.embeddings[j, n])
+                end
+            end
+            sketch.embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
 
         end
     elseif order == 2
