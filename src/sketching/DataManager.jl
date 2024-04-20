@@ -5,11 +5,13 @@ include("Logger.jl")
 using MAT
 using .Logger
 
-function load_matrix(path::String, key = "network")
+export load_matrix_mat, save_matrix_mat
+
+function load_matrix_mat(path::String, key = "network")
     file = matopen(path)
     varkeys = keys(file)
 
-    Logger.log_msg("loaded data from file: $path\n
+    log_info("loaded data from file: $path\n
                 variable keys: $varkeys")
 
     data = read(file)
@@ -17,7 +19,14 @@ function load_matrix(path::String, key = "network")
     return data[key]
 end
 
-function save_matrix(matrix, path::String)
+function save_matrix_mat(matrix, path::String)
+    directory = dirname(path)
+    
+    # Create the directory if it does not exist
+    if !isdir(directory)
+        mkpath(directory)
+    end
+
     matwrite(path, Dict(
         "embs" => matrix
     ), version="v4")
