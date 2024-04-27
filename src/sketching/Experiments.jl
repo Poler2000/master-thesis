@@ -17,14 +17,16 @@ module Experiments
         default_k = 4
         default_size = 128
 
-        run_embeddings_var_order(["dblp", "blogcatalog", "wiki", "Homo_sapiens"], true, [2,3,4], default_alpha, default_size)
-        run_embeddings_var_order(["dblp", "blogcatalog", "wiki", "Homo_sapiens"], false, [2,3,4], default_alpha, default_size)
+        datasets = ["dblp"]
 
-        run_embeddings_var_size(["dblp", "blogcatalog", "wiki", "Homo_sapiens"], true, default_k, default_alpha, [16, 32, 64, 128])
-        run_embeddings_var_size(["dblp", "blogcatalog", "wiki", "Homo_sapiens"], false, default_k, default_alpha, [16, 32, 64, 128])
+        run_embeddings_var_order(datasets, true, [2,3,4], default_alpha, default_size)
+        run_embeddings_var_order(datasets, false, [2,3,4], default_alpha, default_size)
 
-        run_embeddings_var_alpha(["dblp", "blogcatalog", "wiki", "Homo_sapiens"], true, default_k, [0.0005, 0.001, 0.01, 0.1], default_size)
-        run_embeddings_var_alpha(["dblp", "blogcatalog", "wiki", "Homo_sapiens"], false, default_k, [0.0005, 0.001, 0.01, 0.1], default_size)
+        run_embeddings_var_size(datasets, true, default_k, default_alpha, [16, 32, 64, 128])
+        run_embeddings_var_size(datasets, false, default_k, default_alpha, [16, 32, 64, 128])
+
+        run_embeddings_var_alpha(datasets, true, default_k, [0.0005, 0.001, 0.01, 0.1], default_size)
+        run_embeddings_var_alpha(datasets, false, default_k, [0.0005, 0.001, 0.01, 0.1], default_size)
     end
 
     function run_embeddings_var_order(datasets::Array{String}, use_expsketch::Bool, orders::Vector{<:Integer}, alpha::Number, sketch_dimensions::Number)
