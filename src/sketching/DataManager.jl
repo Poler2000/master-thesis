@@ -5,7 +5,7 @@ include("Logger.jl")
 using MAT
 using .Logger
 
-export load_matrix_mat, save_matrix_mat
+export load_matrix_mat, save_matrix_embs, save_matrix_network
 
 function load_matrix_mat(path::String, key = "network")
     file = matopen(path)
@@ -18,7 +18,15 @@ function load_matrix_mat(path::String, key = "network")
     return data[key]
 end
 
-function save_matrix_mat(matrix, path::String)
+function save_matrix_embs(matrix, path::String)
+    save_matrix_core(matrix, path, "embs")
+end
+
+function save_matrix_network(matrix, path::String)
+    save_matrix_core(matrix, path, "network")
+end
+
+function save_matrix_core(matrix, path::String, key::String)
     directory = dirname(path)
     
     # Create the directory if it does not exist
@@ -27,7 +35,7 @@ function save_matrix_mat(matrix, path::String)
     end
 
     matwrite(path, Dict(
-        "embs" => matrix
+        key => matrix
     ), version="v4")
 end
 
