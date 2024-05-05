@@ -8,7 +8,7 @@ module Experiments
     using .Logger
 
     const DATA_FOLDER = "../data/"
-    const RESULTS_FOLDER = "../results/"
+    const RESULTS_FOLDER = "../results/emb/"
 
     export run_embeddings_var_order, run_embeddings_var_size, run_embeddings_var_alpha, run_all
 
@@ -44,7 +44,7 @@ module Experiments
                 log_info("Output sample:\n" * matrix_str * '\n')
 
                 alpha_str = replace(string(alpha), "0." => "")
-                save_matrix_mat(dense_matrix, "$RESULTS_FOLDER/var_k/$(dataset)/res_$(dataset)_$(use_expsketch ? "exp" : "basic")_$(k)_$(alpha_str)_$(sketch_dimensions).mat")
+                save_matrix_embs(dense_matrix, "$RESULTS_FOLDER/var_k/$(dataset)/res_$(dataset)_$(use_expsketch ? "exp" : "basic")_$(k)_$(alpha_str)_$(sketch_dimensions).mat")
             end
         end
     end
@@ -64,7 +64,7 @@ module Experiments
                 log_info("Output sample:\n" * matrix_str * '\n')
 
                 alpha_str = replace(string(alpha), "0." => "")
-                save_matrix_mat(dense_matrix, "$RESULTS_FOLDER/var_L/$(dataset)/res_$(dataset)_$(use_expsketch ? "exp" : "basic")_$(k)_$(alpha_str)_$(sketch_size).mat")
+                save_matrix_embs(dense_matrix, "$RESULTS_FOLDER/var_L/$(dataset)/res_$(dataset)_$(use_expsketch ? "exp" : "basic")_$(k)_$(alpha_str)_$(sketch_size).mat")
             end
         end
     end
@@ -84,7 +84,7 @@ module Experiments
                 log_info("Output sample:\n" * matrix_str * '\n')
 
                 alpha_str = replace(string(alpha), "0." => "")
-                save_matrix_mat(dense_matrix, "$RESULTS_FOLDER/var_a/$(dataset)/res_$(dataset)_$(use_expsketch ? "exp" : "basic")_$(k)_$(alpha_str)_$(sketch_dimensions).mat")
+                save_matrix_embs(dense_matrix, "$RESULTS_FOLDER/var_a/$(dataset)/res_$(dataset)_$(use_expsketch ? "exp" : "basic")_$(k)_$(alpha_str)_$(sketch_dimensions).mat")
             end
         end
     end

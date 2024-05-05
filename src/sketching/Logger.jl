@@ -6,13 +6,19 @@ ENABLE_DEBUG_LOGGING = true
 LOG_TO_CONSOLE = true
 LOGFILE = "log.txt"
 
-function log_info(msg::String)
+function log_info(msg::String, path = Nothing)
     if LOG_TO_CONSOLE
         println(msg)
     end
 
     if LOGFILE != Nothing
         open(LOGFILE, "a") do file
+            write(file, msg * "\n")
+        end
+    end
+
+    if path != Nothing
+        open(path, "a") do file
             write(file, msg * "\n")
         end
     end

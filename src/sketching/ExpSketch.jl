@@ -12,7 +12,7 @@ end
 # simple implementation of ExpSketch algorithm
 # stream - a stream of elements
 # m - number of sketch elements
-# h - hasz function
+# h - hash function
 function expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
     M = fill(Inf, m)
 
