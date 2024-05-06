@@ -1,4 +1,46 @@
 \chapter{Szkice danych}
 \section{Definicja}
 
+\begin{algorithm}
+    \caption{ExpSketch($\mathfrak{M}, m$)}\label{alg:exp_sketch}
+    $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
+    \ForEach{$(i, \lambda_i) \in \mathfrak{M}$}{
+        \ForEach{$k \in {1,2,\dots,m}$}{
+            $U \gets h(i || k)$\;
+            $E \gets - \ln(U / \lambda_i)$\;
+            $M_k \gets \min{\{M_k, E\}}$\;
+        }
+    }
+    \Return{$M$}
+\end{algorithm}
 
+\begin{algorithm}
+    \caption{FastExpSketch($\mathfrak{M}, m$)}\label{alg:fast_exp_sketch}
+    $permInit \gets (1,2,3,\dots, m)$\;
+    $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
+    $MAX \gets \infty$\;
+    \ForEach{$(i, \lambda_i) \in \mathfrak{M}$}{
+        $S \gets 0$\;
+        $updateMAX \gets false$\;
+        $P \gets permInit$\;
+        \ForEach{$k \in {1,2,\dots,m}$}{
+            $U \gets h(i || k)$\;
+            $E \gets - \ln(U / \lambda_i)$\;
+            $S \gets S + E / (m - k + 1)$\;
+            \uIf{$S > MAX$}{
+                break\;
+            }
+            $r \gets RandomInteger([k, m], seed = i)$\;
+            $swap(P[k], P[r])$\;
+            $j \gets P[k]$\;
+            \uIf{$M_j = MAX$}{
+                $updateMAX \gets true$\;
+            }
+            $M_j \gets \min{\{M_j, S\}}$\;
+        }
+        \uIf{$updateMAX$}{
+            $MAX \gets \max{\{M_1, \dots, M_m\}}$\;
+        }
+    }
+    \Return{$M$}
+\end{algorithm}
