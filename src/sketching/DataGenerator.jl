@@ -24,7 +24,7 @@ function generate_random_matrix(n::Int, density::Float64, max_value::Int)
 end
 
 ns = [2500, 5000, 10000]
-densities = [0.01, 0.005, 0.001, 0.0005]
+densities = [0.0025, 0.001, 0.0005, 0.0001]
 
 for n in ns
     for density in densities

@@ -38,8 +38,8 @@ module Experiments
     function run_similarity_var_k(datasets::Array{String}, orders::Vector{<:Integer}, 
         alpha::Number, alpha_sim::Number, sketch_dimensions::Number)
 
-        res_node = run_similarity_var_k_single(datasets, false, orders, alpha, alpha_sim, sketch_dimensions)
         res_exp = run_similarity_var_k_single(datasets, true, orders, alpha, alpha_sim, sketch_dimensions)
+        res_node = run_similarity_var_k_single(datasets, false, orders, alpha, alpha_sim, sketch_dimensions)
 
         print_summary(datasets, orders, "k", res_exp, res_node)
     end
@@ -123,7 +123,7 @@ module Experiments
                 correctly_predicted_1000 = 0
     
                 for (i, (x, y)) in enumerate(Tuple.(top_coordinates))
-                    if matrix[x, y] == 1
+                    if matrix[x, y] >= 1
                         correctly_predicted += 1
                         if i <= 1000
                             correctly_predicted_1000 += 1
@@ -188,7 +188,7 @@ module Experiments
                 correctly_predicted_1000 = 0
     
                 for (i, (x, y)) in enumerate(Tuple.(top_coordinates))
-                    if matrix[x, y] == 1
+                    if matrix[x, y] >= 1
                         correctly_predicted += 1
                         if i <= 1000
                             correctly_predicted_1000 += 1
@@ -225,7 +225,7 @@ module Experiments
             for alpha_sim in alphas_sim
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha_sim = $alpha_sim, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? fastexp_nodesketch_extended(matrix, k, sketch_dimensions, alpha_sim) : nodesketch_extended(matrix, k, sketch_dimensions, alpha, alpha_sim)
+                @time sketch = use_expsketch ? fastexp_nodesketch_extended(matrix, k, sketch_dimensions, alpha_sim) : nodesketch_extended(matrix, k, sketch_dimensions, alpha_sim, alpha_sim)
                 
                 embs = sketch.embeddings'
                 similarity = sketch.similarity_matrix'
@@ -253,7 +253,7 @@ module Experiments
                 correctly_predicted_1000 = 0
     
                 for (i, (x, y)) in enumerate(Tuple.(top_coordinates))
-                    if matrix[x, y] == 1
+                    if matrix[x, y] >= 1
                         correctly_predicted += 1
                         if i <= 1000
                             correctly_predicted_1000 += 1

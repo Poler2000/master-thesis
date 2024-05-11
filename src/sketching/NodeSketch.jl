@@ -8,6 +8,7 @@ using SparseArrays
 using .ExpSketch
 using .Logger
 using Base.Threads
+using ConcurrentCollections
 
 export SLA, Sketch
 export nodesketch, fastexp_nodesketch, nodesketch_extended, fastexp_nodesketch_extended
@@ -287,31 +288,26 @@ function fastexp_nodesketch_core_similarity(
         sketch = fastexp_nodesketch_core_similarity(A, order - 1, sketch_dimensions, alpha_sim, h)
         
         ak = A^(order - 1)
+        hey = ConcurrentDict{Int, Vector{Float64}}()
+
         @threads for i in 1:col_count
-            if (i % 100 == 0)
-                log_debug("Computing similarity matrix, nodes: $i, order: $order")
-            end
-
             k_neighbours = findall(x -> x > 0, ak[:, i])
-
             v = fill(typemax(Float64), sketch_dimensions)
             for n in k_neighbours
                 for j in 1:sketch_dimensions
                     v[j] = min(v[j], sketch.embeddings[j, n])
                 end
             end
+            hey[i] = v
+        end
+
+        @threads for i in 1:col_count
+            if (i % 100 == 0)
+                log_debug("Computing similarity matrix, nodes: $i, order: $order")
+            end
 
             for j in i:col_count
-                k_neighbours = findall(x -> x > 0, ak[:, j])
-
-                w = fill(typemax(Float64), sketch_dimensions)
-                for n in k_neighbours
-                    for l in 1:sketch_dimensions
-                        w[l] = min(w[l], sketch.embeddings[l, n])
-                    end
-                end
-
-                count = sum(w .== v) / sketch_dimensions
+                count = sum(hey[i] .== hey[j]) / sketch_dimensions
                 sketch.similarity_matrix[i, j] += (alpha_sim ^ (order - 2)) * count
                 if i != j
                     sketch.similarity_matrix[j, i] += (alpha_sim ^ (order - 2)) * count

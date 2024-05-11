@@ -1,0 +1,72 @@
+Summary for dataset: weighted_10000_01
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.006 		|	0.01046497229977752	|		0.01 		|	0.010325173051498049	
+3	|		0.016 		|	0.010542860452390368	|		0.018 		|	0.014353388534065082	
+4	|		0.009 		|	0.01063872279406772	|		0.018 		|	0.014353388534065082	
+Summary for dataset: weighted_10000_005
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.009 		|	0.005157165005181264	|		0.004 		|	0.006370143067147574	
+3	|		0.005 		|	0.005370038638572702	|		0.022 		|	0.01903009952846482	
+4	|		0.007 		|	0.005157165005181264	|		0.022 		|	0.01903009952846482	
+Summary for dataset: weighted_10000_001
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.0 		|	0.0010482180293501049	|		0.001 		|	0.00487824544428318	
+3	|		0.0 		|	0.0010885341074020319	|		0.008 		|	0.3571399774229963	
+4	|		0.002 		|	0.0010280599903241413	|		0.026 		|	0.39987502015803905	
+Summary for dataset: weighted_10000_0005
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.0 		|	0.0003183952877497413	|		0.02 		|	0.005532118124651755	
+3	|		0.0 		|	0.0004377935206558943	|		0.004 		|	0.39508875268646027	
+4	|		0.0 		|	0.00039799410968717664	|		0.006 		|	0.39958608612592533	
+Summary for dataset: dblp
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		1.0 		|	0.5984656223564073	|		1.0 		|	0.59522767713894	
+3	|		1.0 		|	0.6103380881537878	|		1.0 		|	0.4471573174644847	
+4	|		1.0 		|	0.6199060704180158	|		1.0 		|	0.38972025320148185	
+Summary for dataset: blogcatalog
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.015 		|	0.047451516993379905	|		0.008 		|	0.04462801998904136	
+3	|		0.037 		|	0.06369485872035403	|		0.008 		|	0.046454460256959186	
+4	|		0.02 		|	0.07781533790642038	|		0.008 		|	0.046454460256959186	
+Summary for dataset: wiki
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.051 		|	0.016219730212904276	|		0.004 		|	0.003521317514491576	
+3	|		0.069 		|	0.011495747331924806	|		0.004 		|	0.0034888130451270383	
+4	|		0.065 		|	0.012655073405926648	|		0.004 		|	0.0034888130451270383	
+Summary for dataset: Homo_sapiens
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.216 		|	0.1387501651473114	|		0.154 		|	0.12371515391729422	
+3	|		0.405 		|	0.1823226317875545	|		0.129 		|	0.1389351301360814	
+4	|		0.425 		|	0.18723741577487119	|		0.128 		|	0.13925221297397278	
+Summary for dataset: bin_10000_01
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.12 		|	0.05493073186334286	|		0.148 		|	0.0722147812006477	
+3	|		0.102 		|	0.04038342362513244	|		0.148 		|	0.0722147812006477	
+4	|		0.084 		|	0.035513663714691245	|		0.148 		|	0.0722147812006477	
+Summary for dataset: bin_10000_005
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.28 		|	0.1052764251389428	|		0.227 		|	0.11085014184368785	
+3	|		0.177 		|	0.05768976844868219	|		0.227 		|	0.11083813814654914	
+4	|		0.18 		|	0.04678641021434602	|		0.227 		|	0.11083813814654914	
+Summary for dataset: bin_10000_001
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.734 		|	0.33751320747194036	|		0.631 		|	0.3178764378700584	
+3	|		0.729 		|	0.13683937720539863	|		0.678 		|	0.3901038655529196	
+4	|		0.7 		|	0.11518909112657244	|		0.71 		|	0.4150236239309424	
+Summary for dataset: bin_10000_0005
+	|			 NodeSketch 				|			NodeExpSketch
+k	|	precision - top 1000 	|	precision - total	|	precision - top 1000 	|	precision - total	
+2	|		0.843 		|	0.4823864548226609	|		0.827 		|	0.4640105922002889	
+3	|		0.893 		|	0.5646364949446316	|		0.773 		|	0.5126785427700209	
+4	|		0.932 		|	0.6104557855881881	|		0.709 		|	0.5299309902102392	
