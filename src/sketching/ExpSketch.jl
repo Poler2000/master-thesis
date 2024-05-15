@@ -10,7 +10,7 @@ struct StreamElement
 end
 
 # simple implementation of ExpSketch algorithm
-# stream - a stream of elements
+# stream - a stream of elements. Each element is a pair: (id, weight)
 # m - number of sketch elements
 # h - hash function
 function expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
@@ -20,7 +20,6 @@ function expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
         binI = bitstring(element.id)
         for k in 1:m
             binK = bitstring(k)
-
             hashValue = h(binI * binK)
             sampleValue = -log(hashValue) / element.weight
 
@@ -32,7 +31,7 @@ function expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
 end
 
 # FastExpSketch algorithm
-# stream - a stream of elements
+# stream - a stream of elements. Each element is a pair: (id, weight)
 # m - number of sketch elements
 # h - hash function
 function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)

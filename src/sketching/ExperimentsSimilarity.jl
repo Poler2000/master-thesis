@@ -19,7 +19,9 @@ module Experiments
         L::Integer
         alpha::Number
         alpha_sim::Number
+        sim_top_100::Number
         sim_top_1000::Number
+        sim_top_10000::Number
         sim_all::Number
     end
 
@@ -66,13 +68,13 @@ module Experiments
         i = 0
         path = "$RESULTS_FOLDER/summary_$(label).txt"
         for dataset in datasets
-            log_info("Summary for dataset: $dataset", path)
-            log_info("\t|\t\t\t NodeSketch \t\t\t\t|\t\t\tNodeExpSketch", path)
-            log_info("$label\t|\tprecision - top 1000 \t|\tprecision - total\t|\tprecision - top 1000 \t|\tprecision - total\t", path)
+            log_info("\nSummary for dataset: $dataset, sketch size = $(res_node[1].L), alpha = $(res_node[1].alpha_sim)", path)
+            log_info("\t|\t\t\t\t\t NodeSketch \t\t\t\t\t\t|\t\t\t\t\tEdgeSketch", path)
+            log_info("$label\t|\tt = 100 \t|\tt = 1000 \t|\tt = 10000 \t|\tt = |E| \t|\tt = 100 \t|\tt = 1000 \t|\tt = 10000 \t|\tt = |E|\t", path)
             
             for variable in variables
                 i += 1
-                log_info("$variable\t|\t\t$(res_node[i].sim_top_1000) \t\t|\t$(res_node[i].sim_all)\t|\t\t$(res_exp[i].sim_top_1000) \t\t|\t$(res_exp[i].sim_all)\t", path)
+                log_info("$variable\t|\t$(res_node[i].sim_top_100) \t\t|\t$(res_node[i].sim_top_1000) \t\t|\t$(res_node[i].sim_top_10000) \t\t|\t$(res_node[i].sim_all)\t\t|\t$(res_exp[i].sim_top_100) \t\t|\t$(res_exp[i].sim_top_1000) \t\t|\t$(res_exp[i].sim_top_10000) \t\t|\t$(res_exp[i].sim_all)\t", path)
             end
         end
     end
@@ -111,31 +113,52 @@ module Experiments
                         mask[j,i] = false
                     end
                 end
+
+                println("Test:")
+                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:min(16, sketch_dimensions)]')], "\n")
+                log_info("emb sample:\n" * matrix_str * '\n')
+                println("Sim:")
+                matrix_str = join([join(row, "\t") for row in eachrow(similarity[1:8, 1:8]')], "\n")
+                log_info("sim sample:\n" * matrix_str * '\n')
             
                 flat_A = similarity[mask]
 
                 sorted_indices = sortperm(flat_A, rev=true)[1:sample_size]
             
                 original_indices = findall(mask)
+
                 top_coordinates = original_indices[sorted_indices]
             
                 correctly_predicted = 0
+                correctly_predicted_100 = 0
                 correctly_predicted_1000 = 0
+                correctly_predicted_10000 = 0
     
                 for (i, (x, y)) in enumerate(Tuple.(top_coordinates))
+                    if i <= 100
+                        println("$x, $y $(matrix[x,y])\t$(matrix[y,x])\t$(similarity[x,y])")
+                    end
                     if matrix[x, y] >= 1
                         correctly_predicted += 1
+                        if i <= 100
+                            correctly_predicted_100 += 1
+                        end
                         if i <= 1000
                             correctly_predicted_1000 += 1
+                        end
+                        if i <= 10000
+                            correctly_predicted_10000 += 1
                         end
                     end
 
                 end
 
-                push!(results, SimResult(dataset, use_expsketch ? "NodeExpSketch" : "NodeSketch", k, sketch_dimensions, alpha, alpha_sim, (correctly_predicted_1000 / 1000), (correctly_predicted / sample_size)))
+                push!(results, SimResult(dataset, use_expsketch ? "NodeExpSketch" : "NodeSketch", k, sketch_dimensions, alpha, alpha_sim, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4)))
             
                 log_info("correctly predicted: $correctly_predicted / $sample_size ($(correctly_predicted / sample_size))")
+                log_info("correctly predicted per 100: $correctly_predicted_100 / 100 ($(correctly_predicted_100 / 100))")
                 log_info("correctly predicted per 1000: $correctly_predicted_1000 / 1000 ($(correctly_predicted_1000 / 1000))")
+                log_info("correctly predicted per 10000: $correctly_predicted_10000 / 1000 ($(correctly_predicted_10000 / 10000))")
             end
         end
 
