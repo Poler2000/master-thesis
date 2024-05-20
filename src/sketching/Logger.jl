@@ -4,20 +4,20 @@ export log_info, log_debug, LOG_TO_CONSOLE, LOGFILE
 
 ENABLE_DEBUG_LOGGING = true
 LOG_TO_CONSOLE = true
-LOGFILE = "log.txt"
+LOGFILE = nothing
 
-function log_info(msg::String, path = Nothing)
+function log_info(msg::String, path = nothing)
     if LOG_TO_CONSOLE
         println(msg)
     end
 
-    if LOGFILE != Nothing
+    if LOGFILE !== nothing
         open(LOGFILE, "a") do file
             write(file, msg * "\n")
         end
     end
 
-    if path != Nothing
+    if path !== nothing
         open(path, "a") do file
             write(file, msg * "\n")
         end
@@ -33,7 +33,7 @@ function log_debug(msg::String)
         println(msg)
     end
 
-    if LOGFILE != Nothing
+    if LOGFILE !== nothing
         open(LOGFILE, "a") do file
             write(file, msg * "\n")
         end

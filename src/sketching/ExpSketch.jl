@@ -5,7 +5,8 @@ using Random
 export StreamElement, expsketch, fast_expsketch
 
 struct StreamElement
-    id::Number
+    id1::Number
+    id2::Number
     weight::Number
 end
 
@@ -17,7 +18,9 @@ function expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
     M = fill(Inf, m)
 
     for element in stream
-        binI = bitstring(element.id)
+        binNode1 = bitstring(element.id1)
+        binNode2 = bitstring(element.id2)
+        binI = element.id1 > element.id2 ? binNode2 * binNode1 : binNode1 * binNode2
         for k in 1:m
             binK = bitstring(k)
             hashValue = h(binI * binK)
@@ -43,7 +46,9 @@ function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
         S = 0
         updateMax = false
         P = copy(permInit)
-        binI = bitstring(element.id)
+        binNode1 = bitstring(element.id1)
+        binNode2 = bitstring(element.id2)
+        binI = element.id1 > element.id2 ? binNode2 * binNode1 : binNode1 * binNode2
         for k in 1:m
             binK = bitstring(k)
 
@@ -55,7 +60,7 @@ function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
                 break
             end
 
-            Random.seed!(element.id)
+            Random.seed!(hash(binI))
             r = rand(k:m)
 
             tmp = P[k];

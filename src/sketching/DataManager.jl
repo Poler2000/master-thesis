@@ -3,9 +3,12 @@ module DataManager
 include("Logger.jl")
 
 using MAT
+using CSV
+using DataFrames
+
 using .Logger
 
-export load_matrix_mat, save_matrix_embs, save_matrix_network
+export load_matrix_mat, save_matrix_embs, save_matrix_network, save_csv
 
 function load_matrix_mat(path::String, key = "network")
     file = matopen(path)
@@ -24,6 +27,11 @@ end
 
 function save_matrix_network(matrix, path::String)
     save_matrix_core(matrix, path, "network")
+end
+
+function save_csv(df::DataFrame, path)
+    should_append = isfile(path)
+    CSV.write(path, df, append=should_append)
 end
 
 function save_matrix_core(matrix, path::String, key::String)

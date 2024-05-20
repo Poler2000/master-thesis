@@ -13,9 +13,9 @@ module Experiments
     export run_embeddings_var_order, run_embeddings_var_size, run_embeddings_var_alpha, run_all
 
     function run_all()
-        default_alpha = 0.002
+        default_alpha = 0.3
         default_k = 4
-        default_size = 128
+        default_size = 10
 
         datasets = ["dblp"]
 
@@ -35,12 +35,12 @@ module Experiments
             for k in orders
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? fastexp_nodesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
 
                 dense_matrix = Matrix(embs)
-                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:16]')], "\n")
+                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:10]')], "\n")
                 log_info("Output sample:\n" * matrix_str * '\n')
 
                 alpha_str = replace(string(alpha), "0." => "")
@@ -55,12 +55,12 @@ module Experiments
             for sketch_size in sketch_sizes
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha = $alpha, L = $sketch_size")
-                @time sketch = use_expsketch ? fastexp_nodesketch(matrix, k, sketch_size, alpha) : nodesketch(matrix, k, sketch_size, alpha)
+                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_size, alpha) : nodesketch(matrix, k, sketch_size, alpha)
                 
                 embs = sketch.embeddings'
 
                 dense_matrix = Matrix(embs)
-                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:16]')], "\n")
+                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:10]')], "\n")
                 log_info("Output sample:\n" * matrix_str * '\n')
 
                 alpha_str = replace(string(alpha), "0." => "")
@@ -75,12 +75,12 @@ module Experiments
             for alpha in alphas
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? fastexp_nodesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
 
                 dense_matrix = Matrix(embs)
-                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:16]')], "\n")
+                matrix_str = join([join(row, "\t") for row in eachrow(dense_matrix[1:8, 1:10]')], "\n")
                 log_info("Output sample:\n" * matrix_str * '\n')
 
                 alpha_str = replace(string(alpha), "0." => "")

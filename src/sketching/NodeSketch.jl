@@ -11,15 +11,11 @@ using Base.Threads
 using ConcurrentCollections
 
 export SLA, Sketch
-export nodesketch, fastexp_nodesketch, nodesketch_extended, fastexp_nodesketch_extended
+export nodesketch, edgeketch
 
 struct Sketch
     embeddings::Matrix{Float64}
     similarity_matrix::Matrix{Float64}
-end
-
-function generate_sample(row, hash_matrix, j, neighbours)
-    return argmin(i -> (hash_matrix[i, j] / row[i]), neighbours)
 end
 
 function nodesketch(
@@ -32,42 +28,9 @@ function nodesketch(
     # column-wise processing is slightly more efficient due to sparse matrix implementation
     sla = to_sla(sparse(A'))
     hash_matrix = construct_hash_matrix(size(sla, 1), sketch_dimensions)
-    col_count = size(A, 2)
-
-    embeddings = nodesketch_core(sla, order, sketch_dimensions, alpha, hash_matrix)
-    return Sketch(embeddings, zeros(col_count, col_count))
-end
-
-function fastexp_nodesketch(
-    A::SparseMatrixCSC{<:Number, <:Integer}, 
-    order::Integer, 
-    sketch_dimensions::Integer, 
-    alpha::Number)::Sketch
-    
-    # Although it's more intuitive to iterate row-wise, 
-    # column-wise processing is slightly more efficient due to sparse matrix implementation
-    sla = to_sla(sparse(A'))
-    h = x -> (hash((x, rand())) % Int64(1e9)) / 1e9
-    col_count = size(A, 2)
-
-    embeddings = fastexp_nodesketch_core(sla, order, sketch_dimensions, alpha, h)
-    return Sketch(embeddings, zeros(col_count, col_count))
-end
-
-function nodesketch_extended(
-    A::SparseMatrixCSC{<:Number, <:Integer}, 
-    order::Integer, 
-    sketch_dimensions::Integer, 
-    alpha::Number,
-    alpha_sim::Number)::Sketch
-    
-    # Although it's more intuitive to iterate row-wise, 
-    # column-wise processing is slightly more efficient due to sparse matrix implementation
-    sla = to_sla(sparse(A'))
-    hash_matrix = construct_hash_matrix(size(sla, 1), sketch_dimensions)
     col_count = size(sla, 2)
 
-    embeddings = nodesketch_core(sla, order, sketch_dimensions, alpha_sim, hash_matrix)
+    embeddings = nodesketch_core(sla, order, sketch_dimensions, alpha, hash_matrix)
     similarity_matrix = zeros(col_count, col_count)
 
     for i in 1:col_count
@@ -87,18 +50,18 @@ function nodesketch_extended(
     return Sketch(embeddings, similarity_matrix)
 end
 
-function fastexp_nodesketch_extended(
+function edgeketch(
     A::SparseMatrixCSC{<:Number, <:Integer}, 
     order::Integer, 
     sketch_dimensions::Integer, 
-    alpha_sim::Number)::Sketch
+    alpha::Number)::Sketch
     
     # Although it's more intuitive to iterate row-wise, 
     # column-wise processing is slightly more efficient due to sparse matrix implementation
     sla = to_sla(sparse(A'))
-    h = x -> (hash(x) % Int64(1e9)) / 1e9
+    h = x -> (hash((x, 123)) % Int64(1e9)) / 1e9
 
-    return fastexp_nodesketch_core_similarity(sla, order, sketch_dimensions, alpha_sim, h)
+    return edgeketch_similarity(sla, order, sketch_dimensions, alpha, h)
 end
 
 function nodesketch_core(
@@ -115,7 +78,7 @@ function nodesketch_core(
         embeddings = nodesketch_core(A, order - 1, sketch_dimensions, alpha, hash_matrix)
         for (i, col) in enumerate(eachcol(A))
             if (i % 100 == 0)
-                log_debug("$i, $order")
+                log_debug("Constructing embeddings: $i, $order")
             end
 
             v = Vector{Float64}(undef,col_count)
@@ -151,93 +114,43 @@ function nodesketch_core(
     return embeddings
 end
 
-function fastexp_nodesketch_core(
+function edgeketch_core(
     A::SparseMatrixCSC{<:Number, <:Integer}, 
-    order::Integer, 
     sketch_dimensions::Integer, 
-    alpha::Number,
     h::Function)::Matrix{Float64}
 
     col_count = size(A, 2)
     embeddings = zeros(sketch_dimensions, col_count)
 
-    if order > 2
-        embeddings = fastexp_nodesketch_core(A, order - 1, sketch_dimensions, alpha, h)
-        for (i, col) in enumerate(eachcol(A))
-            if (i % 100 == 0)
-                log_debug("$i, $order")
-            end
-
-            neighbours = findall(x -> x != 0, col)            
-            v = zeros(sketch_dimensions)
-            for n in neighbours
-                for j in 1:sketch_dimensions
-                    v[j] = min(embeddings[j, i], embeddings[j, n])
-                end
-            end
-
-            embeddings[:, i] .+= (v .* alpha / sketch_dimensions)
+    @threads for (i, col) in collect(enumerate(eachcol(A)))
+        if (i % 100 == 0)
+            log_debug("Constructing embeddings: $i, 2")
         end
-    elseif order == 2
-        for (i, col) in enumerate(eachcol(A))
-            if (i % 100 == 0)
-                log_debug("$i, $order")
-            end
 
-            neighbours = [StreamElement(index, weight) 
-                for (index, weight) in enumerate(col) if weight != 0]
-
+        neighbours = [StreamElement(index, i, weight) 
+            for (index, weight) in enumerate(col) if weight != 0]
+        
             embeddings[:, i] = fast_expsketch(
-                neighbours, 
-                sketch_dimensions, 
-                h)
-        end
+            neighbours, 
+            sketch_dimensions, 
+            h)
     end
     return embeddings
 end
 
-function fastexp_nodesketch_core_similarity(
+function edgeketch_similarity(
     A::SparseMatrixCSC{<:Number, <:Integer}, 
     order::Integer, 
     sketch_dimensions::Integer, 
-    alpha_sim::Number,
+    alpha::Number,
     h::Function)::Sketch
 
     col_count = size(A, 2)
-    sketch = Sketch(zeros(sketch_dimensions, col_count), zeros(col_count, col_count))
     if order > 2
-        sketch = fastexp_nodesketch_core_similarity(A, order - 1, sketch_dimensions, alpha_sim, h)
-        #ak = A^(order - 1)
-        #for (i, col) in enumerate(eachcol(ak))
-        #    if (i % 100 == 0)
-        #        log_debug("$i, $order")
-        #    end
-#
-        #    neighbours = [StreamElement(index, weight) 
-        #        for (index, weight) in enumerate(col) if weight != 0]
-#
-        #    sketch.embeddings[:, i] = fast_expsketch(
-        #        neighbours, 
-        #        sketch_dimensions, 
-        #        h)
-        #end
-#
-        #@threads for i in 1:col_count
-        #    if (i % 100 == 0)
-        #        log_debug("Computing similarity matrix, nodes: $i, order: $order")
-        #    end
-        #    
-        #    for j in i:col_count
-        #        count = sum(sketch.embeddings[:, i] .== sketch.embeddings[:, j]) / sketch_dimensions
-        #        sketch.similarity_matrix[i, j] += (alpha_sim ^ (order - 2)) * count
-        #        if i != j
-        #            sketch.similarity_matrix[j, i] += (alpha_sim ^ (order - 2)) * count
-        #        end
-        #    end
-        #end
+        sketch = edgeketch_similarity(A, order - 1, sketch_dimensions, alpha, h)
 
         ak = A^(order - 1)
-        hey = ConcurrentDict{Int, Vector{Float64}}()
+        sketches_with_neighbourhoods = ConcurrentDict{Int, Vector{Float64}}()
         
         @threads for i in 1:col_count
             k_neighbours = findall(x -> x > 0, ak[:, i])
@@ -247,7 +160,7 @@ function fastexp_nodesketch_core_similarity(
                     v[j] = min(v[j], sketch.embeddings[j, n])
                 end
             end
-            hey[i] = v
+            sketches_with_neighbourhoods[i] = v
         end
 
         @threads for i in 1:col_count
@@ -256,27 +169,16 @@ function fastexp_nodesketch_core_similarity(
             end
 
             for j in i:col_count
-                count = sum(hey[i] .== hey[j]) / sketch_dimensions
-                sketch.similarity_matrix[i, j] += (alpha_sim ^ (order - 2)) * count
+                count = sum(sketches_with_neighbourhoods[i] .== sketches_with_neighbourhoods[j]) / sketch_dimensions
+                sketch.similarity_matrix[i, j] += (alpha ^ (order - 2)) * count
                 if i != j
-                    sketch.similarity_matrix[j, i] += (alpha_sim ^ (order - 2)) * count
+                    sketch.similarity_matrix[j, i] += (alpha ^ (order - 2)) * count
                 end
             end
         end
     elseif order == 2
-        for (i, col) in enumerate(eachcol(A))
-            if (i % 100 == 0)
-                log_debug("$i, $order")
-            end
-
-            neighbours = [StreamElement(index, weight) 
-                for (index, weight) in enumerate(col) if weight != 0]
-
-            sketch.embeddings[:, i] = expsketch(
-                neighbours, 
-                sketch_dimensions, 
-                h)
-        end
+        embeddings = edgeketch_core(A, sketch_dimensions, h)
+        sketch = Sketch(embeddings, zeros(col_count, col_count))
 
         @threads for i in 1:col_count
             if (i % 100 == 0)
@@ -293,6 +195,10 @@ function fastexp_nodesketch_core_similarity(
         end
     end
     return sketch
+end
+
+function generate_sample(row, hash_matrix, j, neighbours)
+    return argmin(i -> (hash_matrix[i, j] / row[i]), neighbours)
 end
 
 function sketch_single_node(
