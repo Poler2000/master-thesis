@@ -1,4 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add the necessary commands for citations, bibliography data, and bibliography style
 %  Zawartość: Główny plik szablonu pracy dyplomowej (magisterskiej/inżynierskiej). 
 %  Opracował: Tomasz Kubik <tomasz.kubik@pwr.edu.pl>
 %  Data: styczeń 2023
@@ -54,7 +55,6 @@
 
 \usepackage{tgtermes}   
 \renewcommand*\ttdefault{txtt}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Ustawienia odpowiedzialne za sposób łamania dokumentu
@@ -472,7 +472,6 @@ captionpos=t
 % Jeśli metadane zawierają przecinki lub średniki, domyślnie metadane te otaczane są apostrofami.
 % Piszą o tym na stronie: https://tex.stackexchange.com/questions/3708/hyperref-enquotes-metadata
 % Aby pozbyć się tych apostrofów użyto pakietu hyperxmp (ładującego kilka innych pakietów)
-\usepackage{hyperxmp}
 \usepackage{ifpdf}
 %\newif\ifpdf \ifx\pdfoutput\undefined
 %\pdffalse % we are not running PDFLaTeX
@@ -482,11 +481,12 @@ captionpos=t
 \ifpdf
  \usepackage{datetime2} % INFO: pakiet potrzeby do uzyskania i sformatowania daty 
  \usepackage[pdftex,bookmarks,breaklinks,unicode]{hyperref}
+ \usepackage{hyperxmp}
  \usepackage[pdftex]{graphicx}
  \usepackage{amsfonts}
  \usepackage{amsmath}
  \usepackage{bbm}
- \usepackage[ruled]{algorithm2e}
+ \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
  \usepackage{tikz}
 \usetikzlibrary{graphs, matrix, positioning, arrows.meta, shapes.geometric}
 
@@ -925,6 +925,7 @@ Kierunek: & {\bfseries \@kierunek}\\
 \include{chapter4}
 \include{chapter5}
 \include{chapter6}
+\include{chapter7}
 % LITERATURA (zostanie wygenerowana automatycznie)
 %UWAGA: bibliotekę referencji należy przygotować samemu. Dobrym do tego narzędziem jest JabRef.
 %       JabRef oferuje jednak większą liczbę typów rekordów niż obsługuje BibTeX.

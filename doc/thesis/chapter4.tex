@@ -1,5 +1,33 @@
-\chapter{Szkice danych}
-\section{Definicja}
+\chapter{Operowanie na szkicach danych}
+    W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywane na szkicach danych oraz skomentujemy ich praktyczne zastosowania. Omówimy także algorytmy ExpSketch i FastExpSketch, wspierające operacje teoriomnogościowe na generowanych przez nie szkicach.
+
+\section{Szkice danych}
+    Jak już wspomniano w poprzednich rozdziałach, szkice danych to kompaktowe struktury danych, które pozwalają na efektywną reprezentację kluczowych informacji o dużych zbiorach danych. Są one najczęściej generowane przez algorytmy online, przetwarzające strumienie danych i wykorzystujące funkcje haszujące do przypisywania identycznym elementom strumienia tych samych, pseudolosowych wartości. Formalnie, mozemy zdefiniować strumień danych jako multizbiór $\mathfrak{M} = (\mathbb{S},m)$, gdzie $\mathbb{S}$ to zbiór unikalnych elementów, a funkcja $m : \mathbb{S} \rightarrow \mathbb{N}_{\geq 1}$ wyznacza ich liczność w strumieniu.
+
+    TODO: operacje
+
+\subsection{ExpSketch}
+    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użytczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. ExpSketch operuje na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest indentyfikatorem elementu, a $\lambda_{i}$ jego wagą. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ dla każdego elementu $i$ mamy wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarzy $m \times d$. Jednak w konktekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
+
+    Schemat działania algorytmu ExpSketch jest dość prosty. Przetwarza elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ haszy:
+    \[
+        h(i || 1), h(i || 2), \dots, h(i || m),
+    \]
+    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każdy z haszy jest nastęnie przekształcany przy użyciu odwrotnpści funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
+    \[
+        F^{-1}(u) = - \frac{\ln u}{\lambda_i}.
+    \]
+    Jak wynika z TODO, otrzymujemy w sposób zmienną losową o rozkładzie wykładniczym:
+
+    \[
+        E = - \frac{\ln(h(i || k))}{\lambda_i} \sim Exp(\lambda_i).
+    \]
+    Każda z otrzymanych w ten sposób wartości jest porównywana z odpowiadającą jej pozycją w szkicu i zapisywana, jeśli jest mniejsza.
+
+\subsection{FastExpSketch}
+    Łatwo zauważyć, że ExpSketch dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu hasza, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, FastEdgeSketch\cite{Lemiesz_2023}.
+
+    Co istotne, ExpSKetch pozwala ma wykonywanie na szkicach operacji teoriomnogościowych, takich jak suma, czy przecięcie. Rozważmy 
 
 \begin{algorithm}
     \caption{ExpSketch($\mathfrak{M}, m$)}\label{alg:exp_sketch}
@@ -15,7 +43,7 @@
 \end{algorithm}
 
 \begin{algorithm}
-    \caption{FastExpSketch($\mathfrak{M}, m$)}\label{alg:fast_exp_sketch}
+    \caption{EdgeSketch($\mathfrak{M}, m$)}\label{alg:edge_sketch}
     $permInit \gets (1,2,3,\dots, m)$\;
     $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
     $MAX \gets \infty$\;

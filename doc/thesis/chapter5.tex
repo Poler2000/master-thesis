@@ -1,6 +1,9 @@
-\chapter{Główny przedmiot pracy}
+\chapter{Ulepszenie algorytmu NodeSketch z wykorzystaniem FastExpSketch}
 \section{Motywacja}
-    TODO
+    Algorytm NodeSketch cechuje się wysoką efektywnością pamięciową i czasową. Ekeprymenty pokazują, że osiąga on także dobre rezultaty na rzeczywistych danych\cite{Yang_Rosso_Li_Cudre-Mauroux_2019}. 
+    Niemniej jednak, gama operacji, które można wykonać na wynikowych zanurzeniach jest dość ograniczona. Ponadto, NodeSketch w swej bazowej postaci nie uwzględnia wag krawędzi w szkicach, co potencjalnie ogranicza jego użyteczność dla grafów ważonych.   
+    W niniejszym rozdziale przyglądamy się potencjalnej generalizacji algorytmu NodeSketch, polegającej na wykorzystaniu metopdy FastExpSketch do szkicowania wierzchołków. Wyjaśniamy zasadę działania tej metody, przedstawiamy jej implementację i analizujemy jej złożoność. Zwracamy także uwagę na korzyści płynące z zastosowania takiego podejścia, takie jak możliwość wykonywania operacji teoriomnogościowych na szkicach, czy uwzględnienie wag krawędzi.
+
 
 \section{Idea}
     TODO
@@ -13,6 +16,29 @@
 
     Pseudokod
 
+    \begin{equation}  \label{eq:sim_matrix}  
+        simM = \sum\limits_{K}^{k = 2} \alpha^{k-1} simM_{k}    
+    \end{equation}
+
+    
+    \begin{algorithm}
+        \caption{ComputeSimilarityMatrix($\mathfrak{M}, m$)}\label{alg:compute_sim_matrix}
+        $simM \gets [,]$ \tcp*{pusta macierz $n \times n$}\;
+        \ForEach{$i \in \{1,\dots,n\}$}{
+            \ForEach{$j \in \{i,\dots,n\}$}{
+                $simCount \gets 0$\; 
+                \ForEach{$l \in \{1,\dots,m\}$}{
+                    \uIf{$embeddings[i,l] = embeddings[j,l]$}{
+                        $simCount \gets simCount + 1$\;
+                    }
+                }
+
+                $simM[i,j] = simM[j,i] \gets simCount / m$
+            }
+        }
+        \Return{$simM$}
+    \end{algorithm}
+
 \section{Analiza złożoności}
 
     \subsection{Złożoność czasowa}
@@ -20,8 +46,4 @@
 
     
     \subsection{Złożoność pamięciowa}
-        TODO
-
-
-    \subsection{Analiza dokładności - jeśli metoda stratna}
         TODO
