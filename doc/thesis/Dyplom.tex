@@ -484,7 +484,7 @@ captionpos=t
  \usepackage{hyperxmp}
  \usepackage[pdftex]{graphicx}
  \usepackage{amsfonts}
- \usepackage{amsmath}
+ \usepackage{amsmath,amssymb}
  \usepackage{bbm}
  \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
  \usepackage{tikz}
@@ -799,6 +799,7 @@ Listing \thelstlisting: #1\hfill%\hfill%
 {\vskip 24pt\raggedright\fontsize{14pt}{16pt}\selectfont%
 \begin{tabular}{@{}ll}
 Kierunek: & {\bfseries \@kierunek}\\
+Specjalność: & {\bfseries \@specjalnosc}\\
 \end{tabular}\\[1.3cm]
 }
 {\vskip 29pt\centering{\fontsize{24pt}{26pt}\selectfont%
@@ -849,6 +850,7 @@ Kierunek: & {\bfseries \@kierunek}\\
 \uczelnia{Politechnika Wrocławska} % INFO: nazwa uczelni
 \wydzial{Wydział Informatyki i Telekomunikacji} % INFO: nazwa wydziału
 \kierunek{Informatyka algorytmiczna (INA)} % IFO: nazwa kierunku
+\specjalnosc{Algorytmika (ALG)} % IFO: nazwa kierunku
 \promotor{dr inż. Jakub Lemiesz} % INFO: dane promotora 
 \kvpl{TODO, TODO, TODO} % INFO: słowa kluczowe po polsku
 \kven{TODO, TODO, TODO} % INFO: słowa kluczowe po angielsku

@@ -1,49 +1,89 @@
 \chapter{Operowanie na szkicach danych}
-    W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywane na szkicach danych oraz skomentujemy ich praktyczne zastosowania. Omówimy także algorytmy ExpSketch i FastExpSketch, wspierające operacje teoriomnogościowe na generowanych przez nie szkicach.
+    W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywane na szkicach danych oraz skomentujemy ich praktyczne zastosowania. Omówimy także algorytmy ExpSketch i FastExpSketch, generujące szkice, na których możliwe jest wykonywanie między innymi działań teoriomnogościowych.
 
 \section{Szkice danych}
     Jak już wspomniano w poprzednich rozdziałach, szkice danych to kompaktowe struktury danych, które pozwalają na efektywną reprezentację kluczowych informacji o dużych zbiorach danych. Są one najczęściej generowane przez algorytmy online, przetwarzające strumienie danych i wykorzystujące funkcje haszujące do przypisywania identycznym elementom strumienia tych samych, pseudolosowych wartości. Formalnie, mozemy zdefiniować strumień danych jako multizbiór $\mathfrak{M} = (\mathbb{S},m)$, gdzie $\mathbb{S}$ to zbiór unikalnych elementów, a funkcja $m : \mathbb{S} \rightarrow \mathbb{N}_{\geq 1}$ wyznacza ich liczność w strumieniu.
 
-    TODO: operacje
+    Szkice danych były początkowo wykorzystywane głównie do estymacji prostych statystyk dotyczących zbioru danych, takich jak liczba unikalnych elementów, czy częstość występowania poszczególnych elementów. Tego typu wiedza bywa wystarczająca w wielu zastosowaniach, ale w niektórych przypadkach może okazać się niewystarczająca. Użyteczniejsze są szkice przechowujące dodatkowe informacje o elementach, takie jak ich wagi, czy dodatkowe atrybuty, a także umożliwiające wykonywanie działań na wyznaczonych szkicach. Przykładowo, posiadając szkice dwóch zbiorów danych, chcilibyśmy umieć efektywnie wyznaczyć szkic ich sumy, przecięcia, czy różnicy.  
 
 \subsection{ExpSketch}
-    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użytczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. ExpSketch operuje na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest indentyfikatorem elementu, a $\lambda_{i}$ jego wagą. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ dla każdego elementu $i$ mamy wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarzy $m \times d$. Jednak w konktekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
+    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. ExpSketch operuje na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest indentyfikatorem elementu, a $\lambda_{i}$ jego wagą. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ dla każdego elementu $i$ mamy wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarzy $m \times d$. Jednak w konktekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
 
-    Schemat działania algorytmu ExpSketch jest dość prosty. Przetwarza elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ haszy:
+    Schemat działania algorytmu ExpSketch jest dość prosty. Przetwarza on elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ haszy:
     \[
         h(i || 1), h(i || 2), \dots, h(i || m),
     \]
-    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każdy z haszy jest nastęnie przekształcany przy użyciu odwrotnpści funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
+    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każdy z haszy jest nastęnie przekształcany przy użyciu odwrotności funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
     \[
         F^{-1}(u) = - \frac{\ln u}{\lambda_i}.
     \]
-    Jak wynika z TODO, otrzymujemy w sposób zmienną losową o rozkładzie wykładniczym:
+    Zgodnie z \textit{inverse transform sampling theorem}\cite{Devroye_1986}, otrzymujemy w ten sposób zmienną losową o rozkładzie wykładniczym:
 
     \[
         E = - \frac{\ln(h(i || k))}{\lambda_i} \sim Exp(\lambda_i).
     \]
-    Każda z otrzymanych w ten sposób wartości jest porównywana z odpowiadającą jej pozycją w szkicu i zapisywana, jeśli jest mniejsza.
+    Każda z otrzymanych w ten sposób wartości jest porównywana z odpowiadającą jej pozycją w szkicu i zapisywana, jeśli jest mniejsza. Zasadę działania algorytmu ilustruje pseudokod \ref{alg:exp_sketch}. Co istotne, na tak zdefiniowanych szkicach można w prosty sposób wykonywać operacje teoriomnogościowe. 
+
+    \begin{algorithm}
+        \caption{ExpSketch($\mathfrak{M}, m$)}\label{alg:exp_sketch}
+        $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
+        \ForEach{$(i, \lambda_i) \in \mathfrak{M}$}{
+            \ForEach{$k \in {1,2,\dots,m}$}{
+                $U \gets h(i || k)$\;
+                $E \gets - \ln(U / \lambda_i)$\;
+                $M_k \gets \min{\{M_k, E\}}$\;
+            }
+        }
+        \Return{$M$}
+    \end{algorithm}
+
+\subsection{Operacja teoriomnogościowe na szkicach}
+    Rozważmy dwa zbiory $\mathbb{A}$ i $\mathbb{B}$ oraz odpowiadające im szkice: 
+    \[
+        A = (A_1, A_2, \dots, A_m) \quad \text{i} \quad B = (B_1, B_2, \dots, B_m).  
+    \]
+    Wiemy, że elementy $A_k$ i $B_k$ szkiców $A$ i $B$ reprezentują minimalne wartości zmiennych losowych o rozkładzie wykładniczym:
+    \[
+        A_k \sim Exp(|\mathbb{A}|_{w}) \quad \text{i} \quad B_k \sim Exp(|\mathbb{B}|_{w}), 
+    \]
+    gdzie $|\mathbb{S}|_{w} = \sum\limits_{i \in \mathbb{S}}\lambda_i$. 
+    \subsubsection*{Suma}
+    Chcąc otrzymać szkic $C$, gdzie $C_k \sim Exp(|\mathbb{A} \cup \mathbb{B}|_{w})$, możemy zastosować operację minimum na odpowiadających sobie elementach szkiców $A$ i $B$:    
+    \[
+        A \mathbin{\mathaccent\cdot\cup} B = (\min{\{A_1, B_1\}}, \min{\{A_2, B_2\}}, \dots, \min{\{A_m, B_m\}}).
+    \]
+    Taka kostrukcja jest oczywiście intuicyjna. Gdyby algorytm ExpSketch otrzymał na wejściu zbiór $\mathbb{A} \cup \mathbb{B}$, to każdy z elementów obu zbiorów zostałby wykorzystany do wygenerowania hasza, a wynikowy szkic zawierałby najmniejsze z otrzymanych wartości.
+    
+    Z kolei samą wartość $|\mathbb{A} \cup \mathbb{B}|_{w}$ możemy estymować jako:
+    \[
+        \hat{U}(A, B) = \frac{m - 1}{\sum\limits_{k = 1}^{m} \min{\{A_k, B_k\}}} .
+    \]
+
+    \subsubsection*{Ważone podobieństwo Jaccarda} 
+    Podobieństwo Jaccarda to miara podobieństwa dwóch zbiorów, zdefiniowana jako stosunek liczby elementów wspólnych do liczby elementów w sumie zbiorów:
+    \[
+        J(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|}{|\mathbb{A} \cup \mathbb{B}|}.
+    \]
+    Jak pokazano w \cite{Lemiesz_2021}, 
+    \[
+        J_w(\mathbb{A}, \mathbb{B}) = Pr[A_k = B_k]. 
+    \]
+    Stąd można łatwo wyznaczyć estymator podobieństwa Jaccarda zbiorów $\mathbb{A}$ i $\mathbb{B}$ jako:
+    \[
+        \hat{J}_w(A, B) = \frac{1}{m} \sum\limits_{k = 1}^{m} \mathbbm{1}[A_k = B_k].  
+    \]
+
+    \subsubsection*{Przecięcie}
+    Statystytki dotyczące przecięcia zbiorów można łatwo estymować na podstawie sumy i podobieństwa Jaccarda. Dla $|\mathbb{A} \cap \mathbb{B}|_{w}$ mamy:
+    \[
+        \hat{I}(A, B) = \hat{J}_w(A, B) \cdot \hat{U}(A, B).  
+    \]
 
 \subsection{FastExpSketch}
-    Łatwo zauważyć, że ExpSketch dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu hasza, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, FastEdgeSketch\cite{Lemiesz_2023}.
-
-    Co istotne, ExpSKetch pozwala ma wykonywanie na szkicach operacji teoriomnogościowych, takich jak suma, czy przecięcie. Rozważmy 
+    Łatwo zauważyć, że ExpSketch dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu hasza, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, FastEdgeSketch\cite{Lemiesz_2023}. Działanie FastEdgeSketch ilustruje pseudokod \ref{alg:fast_exp_sketch}.
 
 \begin{algorithm}
-    \caption{ExpSketch($\mathfrak{M}, m$)}\label{alg:exp_sketch}
-    $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
-    \ForEach{$(i, \lambda_i) \in \mathfrak{M}$}{
-        \ForEach{$k \in {1,2,\dots,m}$}{
-            $U \gets h(i || k)$\;
-            $E \gets - \ln(U / \lambda_i)$\;
-            $M_k \gets \min{\{M_k, E\}}$\;
-        }
-    }
-    \Return{$M$}
-\end{algorithm}
-
-\begin{algorithm}
-    \caption{EdgeSketch($\mathfrak{M}, m$)}\label{alg:edge_sketch}
+    \caption{FastExpSketch($\mathfrak{M}, m$)}\label{alg:fast_exp_sketch}
     $permInit \gets (1,2,3,\dots, m)$\;
     $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
     $MAX \gets \infty$\;
