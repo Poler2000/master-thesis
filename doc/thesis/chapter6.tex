@@ -1,15 +1,17 @@
 \chapter{Analiza wyników}
 
+    W niniejszym rozdziale 
+
 \section{Architektura eksperymentów}
 
     Na działanie algorytmów NodeSketch i EdgeSketch wpływ mają trzy główne parametry. Są to:
     \begin{itemize}
         \item $k$ - rząd sąsiedztwa. Przyjmujemy, że przy $k = 2$ rozpatrujemy tylko bezpośrednie połączenia, przy $k = 3$ także ścieżki długości $2$ itd. Zależy od niego liczba rekurencyjnych wywołań algorytmu.
-        \item $m$ - rozmiar sketchu. Jest to liczba , służących do opisu pojedynczego wierzchołka w grafie. 
+        \item $m$ - rozmiar szkicu. Jest to liczba , służących do opisu pojedynczego wierzchołka w grafie. 
         \item $\alpha$ - . Parametr ten decyduje, jakie wagi nadawane są sąsiedztwom wyższych rzędów
     \end{itemize}
 
-    . Jednak uzyskiwane wyniki zależą też w naturalny sposób od grafu, na którym przeprowadzane są eksperymenty. W związku z tym, w celu zbadania wpływu tych parametrów na jakość uzyskiwanych wyników, przeprowadzono szereg eksperymentów na różnych grafach.
+    . Jednak uzyskiwane wyniki zależą też w naturalny sposób od grafu, na którym przeprowadzane są eksperymenty. W związku z tym, w celu zbadania wpływu tych parametrów na jakość uzyskiwanych wyników, przeprowadzono szereg eksperymentów na różnych grafach. Algorytmy zostały zaimplementowane w języku Julia.
 
 \section{Badanie uzyskiwanych wyników w zależności od rozmiaru i struktury grafów}
     \subsection{Grafy ważone}
@@ -23,7 +25,7 @@
 
     \subsection{Wnioski}
 
-\section{Wpływ rozmiaru sketchu na uzyskiwane wyniki}
+\section{Wpływ rozmiaru szkicu na uzyskiwane wyniki}
 
     \subsection{Wyniki}
 
@@ -34,3 +36,6 @@
     \subsection{Wyniki}
 
     \subsection{Wnioski}
+
+\section{Liczba operacji w zależności od liczby krawędzi w grafie}
+\label{sec:performance}

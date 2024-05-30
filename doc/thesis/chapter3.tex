@@ -302,7 +302,7 @@
             \end{equation}
             Możemy wobec tej wartości zastosować normalizację sum-to-one $\sum \limits_{i = 1}^D V_{i}^{a} = \sum \limits_{i = 1}^D V_{i}^{b} = 1$ i oznaczyć takie znormalizowane podobieństwo przez $Sim_{NMM}$. Jest to efektywny sposób mierzenia podobieństwa \textcolor{red}{pomiędzy wektorami nieujemenych liczb rzeczywistych}, co ukazano w \cite{10.1145/2783258.2783406}. \textcolor{red}{Przykładowy graf wraz z macierzą SLA oraz odpowiadającą jej macierzą znormalizowanych podobieństw min-max ukazuje rysunek \ref{fig:node_sketch_sla}.} Zasadniczo spójne ważone próbkowanie sprowadza się do generowania próbek danych w taki sposób, aby prawdopodobieństwo wylosowania identycznych wartości dla obu wektorów było równe ich podobieństwu min-max. Próbki te są następnie traktowane jako szkic wektora wejściowego. Proponowany proces generowania próbek dla wektora \textcolor{red}{$V = [V_1, V_2, \dots, V_D]$} jest dość prosty. Zaczyna się on od wyboru funckji haszującej $h_j$, takiej, że $h_j(i) \sim Uniform(0,1)$. Za jej pomocą próbka $S_j$ wyznaczana jest jako:
             \begin{equation} \label{eq:node_sketch_1}  
-                S_j = \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}.
+                S_j = \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}.
             \end{equation}
             Wybierając $L$ $(L \ll D)$ niezależnych funkcji haszujących i generując na ich podstawie próbki otrzymujemy szkic $S$ o rozmiarze $L$ wektora $V$. Ponadto, wynikowe szkice zachowują własność:
 
@@ -379,12 +379,12 @@
                     $S(k-1) \gets NodeSketch(\tilde{A},k - 1,\alpha)$\;
                     \ForEach{rząd $r$ w $\tilde{A}$}{
                         $\color{red} \tilde{V}_{i}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;
-                        $\color{red} S_{j}^{r}(k) \gets \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, L\}$\;
+                        $\color{red} S_{j}^{r}(k) \gets \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \ElseIf{$k = 2$}{
                     \ForEach{rząd $r$ w $\tilde{A}$}{
-                        $\color{red} S_{j}^{r}(2) \gets \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, L\}$\;
+                        $\color{red} S_{j}^{r}(2) \gets \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \Return{$S(k)$}
@@ -416,12 +416,12 @@
                     zaktualizuj $S(k-1)$ i zbiór $\Omega$: $SGSketchUpdate(\tilde{A},S,\Omega,k-1,\alpha)$\;
                     \ForEach{$r \in \Omega$}{
                         $\color{red} \tilde{V}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{L} \sum\limits_{j = 1}^{L} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;
-                        $\color{red} S_{j}^{r}(k) \gets \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, L\}$\;
+                        $\color{red} S_{j}^{r}(k) \gets \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \ElseIf{$k = 2$}{
                     \ForEach{$r \in \Omega$}{
-                        $\color{red} S_{j}^{r}(2) \gets  \mathop{argmin}_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, L\}$\;
+                        $\color{red} S_{j}^{r}(2) \gets  \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, L\}$\;
                     }
                 }
                 \ForEach{$r \in \Omega$}{
