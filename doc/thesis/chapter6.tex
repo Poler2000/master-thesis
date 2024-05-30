@@ -8,14 +8,82 @@
     \begin{itemize}
         \item $k$ - rząd sąsiedztwa. Przyjmujemy, że przy $k = 2$ rozpatrujemy tylko bezpośrednie połączenia, przy $k = 3$ także ścieżki długości $2$ itd. Zależy od niego liczba rekurencyjnych wywołań algorytmu.
         \item $m$ - rozmiar szkicu. Jest to liczba , służących do opisu pojedynczego wierzchołka w grafie. 
-        \item $\alpha$ - . Parametr ten decyduje, jakie wagi nadawane są sąsiedztwom wyższych rzędów
+        \item $\alpha$ - parametr rozkładu wykładniczego. Decyduje on, jakie wagi nadawane są sąsiedztwom wyższych rzędów.
     \end{itemize}
 
     . Jednak uzyskiwane wyniki zależą też w naturalny sposób od grafu, na którym przeprowadzane są eksperymenty. W związku z tym, w celu zbadania wpływu tych parametrów na jakość uzyskiwanych wyników, przeprowadzono szereg eksperymentów na różnych grafach. Algorytmy zostały zaimplementowane w języku Julia.
 
 \section{Badanie uzyskiwanych wyników w zależności od rozmiaru i struktury grafów}
-    \subsection{Grafy ważone}
     \subsection{Wyniki}
+    \subsubsection{Erdos-Renyi Model}
+
+        \begin{table}[!ht]
+            \centering
+            \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+            \hline
+                & & \multicolumn{4}{c|}{NodeSketch} & \multicolumn{4}{c|}{EdgeSketch} \\ \cline{1-10}
+                \textbf{p} & \textbf{k} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} \\ \hline\hline
+                \multirow{3}{*}{0.0005} & 2 & 1 & 0.22 & 0.022 & 0.8397 & 1 & 0.236 & 0.0236 & 0.9008 \\ \cline{2-10}
+                & 3 & 1 & 0.219 & 0.0219 & 0.8359 & 1 & 0.238 & 0.0238 & 0.9084 \\ \cline{2-10}
+                & 4 & 0.98 & 0.224 & 0.0224 & 0.855 & 1 & 0.237 & 0.0237 & 0.9046 \\ \hline\hline
+                \multirow{3}{*}{0.001} & 2 & 1 & 0.386 & 0.0386 & 0.7569 & 1 & 0.43 & 0.043 & 0.8431 \\ \cline{2-10}
+                & 3 & 0.97 & 0.378 & 0.0378 & 0.7412 & 1 & 0.423 & 0.0423 & 0.8294 \\ \cline{2-10}
+                & 4 & 1 & 0.386 & 0.0386 & 0.7569 & 1 & 0.409 & 0.0409 & 0.802 \\ \hline\hline
+                \multirow{3}{*}{0.005} & 2 & 0.62 & 0.447 & 0.0877 & 0.358 & 1 & 1 & 0.1346 & 0.5494 \\ \cline{2-10}
+                & 3 & 0.8 & 0.433 & 0.0736 & 0.3004 & 1 & 0.862 & 0.1411 & 0.5759 \\ \cline{2-10}
+                & 4 & 0.23 & 0.1 & 0.0172 & 0.0702 & 1 & 0.867 & 0.1408 & 0.5747 \\ \hline\hline
+                \multirow{3}{*}{0.01} & 2 & 0.55 & 0.33 & 0.1076 & 0.2146 & 1 & 1 & 0.1893 & 0.3775 \\ \cline{2-10}
+                & 3 & 0.11 & 0.028 & 0.0123 & 0.0245 & 1 & 0.817 & 0.1854 & 0.3698 \\ \cline{2-10}
+                & 4 & 0.04 & 0.038 & 0.0142 & 0.0283 & 1 & 0.812 & 0.1608 & 0.3207 \\ \hline
+            \end{tabular}
+            \caption{Erdos-Renyi Model}
+
+        \end{table}
+
+
+    \subsubsection{Stochastic Block Model}
+    
+    \begin{table}[!ht]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+        \hline
+            & & \multicolumn{4}{c|}{NodeSketch} & \multicolumn{4}{c|}{EdgeSketch} \\ \cline{1-10}
+            \textbf{bloki} & \textbf{k} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} \\ \hline\hline
+            \multirow{3}{*}{2} & 2 & 0.57 & 0.525 & 0.5136 & 0.5072 & 1 & 1 & 0.4391 & 0.2616 \\ \cline{2-10}
+             & 3 & 0.47 & 0.527 & 0.5089 & 0.5016 & 1 & 1 & 0.4545 & 0.3426 \\ \cline{2-10}
+             & 4 & 0.44 & 0.523 & 0.5079 & 0.5022 & 1 & 1 & 0.4545 & 0.3426 \\ \hline\hline
+            \multirow{3}{*}{4} & 2 & 0.5 & 0.542 & 0.5343 & 0.5131 & 1 & 1 & 0.3352 & 0.1547 \\ \cline{2-10}
+             & 3 & 0.53 & 0.483 & 0.4991 & 0.5003 & 1 & 1 & 0.5342 & 0.4087 \\ \cline{2-10}
+             & 4 & 0.46 & 0.499 & 0.4983 & 0.5008 & 1 & 1 & 0.5342 & 0.4087 \\ \hline\hline
+            \multirow{3}{*}{8} & 2 & 0.66 & 0.594 & 0.5521 & 0.5234 & 1 & 1 & 0.2831 & 0.1289 \\ \cline{2-10}
+             & 3 & 0.51 & 0.528 & 0.5158 & 0.5063 & 1 & 0.884 & 0.5825 & 0.4762 \\ \cline{2-10}
+             & 4 & 0.5 & 0.496 & 0.5002 & 0.5029 & 1 & 0.884 & 0.5821 & 0.4755 \\ \hline
+        \end{tabular}
+        \caption{Stochastic Block Model}
+    \end{table}
+
+    \subsubsection{Barabasi-Albert Model}
+
+    \begin{table}[!ht]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+        \hline
+            & & \multicolumn{4}{c|}{NodeSketch} & \multicolumn{4}{c|}{EdgeSketch} \\ \cline{1-10}
+            \textbf{m} & \textbf{k} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} \\ \hline\hline
+            \multirow{3}{*}{2} & 2 & 0.52 & 0.269 & 0.0432 & 0.2163 & 1 & 0.974 & 0.0974 & 0.4877 \\ \cline{2-10}
+            & 3 & 0.32 & 0.152 & 0.0246 & 0.1232 & 1 & 0.213 & 0.0313 & 0.1567 \\ \cline{2-10}
+            & 4 & 0.56 & 0.289 & 0.043 & 0.2153 & 1 & 0.134 & 0.0188 & 0.0941 \\ \hline\hline
+            \multirow{3}{*}{8} & 2 & 0.19 & 0.14 & 0.0709 & 0.0892 & 1 & 1 & 0.178 & 0.2241 \\ \cline{2-10}
+            & 3 & 0.12 & 0.063 & 0.0406 & 0.0511 & 1 & 0.921 & 0.1765 & 0.2222 \\ \cline{2-10}
+            & 4 & 0.08 & 0.07 & 0.0313 & 0.0394 & 1 & 0.921 & 0.1765 & 0.2222 \\ \hline\hline
+            \multirow{3}{*}{16} & 2 & 0.12 & 0.079 & 0.0939 & 0.0939 & 1 & 1 & 0.2105 & 0.1424 \\ \cline{2-10}
+            & 3 & 0.1 & 0.107 & 0.0656 & 0.0595 & 1 & 1 & 0.2197 & 0.1578 \\ \cline{2-10}
+            & 4 & 0.06 & 0.028 & 0.0359 & 0.0376 & 1 & 1 & 0.2197 & 0.1578 \\ \hline
+        \end{tabular}
+        \caption{Barabasi-Albert Model}
+    \end{table}
+
+    \subsubsection{Grafy ważone}
 
     \subsection{Wnioski}
 

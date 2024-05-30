@@ -2,12 +2,12 @@
     W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywane na szkicach danych oraz skomentujemy ich praktyczne zastosowania. Omówimy także algorytmy ExpSketch i FastExpSketch, generujące szkice, na których możliwe jest wykonywanie między innymi działań teoriomnogościowych.
 
 \section{Szkice danych}
-    Jak już wspomniano w poprzednich rozdziałach, szkice danych to kompaktowe struktury danych, które pozwalają na efektywną reprezentację kluczowych informacji o dużych zbiorach danych. Są one najczęściej generowane przez algorytmy online, przetwarzające strumienie danych i wykorzystujące funkcje haszujące do przypisywania identycznym elementom strumienia tych samych, pseudolosowych wartości. Formalnie, mozemy zdefiniować strumień danych jako multizbiór $\mathfrak{M} = (\mathbb{S},m)$, gdzie $\mathbb{S}$ to zbiór unikalnych elementów, a funkcja $m : \mathbb{S} \rightarrow \mathbb{N}_{\geq 1}$ wyznacza ich liczność w strumieniu.
+    Jak już wspomniano w poprzednich rozdziałach, szkice danych to kompaktowe struktury, które pozwalają na efektywną reprezentację kluczowych informacji o dużych zbiorach danych. Są one najczęściej generowane przez algorytmy online, przetwarzające strumienie danych i wykorzystujące funkcje haszujące do przypisywania identycznym elementom strumienia tych samych, pseudolosowych wartości. Formalnie, możemy zdefiniować strumień danych jako multizbiór $\mathfrak{M} = (\mathbb{S},m)$, gdzie $\mathbb{S}$ to zbiór unikalnych elementów, a funkcja $m : \mathbb{S} \rightarrow \mathbb{N}_{\geq 1}$ wyznacza ich liczność w strumieniu.
 
-    Szkice danych były początkowo wykorzystywane głównie do estymacji prostych statystyk dotyczących zbioru danych, takich jak liczba unikalnych elementów, czy częstość występowania poszczególnych elementów. Tego typu wiedza bywa wystarczająca w wielu zastosowaniach, ale w niektórych przypadkach może okazać się niewystarczająca. Użyteczniejsze są szkice przechowujące dodatkowe informacje o elementach, takie jak ich wagi, czy dodatkowe atrybuty, a także umożliwiające wykonywanie działań na wyznaczonych szkicach. Przykładowo, posiadając szkice dwóch zbiorów danych, chcilibyśmy umieć efektywnie wyznaczyć szkic ich sumy, przecięcia, czy różnicy.  
+    Szkice danych były początkowo wykorzystywane głównie do estymacji prostych statystyk, takich jak liczba unikalnych elementów, czy częstość ich występowania. Tego typu wiedza bywa wystarczająca w wielu zastosowaniach, ale w niektórych przypadkach może okazać się niewystarczająca. Użyteczniejsze są szkice przechowujące dodatkowe informacje o elementach, takie jak ich wagi, czy dodatkowe atrybuty, a także umożliwiające wykonywanie działań na wyznaczonych szkicach. Przykładowo, posiadając szkice dwóch zbiorów danych, przydatna byłaby możliwość efektywnego wyznaczenia szkicu ich sumy lub przecięcia.  
 
 \subsection{ExpSketch}
-    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. ExpSketch operuje na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest indentyfikatorem elementu, a $\lambda_{i}$ jego wagą. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ dla każdego elementu $i$ mamy wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarzy $m \times d$. Jednak w konktekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
+    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. Operuje on na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest indentyfikatorem elementu, a $\lambda_{i}$ jego wagą. Wynikiem jego działania jest natomiast wektor zanurzeń o pewnym ustalonym rozmiarze $m$. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ do każdego elementu $i$ przypisany jest wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarzy $d \times m$. Jednak w konktekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
 
     Schemat działania algorytmu ExpSketch jest dość prosty. Przetwarza on elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ haszy:
     \[
@@ -93,15 +93,15 @@
         \]
     \end{twierdzenie}
 
-    W oryginalnym algorytmie ExpSketch, dla każdego elementu generujemy $m$ wartości $E_{1}, E_{2}, \dots, E_{m}$, a następnie porównujemy je z analogicznymi wartościami w szkicu. Można zauważyć, że jeśli dla danego $k$ zachodzi:
+    W oryginalnym algorytmie ExpSketch, dla każdego elementu generowanych jest $m$ wartości $E_{1}, E_{2}, \dots, E_{m}$, które są następnie porównywane z analogicznymi wartościami w szkicu. Można zauważyć, że jeśli dla danego $k$ zachodzi:
     \[
         E_{k} > \max{\{M_1, M_2, \dots, M_m\}},     
     \]
-    to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejsezenie liczby operacji wykonywanych przez lagorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast generować wartości $E_{1}, E_{2}, \dots$, generujemy ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie porównujemy wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ z wartościami w szkicu. 
+    to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejsezenie liczby operacji wykonywanych przez algorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast wartości $E_{1}, E_{2}, \dots$, generowane są ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ są porównywane z wartościami w szkicu. 
     
-    Działanie FastEdgeSketch ilustruje pseudokod \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną pozycyjną na $0$. W linijkach $8-10$ obliczamy kolejne statystyki pozycyjne, korzystając z twierdzenia\ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $12-14$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
+    Działanie FastEdgeSketch ilustruje pseudokod \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z twierdzenia\ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
 
-    Rozważając złożoność algorytmu, możemy skupić się na liczbie porównań w linii $16$. Oznaczmy przez $C_i$ zmienną losową wyznaczającą liczbę takich porównań dla elementu $i$. Rozważymy twierdzenie, którego dowód można znależć w \cite{Lemiesz_2023}:
+    Rozważając złożoność algorytmu, możemy skupić się na liczbie porównań w linii $19$. Oznaczmy przez $C_i$ zmienną losową wyznaczającą liczbę takich porównań dla elementu $i$. Rozważymy twierdzenie, którego dowód można znależć w \cite{Lemiesz_2023}:
     \begin{twierdzenie}
         \label{theo:avgComp}        
         Dla $i \geq 2$, $\Lambda_{i} = \lambda_{1}, \lambda_{2}, \dots, \lambda_{i}$ oraz $r_i = \frac{\lambda_{i}}{\Lambda_{i - 1}}$, zachodzi:
@@ -119,8 +119,9 @@
     \]
     gdzie $H_m$ jest $m$-tą liczbą harmoniczną. Stąd otrzymujemy:
     \[
-        \mathbb{E}[C] \leq \sum\limits_{i = 1}^{n} \frac{m H_m}{i} = m H_m H_n.
-    \], gdzie $H_n = \ln n + \gamma + O(\frac{1}{n})$, więc wartość oczekiwana liczby porównań jest logarytmiczna względem liczby elementów w strumieniu.
+        \mathbb{E}[C] \leq \sum\limits_{i = 1}^{n} \frac{m H_m}{i} = m H_m H_n,
+    \]
+    gdzie $H_n = \ln n + \gamma + O(\frac{1}{n})$, więc wartość oczekiwana liczby porównań jest logarytmiczna względem liczby elementów w strumieniu.
 
 \begin{algorithm}
     \caption{FastExpSketch($\mathfrak{M}, m$)}\label{alg:fast_exp_sketch}
