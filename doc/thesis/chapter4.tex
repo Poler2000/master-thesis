@@ -7,13 +7,13 @@
     Szkice danych były początkowo wykorzystywane głównie do estymacji prostych statystyk, takich jak liczba unikalnych elementów, czy częstość ich występowania. Tego typu wiedza bywa wystarczająca w wielu zastosowaniach, ale w niektórych przypadkach może okazać się niewystarczająca. Użyteczniejsze są szkice przechowujące dodatkowe informacje o elementach, takie jak ich wagi, czy dodatkowe atrybuty, a także umożliwiające wykonywanie działań na wyznaczonych szkicach. Przykładowo, posiadając szkice dwóch zbiorów danych, przydatna byłaby możliwość efektywnego wyznaczenia szkicu ich sumy lub przecięcia.  
 
 \subsection{ExpSketch}
-    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. Operuje on na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest indentyfikatorem elementu, a $\lambda_{i}$ jego wagą. Wynikiem jego działania jest natomiast wektor zanurzeń o pewnym ustalonym rozmiarze $m$. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ do każdego elementu $i$ przypisany jest wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarzy $d \times m$. Jednak w konktekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
+    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. Operuje on na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest identyfikatorem elementu, a $\lambda_{i}$ jego wagą. Wynikiem jego działania jest natomiast wektor zanurzeń o pewnym ustalonym rozmiarze $m$. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ do każdego elementu $i$ przypisany jest wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarze $d \times m$. Jednak w kontekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
 
     Schemat działania algorytmu ExpSketch jest dość prosty. Przetwarza on elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ haszy:
     \[
         h(i || 1), h(i || 2), \dots, h(i || m),
     \]
-    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każdy z haszy jest nastęnie przekształcany przy użyciu odwrotności funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
+    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każdy z haszy jest następnie przekształcany przy użyciu odwrotności funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
     \[
         F^{-1}(u) = - \frac{\ln u}{\lambda_i}.
     \]
@@ -24,6 +24,7 @@
     \]
     Każda z otrzymanych w ten sposób wartości jest porównywana z odpowiadającą jej pozycją w szkicu i zapisywana, jeśli jest mniejsza. Zasadę działania algorytmu ilustruje pseudokod \ref{alg:exp_sketch}. Co istotne, na tak zdefiniowanych szkicach można w prosty sposób wykonywać operacje teoriomnogościowe. 
 
+   \JL{przydałoby się zmienić słowo Algorithm na Algorytm we wszystkich listingach}
     \begin{algorithm}
         \caption{ExpSketch($\mathfrak{M}, m$)}\label{alg:exp_sketch}
         $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
@@ -52,7 +53,7 @@
     \[
         A \mathbin{\mathaccent\cdot\cup} B = (\min{\{A_1, B_1\}}, \min{\{A_2, B_2\}}, \dots, \min{\{A_m, B_m\}}).
     \]
-    Taka kostrukcja jest oczywiście intuicyjna. Gdyby algorytm ExpSketch otrzymał na wejściu zbiór $\mathbb{A} \cup \mathbb{B}$, to każdy z elementów obu zbiorów zostałby wykorzystany do wygenerowania hasza, a wynikowy szkic zawierałby najmniejsze z otrzymanych wartości.
+    Taka konstrukcja jest oczywiście intuicyjna. Gdyby algorytm ExpSketch otrzymał na wejściu zbiór $\mathbb{A} \cup \mathbb{B}$, to każdy z elementów obu zbiorów zostałby wykorzystany do wygenerowania hasza, a wynikowy szkic zawierałby najmniejsze z otrzymanych wartości.
     
     Z kolei samą wartość $|\mathbb{A} \cup \mathbb{B}|_{w}$ możemy estymować jako:
     \[
@@ -68,6 +69,7 @@
     \[
         J_w(\mathbb{A}, \mathbb{B}) = Pr[A_k = B_k]. 
     \]
+    \JL{Przydałoby się formalnie zdefiniować ważone podobieństwo Jaccarda.}
     Stąd można łatwo wyznaczyć estymator podobieństwa Jaccarda zbiorów $\mathbb{A}$ i $\mathbb{B}$ jako:
     \[
         \hat{J}_w(A, B) = \frac{1}{m} \sum\limits_{k = 1}^{m} \mathbbm{1}[A_k = B_k].  
@@ -79,15 +81,19 @@
         \hat{I}(A, B) = \hat{J}_w(A, B) \cdot \hat{U}(A, B).  
     \]
 
+
+    \JL{Przydałoby się napisać, że wszystkie powyższe estymatory są nieobciążone i mają wyliczoną wariancję.}
+    
+    
 \subsection{FastExpSketch}
-    Łatwo zauważyć, że ExpSketch dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu hasza, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, FastEdgeSketch\cite{Lemiesz_2023}. Jego idea opiera się na wykorzystaniu twierdzenia\cite{Devroye_1986a}:
+    Łatwo zauważyć, że ExpSketch dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu hasza, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, FastExpSketch \cite{Lemiesz_2023}. Jego idea opiera się na wykorzystaniu następującego twierdzenia (cf. \cite{Devroye_1986a}):
     \begin{twierdzenie}
         \label{theo:orderStatsExp}        
         Niech $E_1, E_2, \dots, E_m$ będą niezależnymi zmiennymi losowymi o rozkładzie wykładniczym. Oznaczmy przez:
         \[
             E_{(1)} \leq E_{(2)} \leq \dots \leq E_{(m)}  
         \]
-        ich statystyki pozycyjne. Wtedy dla każdego $k \in \{1,2, \dots m\}$ zachodzi równość rozkładów:
+        ich statystyki pozycyjne. Wtedy dla każdego $k \in \{1,2, \dots m\}$ zachodzi równość rozkładów: 
         \[
             E_{(k)} \stackrel{d}{=} E_{(k - 1)} + \frac{E_k}{m - k + 1}.       
         \]
@@ -97,11 +103,12 @@
     \[
         E_{k} > \max{\{M_1, M_2, \dots, M_m\}},     
     \]
-    to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejsezenie liczby operacji wykonywanych przez algorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast wartości $E_{1}, E_{2}, \dots$, generowane są ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ są porównywane z wartościami w szkicu. 
+    to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejszenie liczby operacji wykonywanych przez algorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast wartości $E_{1}, E_{2}, \dots$, generowane są ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ są porównywane z wartościami w szkicu. 
+    \JL{na losowo wybranych pozycjach}
     
-    Działanie FastEdgeSketch ilustruje pseudokod \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z twierdzenia\ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
+    Działanie FastExpSketch ilustruje \sout{pseudokod} \red{Algorytm} \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z Twierdzenia \ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
 
-    Rozważając złożoność algorytmu, możemy skupić się na liczbie porównań w linii $19$. Oznaczmy przez $C_i$ zmienną losową wyznaczającą liczbę takich porównań dla elementu $i$. Rozważymy twierdzenie, którego dowód można znależć w \cite{Lemiesz_2023}:
+    Rozważając złożoność algorytmu, możemy skupić się na liczbie porównań w linii $19$. Oznaczmy przez $C_i$ zmienną losową wyznaczającą liczbę takich porównań dla elementu $i$. Rozważymy twierdzenie, którego dowód można znaleźć w \cite{Lemiesz_2023}:
     \begin{twierdzenie}
         \label{theo:avgComp}        
         Dla $i \geq 2$, $\Lambda_{i} = \lambda_{1}, \lambda_{2}, \dots, \lambda_{i}$ oraz $r_i = \frac{\lambda_{i}}{\Lambda_{i - 1}}$, zachodzi:
