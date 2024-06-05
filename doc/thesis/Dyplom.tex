@@ -566,7 +566,6 @@ captionpos=t
   \addtocontents{lol}{\protect\addvspace{3pt}}}
 \makeatother 
 
-
 \setlength{\cftbeforechapterskip}{0pt} % odstępy w spisie treści przed rozdziałem, działa w korelacji z:
 \renewcommand{\aftertoctitle}{\afterchaptertitle\vspace{-4pt}} % 
 % https://stackoverflow.com/questions/3029271/latex-make-listoffigures-look-like-listoftables-or-lstlistoflistings
@@ -909,6 +908,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 \pdfbookmark[0]{Spis treści}{spisTresci.1}%
 %%\phantomsection
 %%\addcontentsline{toc}{chapter}{Spis treści}
+\setcounter{tocdepth}{1}; 
 \tableofcontents* 
 \clearpage
 % SPIS RYSUNKÓW (zostanie wygenerowany automatycznie)
@@ -933,6 +933,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 \include{skroty} 
 % ROZDZIAŁY (kolejne rozdziały dołączane są z kolejnych plików)
 \chapterstyle{default}
+
 \include{chapter1}
 \include{chapter2}
 \include{chapter3}

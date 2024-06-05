@@ -19,7 +19,7 @@
             $ns \gets \{((\min(i,r) || \max(i,r)),\tilde{A}[r,i]) : \tilde{A}[r,i] \neq 0\}$\;
             $S^{r} \gets FastExpSketch(ns, m)$\;
         }
-        \Return{$S(k)$}
+        \Return{$S$}
     \end{algorithm}
 
     Co ciekawe, w tak zmodyfikowanym algorytmie można pominąć parametr $k$ przy tworzeniu zanurzeń. Zamiast tego, sąsiedztwo wyższych rzędów może zostać \sout{wykorzystane} \red{uzyskane} poprzez odpowiednie operacje na szkicu. Jako przykład, a zarazem ciekawe zastosowanie algorytmu, będziemy rozważać zadanie rekonstrukcji grafu. Konkretnie, zależeć nam będzie na wyznaczeniu na podstawie szkicu $t$ najbardziej prawdopodobnych krawędzi. W tym celu wykorzystane zostanie podobieństwo Jaccarda między zanurzaniami wierzchołków. Procedura polega na obliczeniu macierzy podobieństwa $simM$ między każdymi dwoma wierzchołkami w grafie, co ilustruje \sout{pseudokod} \red{Algorytm} \ref{alg:compute_sim_matrix}. W przypadku oryginalnego algorytmu NodeSketch, operacja ta jest wykonywana na podstawie zanurzeń $k$-tego rzędu. Z kolei w przypadku EdgeSketcha, macierze podobieństwa \sout{są} \red{mogą być} obliczane oddzielnie dla różnych stopni sąsiedztwa. \red{Na przykład,} dla $k = 3$, do reprezentacji wierzchołka używana jest suma teoriomnogościowa zanurzeń tego wierzchołka i jego sąsiadów, dla $k = 4$ wszystkich wierzchołków odległych o co najwyżej $2$ i tak dalej. Ostateczny rezultat powstaje przez połączenie wszystkich macierzy podobieństwa. Parametr rozkładu wykładniczego $\alpha$ decyduje o tym, jakie wagi nadawane są macierzom wyższych rzędów, według wzoru:
@@ -50,7 +50,7 @@
     \JL{dokładniej wyjaśnić z czego wynika powyższa złożoność NodeSketch}
     
      EdgeSketch również przetwarza po kolei wierzchołki. Dla każdego z nich wyszukiwani są sąsiedzi w czasie liniowym. Z kolei czas potrzebny na stworzenie zanurzeń dla danego wierzchołka zależy od liczby krawędzi z niego wychodzących. Liczba ta nie przekroczy jednak oczywiście liczby wierzchołków, dlatego możemy przyjąć górne ograniczenie w postaci złożoności $O(m H_m H_{|V|}) = O(m \ln(m) \ln(|V|))$. Daje to łączną złożoność algorytmu $O((|V|)^2 + |V|(m \ln(m) \ln(|V|)))$ lub, traktując $m$ jako stałą, $O((|V|)^2 + |V|(\ln(|V|)))$. Choć oczywiście pierwszy składnik sumy jest asymptotycznie dominujący, w praktyce dla wielu grafów drugi składnik może okazać się kluczowy, głównie ze względu na stosunkowo wysoki koszt obliczania haszy. Warto też zauważyć, że obliczenia wykonywane w każdej iteracji pętli są niezależne od siebie, co pozwala na łatwe zrównoleglenie obliczeń. 
-     \JL{tutaj też można by trochę dokładniej, dlaczego mamy $|V|^2$, dlaczego mamy dodawanie, przypomnieć skąd się bierze formuła $$O(m H_m H_{|V|}) $ }
+     \JL{tutaj też można by trochę dokładniej, dlaczego mamy $|V|^2$, dlaczego mamy dodawanie, przypomnieć skąd się bierze formuła $O(m H_m H_{|V|}) $ }
      
      
      \JL{Może jeszcze coś o złożoności pamięciowej?}
