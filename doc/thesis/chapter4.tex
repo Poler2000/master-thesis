@@ -80,6 +80,26 @@
     \[
         \hat{I}(A, B) = \hat{J}_w(A, B) \cdot \hat{U}(A, B).  
     \]
+    \subsubsection*{Estymator sumy wag elementów}
+    \label{sec:weight_sum_estimator}
+    \textcolor{red}{Oznaczmy sumę wag wszystkich elementów w strumieniu jako $\Lambda = \lambda_1, \lambda_2, \dots, \lambda_n$ i roważmy $k$-tą pozycję w szkicu. Dla każdego elementu $i$ generowana jest próbka $E_i \sim Exp(\lambda_i)$, a w ostatecznym szkicu zapisywana jest najmniejsza z tych próbek: 
+    \[
+        M_k = \min{\{E_1, E_2, \dots, E_n\}}.
+    \].
+    Oczywiście minimum zmiennych losowych o rozkładzie wykładniczym również ma rozkład wykładniczy, z parametrem równym $\Lambda$:
+    \[
+        M_k \sim Exp(\Lambda).
+    \]
+    Warto zauważyć, że wartości $M_1, M_2, \dots, M_m$ są niezależne od siebie. Wiadomo również, że suma niezależnych zmiennych losowych o rozkładzie wykładniczym i o tej samej wartości oczekiwanej ma rozkład gamma. Korzystając z tego faktu, oznaczmy $G_m = M_1 + M_2 + \dots + M_m$. Wtedy 
+    \[
+        G_m \sim \Gamma(m, \Lambda).
+    \]
+    Korzystając z własności rozkładu gamma, możemy wyznaczyć estymator sumy wag elementów w strumieniu jako:
+    \[
+        \hat{\Lambda} = \frac{m - 1}{G_m}.
+    \]
+    Jest to estymator nieobciążony.
+    }
 
 
     \JL{Przydałoby się napisać, że wszystkie powyższe estymatory są nieobciążone i mają wyliczoną wariancję.}
