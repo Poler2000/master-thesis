@@ -16,7 +16,7 @@
 \section{Badanie uzyskiwanych wyników w zależności od struktury grafów}
 
     \subsubsection{Model Erdosa-Renyiego}
-        Model Erdosa-Renyiego jednym z najpowszechniejszych modeli grafów losowych. W modelu tym, każda para wierzchołków jest połączona krawędzią z jednakowym prawdopodobieństwem $p$. Steruje on gęstością grafu, a co za tym idzie, średnim stopniem wierzchołków. Grafy w tym modelu charakteryzują się dość jednorodną strukturą, bez wyraźnych klastrów, czy wierzchołków o dysproporcjonalnie wysokich stopniach. 
+        Model Erdosa-Renyiego jest jednym z najpowszechniejszych modeli grafów losowych. W modelu tym, każda para wierzchołków jest połączona krawędzią z jednakowym prawdopodobieństwem $p$. Steruje on gęstością grafu, a co za tym idzie, średnim stopniem wierzchołków. Grafy w tym modelu charakteryzują się dość jednorodną strukturą, bez wyraźnych klastrów, czy wierzchołków o dysproporcjonalnie wysokich stopniach. 
 
         Eksperyment przeprowadzono dla różnych prawdopodobieństw wystąpienia krawędzi $p$ oraz stopni sąsiedztwa $k \in \{2,3,4\}$. W każdym przypadku liczba wierzchołków w grafie wynosiła $10000$. Rozmiar szkicu wyniósł $m = 10$, a parametr rozkładu wykładniczego $\alpha = 0.3$. Wyniki przedstawiono w tabeli \ref{tab:erdos_renyi}.
 
@@ -40,8 +40,8 @@
                 & 3 & 0.05 & 0.026 & 0.0157 & 0.0104	& 1	& 1	& 1	& 0.05 \\ \cline{2-10}
                 & 4 & 0 & 0.006 & 0.0091 & 0.0102	& 1	& 1	& 1	& 0.05 \\ \hline
             \end{tabular}
-            \label{tab:erdos_renyi}
             \caption{Model Erdosa-Renyiego}
+            \label{tab:erdos_renyi}
 
         \end{table}
 
@@ -67,8 +67,8 @@
              & 3 & 0.51 & 0.528 & 0.5158 & 0.5063 & 1 & 0.884 & 0.5825 & 0.4762 \\ \cline{2-10}
              & 4 & 0.5 & 0.496 & 0.5002 & 0.5029 & 1 & 0.884 & 0.5821 & 0.4755 \\ \hline
         \end{tabular}
-        \label{tab:stochastic_block_model}
         \caption{Stochastyczny model blokowy}
+        \label{tab:stochastic_block_model}
     \end{table}
 
     \subsubsection{Model Barabasiego-Alberta}
@@ -96,8 +96,8 @@
             & 3 & 0.1 & 0.107 & 0.0656 & 0.0595 & 1 & 1 & 0.2197 & 0.1578 \\ \cline{2-10}
             & 4 & 0.06 & 0.028 & 0.0359 & 0.0376 & 1 & 1 & 0.2197 & 0.1578 \\ \hline
         \end{tabular}
-        \label{tab:barabasi_albert}
         \caption{Model Barabasiego-Alberta}
+        \label{tab:barabasi_albert}
     \end{table}
 
     \subsubsection{Grafy ważone}
@@ -124,8 +124,8 @@
             & 3 & 0.03 & 0.012 & 0.0101 & 0.0117 & 1 & 1 & 1 & 0.05 \\ \cline{2-10}
             & 4 & 0.01 & 0.011 & 0.0151 & 0.0138 & 1 & 1 & 1 & 0.05 \\ \hline
         \end{tabular}
-        \label{tab:weighted_graphs}
         \caption{Grafy ważone}
+        \label{tab:weighted_graphs}
     \end{table}
 
     \subsection{Wnioski}
@@ -158,8 +158,8 @@
             & 3 & 1 & 1 & 0.7684 & 0.3214 & 1 & 0.995 & 0.731 & 0.449 \\ \cline{2-10}
             & 4 & 1 & 1 & 0.6666 & 0.2927 & 1 & 0.997 & 0.6317 & 0.4303 \\ \hline
         \end{tabular}
-        \label{tab:degree}
         \caption{Wyniki z wykorzystaniem stopnia wierzchołków przy rekonstrukcji}
+        \label{tab:degree}
     \end{table}
 
     \subsection{Wnioski}
@@ -191,15 +191,15 @@
             & 128 & 1 & 0.9389 & 0.6017 & 1 & 1 & 0.9421 \\ \cline{2-8}
             & 256 & 1 & 0.9415 & 0.6051 & 1 & 1 & 0.9757 \\ \hline
         \end{tabular}
-        \label{tab:sketch_size}
         \caption{Wyniki dla różnych rozmiarów szkicu}
+        \label{tab:sketch_size}
     \end{table}
 
     \begin{figure}[!ht]
         \includegraphics[width=16cm]{img/precision_m.png}
         \centering
-        \label{fig:precision_m}
         \caption[Precyzja rekonstrukcji]{Precyzja rekonstrukcji w zależności od rozmiaru szkicu dla algorytmu EdgeSketch.}
+        \label{fig:precision_m}
     \end{figure}
     
     \subsection{Wnioski}
@@ -233,28 +233,30 @@
             & 0.3 & 0.01 & 0.009 & 0.0095 & 0.0095 & 1 & 1 & 0.3234 & 0.0647 \\ \cline{2-10}
             & 0.45 & 0.01 & 0.009 & 0.0094 & 0.0095 & 1 & 0.63 & 0.1928 & 0.0428 \\ \hline
         \end{tabular}
-        \label{tab:alpha}
         \caption{Wyniki dla różnych wartości parametru $\alpha$}
+        \label{tab:alpha}
     \end{table}
 
     \subsection{Wnioski}
     Odpowiedni dobór paramtru rozkładu wykładniczego zależy od konkretnego grafu. W badanym modelu dla algorytmu NodeSketch najlepsze wyniki uzyskano ignorując sąsiedztwa wyższych rzędów. Inaczej było w przypadku EdgeSketcha, gdzie niewielkie wartości parametru, zwłaszcza $\alpha = 0.15$ lub $\alpha = 0.3$ wływały korzystnie na uzyskiwane wyniki. Pogarszały się one jednak przy wyborze większych współczynników. Większa $\alpha$ pozwala na ujęcie większej ilości informacji o dalszym sąsiedztwie, ale może również przykrywać informacje o najbliższych sąsiedach wierzchołka, co później zaburza proces rekonstrukcji krawędzi. W większości przypadków wybór małych wartości $\alpha$ wydaje się więc najskuteczniejszą strategią dla algorytmu NodeSketch. 
 
 \section{Liczba operacji w zależności od liczby krawędzi w grafie}
+\label{sec:performance}
+
     Teoretyczna złożoność obliczeniowa algorytmów NodeSketch i EdgeSketch została skomentowana w rozdziale \ref{sec:complexity}. Analiza ta obejmowała wszystkie kroki wykonywane w trakcie działania algorytmów. Jednak w praktyce, pewne operacje mogą mieć o wiele istotniejszy wpływ na ostateczny czas działania niż inne. W szczególności, obliczenie wartości funckji haszujące, choć odbywa się w czasie $O(1)$, to przy dużej liczbie wywołań ma znaczący wpływ na efektywność algorytmu. W poniższym eksperymencie zbadano średnią liczbę obliczonych wartości funkcji haszujących w zależności od liczby krawędzi w grafie. W tym celu wygenerowano grafy w stochastycznym modelu blokowym o różnych rozmiarach, od $200$ do $8000$ wierzchołków. Wszystkie z nich miały $4$ bloki, a prawdopodobieństwa krawędzi wewnątrz bloku i pomiędzy blokami wynosiły odpowiednio $0.5$ i $0.001$. Podobnie jak w innych eksperymentach, rozmiar szkicu $m$ wynosił $10$ i przyjęto $\alpha = 0.3$. Wyniki przedstawiono na wykresie \ref{fig:calculated_hashes_vs_edges_all}. Dodatkowo, wykres \ref{fig:calculated_hashes_vs_edges_relative} przedstawia te same wyniki, ale znormalizowane względem liczby krawędzi w grafie. Warto zaznaczyć, że w implementacji algorytmu NodeSketch zastosowano podobną optymalizację jak w algorytmie EdgeSketch, polegającą na obliczanniu wartośći funkcji haszującej tylko dla niezerowych elementów w macierzy $SLA$. 
 
 \begin{figure}[!ht]
     \includegraphics[width=16cm]{img/calculated_hashes_vs_edges_all.png}
     \centering
-    \label{fig:calculated_hashes_vs_edges_all}
     \caption[Liczba operacji]{Liczba obliczonych wartości funkcji haszującej w zależności od liczby krawędzi w grafie}
+    \label{fig:calculated_hashes_vs_edges_all}
 \end{figure}
 
 \begin{figure}[!ht]
     \includegraphics[width=16cm]{img/calculated_hashes_vs_edges_relative.png}
     \centering
-    \label{fig:calculated_hashes_vs_edges_relative}
     \caption[Liczba operacji znormalizowana]{Liczba obliczonych wartości funkcji haszującej znormalizowana względem liczby krawędzi w grafie}
+    \label{fig:calculated_hashes_vs_edges_relative}
 \end{figure}
 
 \subsection{Wnioski}
@@ -270,5 +272,3 @@ która w rozważanym modelu jest stała. Ostatecznie otrzymujemy więc:
 Wraz ze wzrostem parametru $k$, NodeSketch wykonuje więcej operacji ze względu na rekurencyjną procedurę szkicowania. Oczywiście EdgeSketch generuje zanurzenia tylko raz, co daje mu porzewagę przy rozważaniu wyższych stopni sąsiedztwa. Jednak nawet dla $k = 2$, EdgeSketch wykonuje wyraźnie mniej wywołań funckji haszującej niż NodeSketch.
 
 Na drugim wykresie widać ukazującym liczbę wywołań podzieloną przez liczbę krawędzi, widać, że stosunek ten jest rzeczywiście liniowy. Jedynie dla małych grafów odznaczają się nieco większe wartości. Wynika to z faktu, że algorytmy wykorzystują macierz $SLA$, a nie zwykłą macierz sąsiedztwa, a więc biorą pod uwagę sztuczną pętle od wierzchołka do siebie samego, nie ujętą w zaprezentowanej liczbie krawędzi. Dla algorytmu NodeSketch stosunek ten stabilizuję się na ok $20$. Wynika to z faktu, że szkic ma rozmiar $10$, a każdą z krawędzi rozważamy dla dokładnie dwóch wierzchołków. Wykorzystanie procedury FastExpSketch pozwala zredukować tę wartość prawie dwukrotnie, choć jest to okupione większą wariancją.  
-
-\label{sec:performance}

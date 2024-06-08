@@ -497,6 +497,7 @@ captionpos=t
  \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
  \usepackage{tikz}
 \usetikzlibrary{graphs, matrix, positioning, arrows.meta, shapes.geometric}
+\usepackage{caption}
 
  \DeclareGraphicsExtensions{.pdf,.jpg,.mps,.png} % po zadeklarowaniu rozszerzeń można będzie wstawiać pliki z grafiką bez konieczności podawania tych rozszerzeń w ich nazwach
 \pdfcompresslevel=9
@@ -861,7 +862,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
-
+\SetAlgorithmName{Algorytm}{Algorytm}{Lista algorytmów} % Redefine 'Algorithm' to 'Unicorn'
 \begin{document}
 
 % Komendami poniżej można przełączyć odstęp między liniami. Proszę jednak tego nie robić !!!

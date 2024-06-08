@@ -1,5 +1,5 @@
 \chapter{Operowanie na szkicach danych}
-    W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywane na szkicach danych oraz skomentujemy ich praktyczne zastosowania. Omówimy także algorytmy ExpSketch i FastExpSketch, generujące szkice, na których możliwe jest wykonywanie między innymi działań teoriomnogościowych.
+W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywane na szkicach danych oraz skomentujemy ich praktyczne zastosowania. Omówimy także algorytmy \texttt{ExpSketch} i \texttt{FastExpSketch}, generujące szkice, na których możliwe jest wykonywanie między innymi działań teoriomnogościowych.
 
 \section{Szkice danych}
     Jak już wspomniano w poprzednich rozdziałach, szkice danych to kompaktowe struktury, które pozwalają na efektywną reprezentację kluczowych informacji o dużych zbiorach danych. Są one najczęściej generowane przez algorytmy online, przetwarzające strumienie danych i wykorzystujące funkcje haszujące do przypisywania identycznym elementom strumienia tych samych, pseudolosowych wartości. Formalnie, możemy zdefiniować strumień danych jako multizbiór $\mathfrak{M} = (\mathbb{S},m)$, gdzie $\mathbb{S}$ to zbiór unikalnych elementów, a funkcja $m : \mathbb{S} \rightarrow \mathbb{N}_{\geq 1}$ wyznacza ich liczność w strumieniu.
@@ -7,13 +7,13 @@
     Szkice danych były początkowo wykorzystywane głównie do estymacji prostych statystyk, takich jak liczba unikalnych elementów, czy częstość ich występowania. Tego typu wiedza bywa wystarczająca w wielu zastosowaniach, ale w niektórych przypadkach może okazać się niewystarczająca. Użyteczniejsze są szkice przechowujące dodatkowe informacje o elementach, takie jak ich wagi, czy dodatkowe atrybuty, a także umożliwiające wykonywanie działań na wyznaczonych szkicach. Przykładowo, posiadając szkice dwóch zbiorów danych, przydatna byłaby możliwość efektywnego wyznaczenia szkicu ich sumy lub przecięcia.  
 
 \subsection{ExpSketch}
-    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest ExpSketch\cite{Lemiesz_2021}. Operuje on na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest identyfikatorem elementu, a $\lambda_{i}$ jego wagą. Wynikiem jego działania jest natomiast wektor zanurzeń o pewnym ustalonym rozmiarze $m$. W praktyce ExpSketch może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ do każdego elementu $i$ przypisany jest wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarze $d \times m$. Jednak w kontekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
+    Szczególnie ciekawym przykładem algorytmu mającego na celu zwiększyć liczbę możliwych do wykonania operacji, a tym samym użyteczność szkicu, jest \texttt{ExpSketch}\cite{Lemiesz_2021}. Operuje on na elementach postaci $(i, \lambda_{i})$, gdzie $i$ jest identyfikatorem elementu, a $\lambda_{i}$ jego wagą. Wynikiem jego działania jest natomiast wektor zanurzeń o pewnym ustalonym rozmiarze $m$. W praktyce \texttt{ExpSketch} może reprezentować wiele różnych cech zbioru danych poprzez dodanie dodatkowego wymiaru w zanurzeniach elementów. W takim wypadku zamiast jednej wagi $\lambda_i$ do każdego elementu $i$ przypisany jest wektor wag $\lambda_i = (\lambda_{i,1}, \lambda_{i,2}, \dots, \lambda_{i,d})$, a szkic elementu przyjmuje formę macierzy o rozmiarze $d \times m$. Jednak w kontekście szkicowania grafów jedyna cecha, którą będziemy rozważać, jest związana z wagami krawędzi. Dlatego przedstawimy wersję algorytmu dla $d = 1$.
 
-    Schemat działania algorytmu ExpSketch jest dość prosty. Przetwarza on elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ haszy:
+    Schemat działania algorytmu \texttt{ExpSketch} jest dość prosty. Przetwarza on elementy w strumieniu sekwencyjnie. Dla każdego elementu $(i, \lambda_{i})$ obliczane jest $m$ wartości funkcji haszującej:
     \[
         h(i || 1), h(i || 2), \dots, h(i || m),
     \]
-    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każdy z haszy jest następnie przekształcany przy użyciu odwrotności funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
+    gdzie $h: \mathfrak{M} \rightarrow [0,1]$ jest funkcją haszującą, a $||$ oznacza konkatenację reprezentacji binarnych liczb o ustalonej długości. Każda z wartości funkcji haszującej jest następnie przekształcana przy użyciu odwrotności funkcji rozkładu wykładniczego z parametrem $\lambda_i$:
     \[
         F^{-1}(u) = - \frac{\ln u}{\lambda_i}.
     \]
@@ -22,11 +22,10 @@
     \[
         E = - \frac{\ln(h(i || k))}{\lambda_i} \sim Exp(\lambda_i).
     \]
-    Każda z otrzymanych w ten sposób wartości jest porównywana z odpowiadającą jej pozycją w szkicu i zapisywana, jeśli jest mniejsza. Zasadę działania algorytmu ilustruje pseudokod \ref{alg:exp_sketch}. Co istotne, na tak zdefiniowanych szkicach można w prosty sposób wykonywać operacje teoriomnogościowe. 
+    Każda z otrzymanych w ten sposób wartości jest porównywana z odpowiadającą jej pozycją w szkicu i zapisywana, jeśli jest mniejsza. Zasadę działania całej procedury ilustruje algorytm \ref{alg:exp_sketch}. Co istotne, na tak zdefiniowanych szkicach można w prosty sposób wykonywać operacje teoriomnogościowe. 
 
-   \JL{przydałoby się zmienić słowo Algorithm na Algorytm we wszystkich listingach}
-    \begin{algorithm}
-        \caption{ExpSketch($\mathfrak{M}, m$)}\label{alg:exp_sketch}
+        \begin{algorithm}
+        \caption{\texttt{ExpSketch}($\mathfrak{M}, m$)}\label{alg:exp_sketch}
         $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
         \ForEach{$(i, \lambda_i) \in \mathfrak{M}$}{
             \ForEach{$k \in {1,2,\dots,m}$}{
@@ -47,36 +46,44 @@
     \[
         A_k \sim Exp(|\mathbb{A}|_{w}) \quad \text{i} \quad B_k \sim Exp(|\mathbb{B}|_{w}), 
     \]
-    gdzie $|\mathbb{S}|_{w} = \sum\limits_{i \in \mathbb{S}}\lambda_i$. 
+    gdzie $|\mathbb{S}|_{w} = \sum\limits_{i \in \mathbb{S}}\lambda_i$ jest sumą wag elementów w zbiorze $\mathbb{S}$. 
     \subsubsection*{Suma}
-    Chcąc otrzymać szkic $C$, gdzie $C_k \sim Exp(|\mathbb{A} \cup \mathbb{B}|_{w})$, możemy zastosować operację minimum na odpowiadających sobie elementach szkiców $A$ i $B$:    
+    \textcolor{red}{Z własności rozkładu wykładniczego wiemy, że dla dwóch zmiennych losowych $X, Y$ o rozkładzie wykładniczym i parametrach $\lambda_X, \lambda_Y$, $\min(X, Y)$ ma także rozkład wykładniczy, którego parametr wynosi $\lambda = \lambda_X + \lambda_Y$. Stąd, }chcąc otrzymać szkic $C$, gdzie 
+    \[
+        C_k \sim Exp(|\mathbb{A} \cup \mathbb{B}|_{w}), 
+    \]
+    możemy zastosować operację minimum na odpowiadających sobie elementach szkiców $A$ i $B$:    
     \[
         A \mathbin{\mathaccent\cdot\cup} B = (\min{\{A_1, B_1\}}, \min{\{A_2, B_2\}}, \dots, \min{\{A_m, B_m\}}).
     \]
-    Taka konstrukcja jest oczywiście intuicyjna. Gdyby algorytm ExpSketch otrzymał na wejściu zbiór $\mathbb{A} \cup \mathbb{B}$, to każdy z elementów obu zbiorów zostałby wykorzystany do wygenerowania hasza, a wynikowy szkic zawierałby najmniejsze z otrzymanych wartości.
+    Taka konstrukcja jest oczywiście intuicyjna. Gdyby algorytm \texttt{ExpSketch} otrzymał na wejściu zbiór $\mathbb{A} \cup \mathbb{B}$, to każdy z elementów obu zbiorów zostałby wykorzystany do wygenerowania wartości funkcji haszującej, a wynikowy szkic zawierałby najmniejsze z otrzymanych wartości.
     
     Z kolei samą wartość $|\mathbb{A} \cup \mathbb{B}|_{w}$ możemy estymować jako:
     \[
         \hat{U}(A, B) = \frac{m - 1}{\sum\limits_{k = 1}^{m} \min{\{A_k, B_k\}}} .
     \]
+    \textcolor{red}{Jako pokazano w \cite{Lemiesz_2023}, tak zdefiniowany estymator jest nieobciążony i ma wyznaczoną wariancję, podobnie jak kolejne, przedstawione dalej estymatory.}
 
     \subsubsection*{Ważone podobieństwo Jaccarda} 
     Podobieństwo Jaccarda to miara podobieństwa dwóch zbiorów, zdefiniowana jako stosunek liczby elementów wspólnych do liczby elementów w sumie zbiorów:
     \[
         J(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|}{|\mathbb{A} \cup \mathbb{B}|}.
     \]
+    \textcolor{red}{Można także zdefiniować jego ważony wariant, wykorzystując sumy wag elementów zbiorów:
+    \[
+        J_w(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|_w}{|\mathbb{A} \cup \mathbb{B}|_w}
+    \]}
     Jak pokazano w \cite{Lemiesz_2021}, 
     \[
         J_w(\mathbb{A}, \mathbb{B}) = Pr[A_k = B_k]. 
     \]
-    \JL{Przydałoby się formalnie zdefiniować ważone podobieństwo Jaccarda.}
-    Stąd można łatwo wyznaczyć estymator podobieństwa Jaccarda zbiorów $\mathbb{A}$ i $\mathbb{B}$ jako:
+    Stąd można łatwo wyznaczyć nieobciążony estymator ważonego podobieństwa Jaccarda zbiorów $\mathbb{A}$ i $\mathbb{B}$ jako:
     \[
         \hat{J}_w(A, B) = \frac{1}{m} \sum\limits_{k = 1}^{m} \mathbbm{1}[A_k = B_k].  
     \]
 
     \subsubsection*{Przecięcie}
-    Statystytki dotyczące przecięcia zbiorów można łatwo estymować na podstawie sumy i podobieństwa Jaccarda. Dla $|\mathbb{A} \cap \mathbb{B}|_{w}$ mamy:
+    Statystyki dotyczące przecięcia zbiorów można łatwo estymować na podstawie sumy i podobieństwa Jaccarda. Dla $|\mathbb{A} \cap \mathbb{B}|_{w}$ otrzymujemy nieobciążony estymator w postaci:
     \[
         \hat{I}(A, B) = \hat{J}_w(A, B) \cdot \hat{U}(A, B).  
     \]
@@ -85,7 +92,7 @@
     \textcolor{red}{Oznaczmy sumę wag wszystkich elementów w strumieniu jako $\Lambda = \lambda_1, \lambda_2, \dots, \lambda_n$ i roważmy $k$-tą pozycję w szkicu. Dla każdego elementu $i$ generowana jest próbka $E_i \sim Exp(\lambda_i)$, a w ostatecznym szkicu zapisywana jest najmniejsza z tych próbek: 
     \[
         M_k = \min{\{E_1, E_2, \dots, E_n\}}.
-    \].
+    \]
     Oczywiście minimum zmiennych losowych o rozkładzie wykładniczym również ma rozkład wykładniczy, z parametrem równym $\Lambda$:
     \[
         M_k \sim Exp(\Lambda).
@@ -101,12 +108,8 @@
     Jest to estymator nieobciążony.
     }
 
-
-    \JL{Przydałoby się napisać, że wszystkie powyższe estymatory są nieobciążone i mają wyliczoną wariancję.}
-    
-    
 \subsection{FastExpSketch}
-    Łatwo zauważyć, że ExpSketch dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu hasza, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, FastExpSketch \cite{Lemiesz_2023}. Jego idea opiera się na wykorzystaniu następującego twierdzenia (cf. \cite{Devroye_1986a}):
+    Łatwo zauważyć, że \texttt{ExpSketch} dla każdego elementu w strumieniu wykonuje $m$ iteracji pętli, po jednej dla każdej wartości przechowywanej w szkicu. Pojedyncza iteracja polega na obliczeniu funkcji haszującej, wygenerowaniu liczby losowej, obliczeniu wartości $E$ i zaktualizowaniu szkicu. Każda z tych operacji wykonywana jest w czasie stałym, co daje złożoność czasową $\Omega(m)$ dla pojedynczego elementu w strumieniu. W przypadku przetwarzania krawędzi grafu oznacza to łączną złożoność czasową $\Omega(m|E|)$, gdzie $|E|$ to liczba krawędzi w grafie. Taka liczba operacji może być w praktyce zbyt duża, dlatego rozważać będziemy zoptymalizowaną wersję algorytmu, \texttt{FastExpSketch} \cite{Lemiesz_2023}. Jego idea opiera się na wykorzystaniu następującego twierdzenia \cite{Devroye_1986a}:
     \begin{twierdzenie}
         \label{theo:orderStatsExp}        
         Niech $E_1, E_2, \dots, E_m$ będą niezależnymi zmiennymi losowymi o rozkładzie wykładniczym. Oznaczmy przez:
@@ -119,14 +122,13 @@
         \]
     \end{twierdzenie}
 
-    W oryginalnym algorytmie ExpSketch, dla każdego elementu generowanych jest $m$ wartości $E_{1}, E_{2}, \dots, E_{m}$, które są następnie porównywane z analogicznymi wartościami w szkicu. Można zauważyć, że jeśli dla danego $k$ zachodzi:
+    W oryginalnym algorytmie \texttt{ExpSketch}, dla każdego elementu generowanych jest $m$ wartości $E_{1}, E_{2}, \dots, E_{m}$, które są następnie porównywane z analogicznymi wartościami w szkicu. Można zauważyć, że jeśli dla danego $k$ zachodzi:
     \[
         E_{k} > \max{\{M_1, M_2, \dots, M_m\}},     
     \]
-    to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejszenie liczby operacji wykonywanych przez algorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast wartości $E_{1}, E_{2}, \dots$, generowane są ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ są porównywane z wartościami w szkicu. 
-    \JL{na losowo wybranych pozycjach}
+    to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejszenie liczby operacji wykonywanych przez algorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast wartości $E_{1}, E_{2}, \dots$, generowane są ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ są porównywane z wartościami w szkicu na losowo wybranych pozycjach. 
     
-    Działanie FastExpSketch ilustruje \sout{pseudokod} \red{Algorytm} \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z Twierdzenia \ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
+    Działanie \texttt{FastExpSketch} ilustruje \red{Algorytm} \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną statystykę pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z Twierdzenia \ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
 
     Rozważając złożoność algorytmu, możemy skupić się na liczbie porównań w linii $19$. Oznaczmy przez $C_i$ zmienną losową wyznaczającą liczbę takich porównań dla elementu $i$. Rozważymy twierdzenie, którego dowód można znaleźć w \cite{Lemiesz_2023}:
     \begin{twierdzenie}
@@ -151,7 +153,7 @@
     gdzie $H_n = \ln n + \gamma + O(\frac{1}{n})$, więc wartość oczekiwana liczby porównań jest logarytmiczna względem liczby elementów w strumieniu.
 
 \begin{algorithm}
-    \caption{FastExpSketch($\mathfrak{M}, m$)}\label{alg:fast_exp_sketch}
+    \caption{\texttt{FastExpSketch}($\mathfrak{M}, m$)}\label{alg:fast_exp_sketch}
     $permInit \gets (1,2,3,\dots, m)$\;
     $M = (M_1, M_2, \dots, M_m) \gets (\infty, \infty, \dots, \infty)$\;
     $MAX \gets \infty$\;
