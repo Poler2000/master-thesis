@@ -647,8 +647,6 @@ Listing \thelstlisting: #1\hfill%\hfill%
         \addto\captionspolish{% 
         \renewcommand{\lstlistlistingname}{Spis listingów}%% INFO: Przedefiniowanie nazwy spisu listingów
 }%} 
-\newlistof{lstlistoflistings}{lol}{\lstlistlistingname}
-
 
 %\AtBeginDocument{% 
         \addto\captionspolish{% 
@@ -816,9 +814,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 	\vfill
 {\centering
 		{\fontsize{14pt}{16pt}\selectfont Opiekun pracy}\\[2mm] 
-		{\fontsize{14pt}{16pt}\bfseries\selectfont \@promotor}\\[10mm]%INFO: tutaj wstawiane ejst nazwisko promotora
-%		&{\fontsize{16pt}{18pt}\selectfont OCENA PRACY:}\\[20mm] 
-% INFO: linię powyższą zakomentowano, gdyż od czasu pandemii COVID-19 prace mogą być dostarczane bez podpisu promotora
+		{\fontsize{14pt}{16pt}\bfseries\selectfont \@promotor}\\[10mm]
 }
 \vspace{4cm}\noindent
 {\fontsize{12pt}{14pt}\selectfont Słowa kluczowe: \@kvpl}% INFO: na stronę tytułową trafiają tylko słowa kluczowe w języku polskim (w jakim napisana jest praca)
@@ -832,13 +828,6 @@ Specjalność: & {\bfseries \@specjalnosc}\\
  \cleardoublepage
 }
 \makeatother
-
-%\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{empty}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   Początek strefy do nanoszenia zmian 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -859,8 +848,8 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 \kierunek{Informatyka algorytmiczna (INA)} % IFO: nazwa kierunku
 \specjalnosc{Algorytmika (ALG)} % IFO: nazwa kierunku
 \promotor{dr inż. Jakub Lemiesz} % INFO: dane promotora 
-\kvpl{TODO, TODO, TODO} % INFO: słowa kluczowe po polsku
-\kven{TODO, TODO, TODO} % INFO: słowa kluczowe po angielsku
+\kvpl{Szkice danych, Analiza grafów, Strumienie danych} % INFO: słowa kluczowe po polsku
+\kven{Data sketches, Graph analysis, Data streams} % INFO: słowa kluczowe po angielsku
 \date{WROCŁAW, 2024} % INFO: miejscowość, rok złożenia pracy dyplomowej
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -869,15 +858,6 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 %%  - tutaj należy wstawić własne rozdziały
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% INFO: Za pomocą polecenia \includeonly{} można dokonać selekcji  
-%       tych części (plików z latexowym kodem), które mają być kompilowane. 
-%       Przydaje się to szczególnie podczas pracy nad dużymi dokumentami. 
-%       Bo im mniej części zostanie wyselekcjonowanych, tym szybsza będzie kompilacja.
-%       Proszę nie mylić tej komendy z poleceniem \include{}, którą używa się 
-%       do zadeklarowania pełnej struktury dokumentu (plików z latexowym kodem).
-%\includeonly{skroty,rozdzial01}  
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -908,7 +888,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 \pdfbookmark[0]{Spis treści}{spisTresci.1}%
 %%\phantomsection
 %%\addcontentsline{toc}{chapter}{Spis treści}
-\setcounter{tocdepth}{1}; 
+\setcounter{tocdepth}{1} 
 \tableofcontents* 
 \clearpage
 % SPIS RYSUNKÓW (zostanie wygenerowany automatycznie)
@@ -927,10 +907,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 \pdfbookmark[0]{Spis listingów}{spisListingow.1} %
 %%\phantomsection
 %%\addcontentsline{toc}{chapter}{Spis listingów}
-\lstlistoflistings*
 \clearpage
-% SKRÓTY (to opcjonalna część pracy)
-\include{skroty} 
 % ROZDZIAŁY (kolejne rozdziały dołączane są z kolejnych plików)
 \chapterstyle{default}
 
@@ -958,5 +935,6 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 %       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
 \bibliography{bibliography}
 \appendix
+\include{appendixA}
 
 \end{document}
