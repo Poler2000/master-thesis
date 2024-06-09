@@ -48,7 +48,7 @@ W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywa
     \]
     gdzie $|\mathbb{S}|_{w} = \sum\limits_{i \in \mathbb{S}}\lambda_i$ jest sumą wag elementów w zbiorze $\mathbb{S}$. 
     \subsubsection*{Suma}
-    \textcolor{red}{Z własności rozkładu wykładniczego wiemy, że dla dwóch zmiennych losowych $X, Y$ o rozkładzie wykładniczym i parametrach $\lambda_X, \lambda_Y$, $\min(X, Y)$ ma także rozkład wykładniczy, którego parametr wynosi $\lambda = \lambda_X + \lambda_Y$. Stąd, }chcąc otrzymać szkic $C$, gdzie 
+    \textcolor{black}{Z własności rozkładu wykładniczego wiemy, że dla dwóch zmiennych losowych $X, Y$ o rozkładzie wykładniczym i parametrach $\lambda_X, \lambda_Y$, $\min(X, Y)$ ma także rozkład wykładniczy, którego parametr wynosi $\lambda = \lambda_X + \lambda_Y$. Stąd, }chcąc otrzymać szkic $C$, gdzie 
     \[
         C_k \sim Exp(|\mathbb{A} \cup \mathbb{B}|_{w}), 
     \]
@@ -62,16 +62,16 @@ W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywa
     \[
         \hat{U}(A, B) = \frac{m - 1}{\sum\limits_{k = 1}^{m} \min{\{A_k, B_k\}}} .
     \]
-    \textcolor{red}{Jako pokazano w \cite{Lemiesz_2023}, tak zdefiniowany estymator jest nieobciążony i ma wyznaczoną wariancję, podobnie jak kolejne, przedstawione dalej estymatory.}
+    \textcolor{black}{Jako pokazano w \cite{Lemiesz_2023}, tak zdefiniowany estymator jest nieobciążony i ma wyznaczoną wariancję, podobnie jak kolejne, przedstawione dalej estymatory.}
 
     \subsubsection*{Ważone podobieństwo Jaccarda} 
     Podobieństwo Jaccarda to miara podobieństwa dwóch zbiorów, zdefiniowana jako stosunek liczby elementów wspólnych do liczby elementów w sumie zbiorów:
     \[
         J(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|}{|\mathbb{A} \cup \mathbb{B}|}.
     \]
-    \textcolor{red}{Można także zdefiniować jego ważony wariant, wykorzystując sumy wag elementów zbiorów:
+    \textcolor{black}{Można także zdefiniować jego ważony wariant, wykorzystując sumy wag elementów zbiorów:
     \[
-        J_w(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|_w}{|\mathbb{A} \cup \mathbb{B}|_w}
+        J_w(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|_w}{|\mathbb{A} \cup \mathbb{B}|_w}~.
     \]}
     Jak pokazano w \cite{Lemiesz_2021}, 
     \[
@@ -89,7 +89,7 @@ W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywa
     \]
     \subsubsection*{Estymator sumy wag elementów}
     \label{sec:weight_sum_estimator}
-    \textcolor{red}{Oznaczmy sumę wag wszystkich elementów w strumieniu jako $\Lambda = \lambda_1, \lambda_2, \dots, \lambda_n$ i roważmy $k$-tą pozycję w szkicu. Dla każdego elementu $i$ generowana jest próbka $E_i \sim Exp(\lambda_i)$, a w ostatecznym szkicu zapisywana jest najmniejsza z tych próbek: 
+    \textcolor{black}{Oznaczmy sumę wag wszystkich elementów w strumieniu jako $\Lambda = \lambda_1, \lambda_2, \dots, \lambda_n$ i roważmy $k$-tą pozycję w szkicu. Dla każdego elementu $i$ generowana jest próbka $E_i \sim Exp(\lambda_i)$, a w ostatecznym szkicu zapisywana jest najmniejsza z tych próbek: 
     \[
         M_k = \min{\{E_1, E_2, \dots, E_n\}}.
     \]
@@ -128,7 +128,7 @@ W niniejszym rozdziale przedstawimy szerzej operacje, które mogą być wykonywa
     \]
     to oczywiście $E_{k}$ nie zostanie zapisane w szkicu. Ten fakt pozwala na zmniejszenie liczby operacji wykonywanych przez algorytm, przy utrzymaniu identycznych wyników. Konkretnie, zamiast wartości $E_{1}, E_{2}, \dots$, generowane są ich statystyki pozycyjne $E_{(1)}, E_{(2)}, \dots$, dopóki nie zajdzie warunek $E_{(i)} > \max{\{M_1, M_2, \dots, M_m\}}$. Następnie wygenerowane wartości $E_{(1)}, E_{(2)}, \dots, E_{(i - 1)}$ są porównywane z wartościami w szkicu na losowo wybranych pozycjach. 
     
-    Działanie \texttt{FastExpSketch} ilustruje \red{Algorytm} \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną statystykę pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z Twierdzenia \ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
+    Działanie \texttt{FastExpSketch} ilustruje Algorytm \ref{alg:fast_exp_sketch}. Algorytm rozpoczyna się od inicjalizacji szkicu, oraz zmiennych pomocniczych. Dla każdego elementu w strumieniu ustawiamy zmienną $S$ przechowującą aktualną statystykę pozycyjną na $0$. W linijkach $9-11$ obliczamy kolejne statystyki pozycyjne, korzystając z Twierdzenia \ref{theo:orderStatsExp} i zapisujemy je na losowej pozycji $j$ w szkicu, o ile są mniejsze od aktualnie zapisanej tam wartości. Pozycje w  szkicu wyznaczamy linijkach $14-16$ na podstawie losowej permutacji $P$, za pomocą kroków analogicznych do algorytmu Fischera-Yatesa. Cała procedura jest przerywana, jeśli wygenerowana wartość $S$ przekroczy aktualne maksimum $MAX$ wartości w szkicu. Na końcu wartość $MAX$ jest aktualizowana, o ile zaszła taka potrzeba.
 
     Rozważając złożoność algorytmu, możemy skupić się na liczbie porównań w linii $19$. Oznaczmy przez $C_i$ zmienną losową wyznaczającą liczbę takich porównań dla elementu $i$. Rozważymy twierdzenie, którego dowód można znaleźć w \cite{Lemiesz_2023}:
     \begin{twierdzenie}

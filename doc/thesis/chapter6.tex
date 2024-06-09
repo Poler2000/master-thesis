@@ -18,7 +18,7 @@
     \subsubsection{Model Erdosa-Renyiego}
         Model Erdosa-Renyiego jest jednym z najpowszechniejszych modeli grafów losowych. W modelu tym, każda para wierzchołków jest połączona krawędzią z jednakowym prawdopodobieństwem $p$. Steruje on gęstością grafu, a co za tym idzie, średnim stopniem wierzchołków. Grafy w tym modelu charakteryzują się dość jednorodną strukturą, bez wyraźnych klastrów, czy wierzchołków o dysproporcjonalnie wysokich stopniach. 
 
-        Eksperyment przeprowadzono dla różnych prawdopodobieństw wystąpienia krawędzi $p$ oraz stopni sąsiedztwa $k \in \{2,3,4\}$. W każdym przypadku liczba wierzchołków w grafie wynosiła $10000$. Rozmiar szkicu wyniósł $m = 10$, a parametr rozkładu wykładniczego $\alpha = 0.3$. Wyniki przedstawiono w tabeli \ref{tab:erdos_renyi}.
+        Eksperyment przeprowadzono dla różnych prawdopodobieństw wystąpienia krawędzi $p$ oraz stopni sąsiedztwa $k \in \{2,3,4\}$. W każdym przypadku liczba wierzchołków w grafie wynosiła $10000$. Rozmiar szkicu wyniósł $m = 10$, a parametr rozkładu wykładniczego $\alpha = 0.3$. Wyniki przedstawiono w Tabeli \ref{tab:erdos_renyi}.
 
         \begin{table}[!ht]
         \small
@@ -46,9 +46,9 @@
         \end{table}
 
     \subsubsection{Stochastyczny model blokowy}
-    Stochastyczny model blokowy (ang. \emph{stochastic block model}) jest modelem, w którym wierzchołki grafu są podzielone losowo na $b$ bloków. Prawdopodobieństwo wystąpienia krawędzi między dwoma wierzchołkami w tym samym bloku wynosi $p$, a pomiędzy wierzchołkami z różnych bloków $q$. Zazwyczaj przyjmuje się $p \gg q$. W modelu tym występują wyraźne klastry, ale stopnie poszczególnych wierzchołków są do siebie dość zbliżone. Sprawdza się on w symulowaniu zbiorów danych, w których można wyróżnić grupy podobnych do siebie punktów, jak np. grupy użytkowników o podobnych zainteresowaniach, albo artykuły z podobnymi słowami kluczowymi. 
+    Stochastyczny model blokowy (ang. \textit{stochastic block model}) jest modelem, w którym wierzchołki grafu są podzielone losowo na $b$ bloków. Prawdopodobieństwo wystąpienia krawędzi między dwoma wierzchołkami w tym samym bloku wynosi $p$, a pomiędzy wierzchołkami z różnych bloków $q$. Zazwyczaj przyjmuje się $p \gg q$. W modelu tym występują wyraźne klastry, ale stopnie poszczególnych wierzchołków są do siebie dość zbliżone. Sprawdza się on w symulowaniu zbiorów danych, w których można wyróżnić grupy podobnych do siebie punktów, jak np. grupy użytkowników o podobnych zainteresowaniach, albo artykuły z podobnymi słowami kluczowymi. 
 
-    W przeprowadzonym eksperymencie przyjęto rozmiar grafu $n = 1000$, prawdopodobieństwo wystąpienia krawędzi wewnątrz bloku $p = 0.5$ oraz między blokami $q = 0.001$. Zbadano także różne liczby bloków $b \in \{2,4,8\}$. Rozmiar szkicu $m$ ustalono na $10$, a parametr rozkładu wykładniczego wyniósł $\alpha = 0.3$. Wyniki przedstawiono w tabeli \ref{tab:stochastic_block_model}.
+    W przeprowadzonym eksperymencie przyjęto rozmiar grafu $n = 1000$, prawdopodobieństwo wystąpienia krawędzi wewnątrz bloku $p = 0.5$ oraz między blokami $q = 0.001$. Zbadano także różne liczby bloków $b \in \{2,4,8\}$. Rozmiar szkicu $m$ ustalono na $10$, a parametr rozkładu wykładniczego wyniósł $\alpha = 0.3$. Wyniki przedstawiono w Tabeli \ref{tab:stochastic_block_model}.
 
     \begin{table}[!ht]
         \small
@@ -72,13 +72,13 @@
     \end{table}
 
     \subsubsection{Model Barabasiego-Alberta}
-    W modelu Barabasiego-Alberta (ang. \emph{Barabasi-Albert Model}) wierzchołki dodawane są do grafu sekwencyjnie. Nowy wierzchołek łączy się z istniejącymi wierzchołkami z prawdopodobieństwem proporcjonalnym do ich stopnia. Bardziej formalnie, konstrukcja grafu rozpoczyna się od wyboru małego zbioru $m_0$ początkowych wierzchołków i poprowadzenia wśród nich krawędzi w taki sposób, aby każdy wierzchołek był połączony z co najmniej jednym innym. Następnie, w każdym kroku dodawany jest nowy wierzchołek wraz z $m_{ba}$ krawędziami łączącymi go z innymi z prawdopodobieństwem tym większym, im większy jest stopień danego wierzchołka. Konkretnie, prawdopodobieństwo istnienia krawędzi do wierzchołka $i$ wynosi 
+    W modelu Barabasiego-Alberta (ang. \textit{Barabasi-Albert Model}) wierzchołki dodawane są do grafu sekwencyjnie. Nowy wierzchołek łączy się z istniejącymi wierzchołkami z prawdopodobieństwem proporcjonalnym do ich stopnia. Bardziej formalnie, konstrukcja grafu rozpoczyna się od wyboru małego zbioru $m_0$ początkowych wierzchołków i poprowadzenia wśród nich krawędzi w taki sposób, aby każdy wierzchołek był połączony z co najmniej jednym innym. Następnie, w każdym kroku dodawany jest nowy wierzchołek wraz z $m_{ba}$ krawędziami łączącymi go z innymi z prawdopodobieństwem tym większym, im większy jest stopień danego wierzchołka. Konkretnie, prawdopodobieństwo istnienia krawędzi do wierzchołka $i$ wynosi 
     \[
         p_i = \frac{k_i}{\sum_{j \in V^{*}} k_j},
     \]
-    gdzie $k_i$ to stopień wierzchołka $i$, a $V^{*}$ to zbiór aktualnie występujących w grafie wierzchołków. W powstałych w ten sposób grafach można zaobserwować duże zróżnicowanie stopni wierzchołków, z wyraźnie odznaczającymi się węzłami centralnymi (ang. \emph{hubs}).
+    gdzie $k_i$ to stopień wierzchołka $i$, a $V^{*}$ to zbiór aktualnie występujących w grafie wierzchołków. W powstałych w ten sposób grafach można zaobserwować duże zróżnicowanie stopni wierzchołków, z wyraźnie odznaczającymi się węzłami centralnymi (ang. \textit{hubs}).
 
-    W przeprowadzonym eksperymencie przyjęto liczbę wierzchołków $n = 1000$ i stopień wierzchołków $m_{ba} \in \{2,4,8\}$, a rozmiar początkowego zbioru wierzchołków ustalono na $m_0 = m_{ba}$. Wyniki przedstawiono w tabeli \ref{tab:barabasi_albert}. W przypadku $m_{ba} = 2$ pominięto wyniki dla $t = 10000$, ponieważ liczba wierzchołków w grafie wynosiła tylko $3994$.
+    W przeprowadzonym eksperymencie przyjęto liczbę wierzchołków $n = 1000$ i stopień wierzchołków $m_{ba} \in \{2,4,8\}$, a rozmiar początkowego zbioru wierzchołków ustalono na $m_0 = m_{ba}$. Wyniki przedstawiono w Tabeli \ref{tab:barabasi_albert}. W przypadku $m_{ba} = 2$ pominięto wyniki dla $t = 10000$, ponieważ liczba wierzchołków w grafie wynosiła tylko $3994$.
     \begin{table}[!ht]
         \small
         \centering
@@ -102,7 +102,8 @@
 
     \subsubsection{Grafy ważone}
 
-    Jedną z motywacji stojących za algorytmem \texttt{EdgeSketch} była potrzeba lepszego wykorzystania własności grafów ważonych.  Przeprowadzono eksperyment mający na celu zweryfikować rzeczywistą skuteczność tego rozwiązania. Testy przeprowadzono na grafach w modelu Erdosa-Renyiego o $10000$ wierzchołków. Wagi krawędzi były losowane z rozkładu jednostajnego na zbiorze $\{1, 2, \ldots, 10\}$. Podobnie jak w poprzednich eksperymentach, rozmiar szkicu wyniósł $m = 10$, a parametr rozkładu wykładniczego $\alpha = 0.3$. Wyniki przedstawiono w tabeli \ref{tab:weighted_graphs}.
+    Jedną z motywacji stojących za algorytmem \texttt{EdgeSketch} była potrzeba lepszego wykorzystania własności grafów ważonych.  Przeprowadzono eksperyment mający na celu zweryfikować rzeczywistą skuteczność tego rozwiązania. Testy przeprowadzono na grafach w modelu Erdosa-Renyiego o $10000$ wierzchołków. Wagi krawędzi były losowane z rozkładu jednostajnego na zbiorze $\{1, 2, \ldots, 10\}$. Podobnie jak w poprzednich eksperymentach, rozmiar szkicu wyniósł $m = 10$, a parametr rozkładu wykładniczego $\alpha = 0.3$. Wyniki przedstawiono w Tabeli \ref{tab:weighted_graphs}.
+
 
     \begin{table}[!ht]
         \small
@@ -131,15 +132,16 @@
     \subsection{Wnioski}
     Algorytm \texttt{EdgeSketch} uzyskuje wyższą precyzję niż \texttt{NodeSketch} dla większości zbiorów, na których przeprowadzono eksperymenty. W szczególności dla małych wartości $t$, uzyskiwana przez \texttt{EdgeSketch} precyzja jest bliska $1$, co oznacza że wszystkie lub niemal wszystkie krawędzie zostały przewidziane poprawnie. \texttt{NodeSketch} uzyskuje dość zróżnicowane wyniki, od zbliżonych, lecz nieco niższych, jak w przypadku grafu w modelu Erdosa-Renyiego z parametrem $p = 0.0005$, po bliskie $0$, jak przy gęstszych grafach w tym samym modelu. Dla obu algorytmów wyniki pogarszają się wraz ze wzrostem $t$, ale \texttt{EdgeSketch} osiąga nadal lepsze wyniki niż \texttt{NodeSketch} na wszystkich grafach poza tymi w stochastycznym modelu blokowym. 
     
-    W przypadku algorytmu \texttt{NodeSketch}, wybór większej wartości parametru $k$ zazwyczaj albo nie zmienia znacząco precyzji albo ją pogarsza, niezależnie od $t$. Inaczej jest w przypadku \texttt{EdgeSketch}, gdzie dobór optymalnego $k$ zależy od konkretnego zbioru oraz wartości $t$. O ile w przypadku małych próbek, np $t = 100$, najlepiej sprawdza się $k = 2$, o tyle dla $t = |E|$, dobór większego $k$ może poprawić wyniki, co widać szczególnie wyraźnie w stochastycznym modelu blokowym oraz w rzadkich grafach w modelu Erdosa-Renyiego. 
+    W przypadku algorytmu \texttt{NodeSketch}, wybór większej wartości parametru $k$ zazwyczaj albo nie zmienia znacząco precyzji albo ją pogarsza, niezależnie od $t$. Inaczej jest w przypadku \texttt{EdgeSketch}, gdzie dobór optymalnego $k$ zależy od konkretnego zbioru oraz wartości $t$. O ile w przypadku małych próbek, np. $t = 100$, najlepiej sprawdza się $k = 2$, o tyle dla $t = |E|$, dobór większego $k$ może poprawić wyniki, co widać szczególnie wyraźnie w stochastycznym modelu blokowym oraz w rzadkich grafach w modelu Erdosa-Renyiego. 
 
     W przypadku grafów ważonych, różnica pomiędzy algorytmami jest szczególnie wyraźna. \texttt{EdgeSketch} uzyskuje wyniki bardzo zbliżone do tych osiąganych dla grafów nieważonych o podobnej strukturze. Pozostaje on więc skuteczny w przewidywaniu krawędzi. W przypadku \texttt{NodeSketcha}, wyniki są natomiast znacznie gorsze, często bliskie zeru. Wynikać to może z faktu, że algorytm ten tworzy szkic, w którym przechowywane są indeksy wierzchołków, a nie próbki z rozkładu wykładniczego, jak w przypadku \texttt{EdgeSketcha}.
+        \JL{Trochę dziwne, że aż tak kiepsko w NodeSketch - oni też używają rozkładu wykładniczego do wyboru indeksów, więc wagi powinny być uwzględniane przy odpowiedniej implementacji? W sumie to nie rozumiem tego ostatniego zdania.}
 
 \section{Wykorzystanie stopnia wierzchołków przy rekonstrukcji}
     Jak wspomniano w rozdziale \ref{sec:weight_sum_estimator}, szkice generowane przez algorytm \texttt{ExpSketch} pozwalają na zdefiniowanie nieobciążonego estymatora sumy wag elementów w strumieniu. W przypadku algorytmu \texttt{EdgeSketch}, \texttt{ExpSketch} jest wywoływany dla pojedynczego wierzchołka, a w strumieniu znajdują się wychodzące z niego krawędzie. Jeśli graf jest nieważony, to suma wag krawędzi jest po prostu stopniem wierzchołka. 
     Przeprowadzono eksperyment mający na celu sprawdzenie, czy ta właściwość może być wykorzystana do poprawy jakości rekonstrukcji. Konkretnie podczas wyboru najbardziej podobnych wierzchołków, śledzono liczbę krawędzi wychodzących z każdego z nich. Jeśli wierzchołek $v$ osiągał swój estymowany stopień, to był on pomijany w dalszym procesie.  
     
-    Testy przeprowadzono na trzech zbiorach zawierających rzeczywiste dane. Pierwszy z nich to \emph{HomoSapiens}, zbiór danych zawierający relacje między białkami dla gatunku ludzkiego. \emph{Blogcatalog} to zbiór danych zawierający relacje między blogerami, a \emph{dblp} to fragment zbioru autorów artykułów naukowych, gdzie krawędzie reprezentują współautorstwo. W eksperymencie przyjęto $\alpha = 0.3$ oraz $m = 10$. Wyniki przedstawiono w tabeli \ref{tab:degree}.
+    Testy przeprowadzono na trzech zbiorach zawierających rzeczywiste dane. Pierwszy z nich to \textit{HomoSapiens}, zbiór danych zawierający relacje między białkami dla gatunku ludzkiego. \textit{Blogcatalog} to zbiór danych zawierający relacje między blogerami, a \textit{dblp} to fragment zbioru autorów artykułów naukowych, gdzie krawędzie reprezentują współautorstwo. W eksperymencie przyjęto $\alpha = 0.3$ oraz $m = 10$. Wyniki przedstawiono w Tabeli \ref{tab:degree}.
 
     \begin{table}[!ht]
         \small
@@ -163,14 +165,14 @@
     \end{table}
 
     \subsection{Wnioski}
-    Wyniki pokazują, że wykorzystanie stopnia wierzchołków przy rekonstrukcji rzeczywiście może wpływać na poprawę precyzji. Jest to szczególnie widoczne dla $t = |E|$. Choć zazwyczaj różnice nie były duże, to np. w przypadku zbioru \emph{blogcatalog} precyzja wzrosła z niecałych $4\%$ do niemal $20\%$, co jest znaczącą poprawą. Nieco gorzej było w przypadku małych $t$, gdzie nieco lepsze wyniki uzyskał oryginalny algorytm.
+    Wyniki pokazują, że wykorzystanie stopnia wierzchołków przy rekonstrukcji rzeczywiście może wpływać na poprawę precyzji. Jest to szczególnie widoczne dla $t = |E|$. Choć zazwyczaj różnice nie były duże, to np. w przypadku zbioru \textit{blogcatalog} precyzja wzrosła z niecałych $4\%$ do niemal $20\%$, co jest znaczącą poprawą. Nieco gorzej było w przypadku małych $t$, gdzie nieco lepsze wyniki uzyskał oryginalny algorytm.
 
 \section{Wpływ rozmiaru szkicu na uzyskiwane wyniki}
     Jednym z kluczowych parametrów wpływających na działanie algorytmów \texttt{NodeSketch} i \texttt{EdgeSketch} jest rozmiar szkicu. Wybór odpowiedniej wartości $m$ może nie być oczywisty. Z jednej strony, większy szkic jest w stanie przechować więcej informacji, lecz z drugiej strony, zwiększa to czas obliczeń oraz ilość używanej pamięci. Poniższe eksperymenty miały na celu weryfikację wpływu rozmiaru szkicu na uzyskiwane wyniki.
 
-    Pierwszy z nich przeprowadzono na zbiorach danych blogcatalog oraz dblp. W obu przypadkach rozważano różne wartości parametru $m \in \{8, 16, 32, 64, 128, 256\}$. W eksperymencie przyjęto $\alpha = 0.3$ oraz $k = 2$. Wyniki przedstawiono w tabeli \ref{tab:sketch_size}.
+    Pierwszy z nich przeprowadzono na zbiorach danych blogcatalog oraz dblp. W obu przypadkach rozważano różne wartości parametru $m \in \{8, 16, 32, 64, 128, 256\}$. W eksperymencie przyjęto $\alpha = 0.3$ oraz $k = 2$. Wyniki przedstawiono w Tabeli \ref{tab:sketch_size}.
 
-    Drugi eksperyment przeprowadzono jedynie dla algorytmu \texttt{EdgeSketch} z tymi samymi parametrami. Został on wykonany na $20$ grafach w stochastycznym modelu blokowym, z których każdy miał $1000$ wierzchołków. Zbadano zmiany precyzji dla $t = 10000$ oraz $t = |E|$ wraz z rozmiarem szkicu. Rezultaty ilustruje wykres \ref{fig:precision_m}.
+    Drugi eksperyment przeprowadzono jedynie dla algorytmu \texttt{EdgeSketch} z tymi samymi parametrami. Został on wykonany na $20$ grafach w stochastycznym modelu blokowym, z których każdy miał $1000$ wierzchołków. Zbadano zmiany precyzji dla $t = 10000$ oraz $t = |E|$ wraz z rozmiarem szkicu. Rezultaty ilustruje Rysunek  \ref{fig:precision_m}.
     \begin{table}[!ht]
         \small
         \centering
@@ -203,11 +205,11 @@
     \end{figure}
     
     \subsection{Wnioski}
-    Zgodnie z intuicją, zwiększenie rozmiaru szkicu ma korzystny wpływ na uzyskiwaną precyzję. Algorytm \texttt{EdgeSketch} jest szczególnie widoczne w przypadku dużych wartości $t$. Warto jednak zaznaczyć, że im większy szkic, tym dalsze jego zwiększanie ma mniejszy wpływ na precyzję. Co ciekawe, dla małych $t$, \texttt{EdgeSketch} jest w stanie uzyskać wysoką precyzję nawet przy małym rozmiarze szkicu. Przykładowo, dla $t = 10000$, szkic o rozmiarze $64$ jest wystarczający, aby w każdym z badanych przypadków uzyskać precyzję $1$, a w dla zbioru dblp, wystarczający jest nawet szkic o $8$ elementach. W przypadku algorytmu \texttt{NodeSketch}, zyski występują, ale są niewielkie w porównaniu do \texttt{EdgeSketcha}. Warto zaznaczyć, że większy rozmiar szkicu implikuje większą liczbę wykonywanych operacji oraz większe zapotrzebowanie na pamięć, dlatego w praktycznych zastosowaniach konieczne może być znaleznienie kompromisu pomiędzy jakością uzyskiwanych wyników a kosztem obliczeniowym.
+    Zgodnie z intuicją, zwiększenie rozmiaru szkicu ma korzystny wpływ na precyzję. Dla algorytmu \texttt{EdgeSketch} jest to szczególnie widoczne w przypadku dużych wartości $t$. Warto jednak zaznaczyć, że im większy szkic, tym dalsze jego zwiększanie ma mniejszy wpływ na precyzję. Co ciekawe, dla małych $t$, \texttt{EdgeSketch} jest w stanie uzyskać wysoką precyzję nawet przy małym rozmiarze szkicu. Przykładowo, dla $t = 10000$, szkic o rozmiarze $64$ jest wystarczający, aby w każdym z badanych przypadków uzyskać precyzję $1$, a w dla zbioru dblp, wystarczający jest nawet szkic o $8$ elementach. W przypadku algorytmu \texttt{NodeSketch}, zyski występują, ale są niewielkie w porównaniu do \texttt{EdgeSketcha}. Warto zaznaczyć, że większy rozmiar szkicu implikuje większą liczbę wykonywanych operacji oraz większe zapotrzebowanie na pamięć, dlatego w praktycznych zastosowaniach konieczne może być znaleznienie kompromisu pomiędzy jakością uzyskiwanych wyników a kosztem obliczeniowym.
 
 \section{Dobór parametru alpha}
 
-    Kolejnym parametrem, mającym znaczenie dla obu algorytmów jest $\alpha$. Jego wartość decyduje, jak szybko maleje wpływ kolejnych, coraz bardziej odległych sąsiadów na generowane szkice, lub, w przypadku \texttt{EdgeSketcha}, obliczane podobieństwa Jaccarda. Grafy wykorzystane w eksperymencie zostały wygenerowane w modelu Erdosa-Renyiego i miały $5000$ wierzchołków. Badano różne wartości $\alpha \in \{0, 0.15, 0.3, 0.45\}$, przy czym $\alpha = 0$ oznacza, że sąsiedztwa wyższych rzędów nie były brane pod uwagę. Rozmiar szkicu $m$ ustalono na $10$, a parametr $k$ na $4$. Rezultaty przedstawiono w tabeli \ref{tab:alpha}.
+    Kolejnym parametrem, mającym znaczenie dla obu algorytmów jest $\alpha$. Jego wartość decyduje, jak szybko maleje wpływ kolejnych, coraz bardziej odległych sąsiadów na generowane szkice, lub, w przypadku \texttt{EdgeSketcha}, obliczane podobieństwa Jaccarda. Grafy wykorzystane w eksperymencie zostały wygenerowane w modelu Erdosa-Renyiego i miały $5000$ wierzchołków. Badano różne wartości $\alpha \in \{0, 0.15, 0.3, 0.45\}$, przy czym $\alpha = 0$ oznacza, że sąsiedztwa wyższych rzędów nie były brane pod uwagę. Rozmiar szkicu $m$ ustalono na $10$, a parametr $k$ na $4$. Rezultaty przedstawiono w Tabeli \ref{tab:alpha}.
 
     \begin{table}[!ht]
         \small
@@ -239,11 +241,18 @@
 
     \subsection{Wnioski}
     Odpowiedni dobór parametru rozkładu wykładniczego zależy od konkretnego grafu. W badanym modelu dla algorytmu \texttt{NodeSketch} najlepsze wyniki uzyskano ignorując sąsiedztwa wyższych rzędów. Inaczej było w przypadku \texttt{EdgeSketcha}, gdzie niewielkie wartości parametru, zwłaszcza $\alpha = 0.15$ lub $\alpha = 0.3$ wpływały korzystnie na uzyskiwane wyniki. Pogarszały się one jednak przy wyborze większych współczynników. Większa $\alpha$ pozwala na ujęcie większej ilości informacji o dalszym sąsiedztwie, ale może również przykrywać informacje o najbliższych sąsiadach wierzchołka, co później zaburza proces rekonstrukcji krawędzi. W większości przypadków wybór małych wartości $\alpha$ wydaje się więc najskuteczniejszą strategią dla algorytmu \texttt{NodeSketch}. 
+    \JL{Chyba dla algorytmu EdgeSketch ?}
 
 \section{Liczba operacji w zależności od liczby krawędzi w grafie}
 \label{sec:performance}
 
-    Teoretyczna złożoność obliczeniowa algorytmów \texttt{NodeSketch} i \texttt{EdgeSketch} została skomentowana w rozdziale \ref{sec:complexity}. Analiza ta obejmowała wszystkie kroki wykonywane w trakcie działania algorytmów. Jednak w praktyce, pewne operacje mogą mieć o wiele istotniejszy wpływ na ostateczny czas działania niż inne. W szczególności, obliczenie wartości funkcji haszujące, choć odbywa się w czasie $O(1)$, to przy dużej liczbie wywołań ma znaczący wpływ na efektywność algorytmu. W poniższym eksperymencie zbadano średnią liczbę obliczonych wartości funkcji haszujących w zależności od liczby krawędzi w grafie. W tym celu wygenerowano grafy w stochastycznym modelu blokowym o różnych rozmiarach, od $200$ do $8000$ wierzchołków. Wszystkie z nich miały $4$ bloki, a prawdopodobieństwa krawędzi wewnątrz bloku i pomiędzy blokami wynosiły odpowiednio $0.5$ i $0.001$. Podobnie jak w innych eksperymentach, rozmiar szkicu $m$ wynosił $10$ i przyjęto $\alpha = 0.3$. Wyniki przedstawiono na wykresie \ref{fig:calculated_hashes_vs_edges_all}. Dodatkowo, wykres \ref{fig:calculated_hashes_vs_edges_relative} przedstawia te same wyniki, ale znormalizowane względem liczby krawędzi w grafie. Warto zaznaczyć, że w implementacji algorytmu \texttt{NodeSketch} zastosowano podobną optymalizację jak w algorytmie \texttt{EdgeSketch}, polegającą na obliczaniu wartości funkcji haszującej tylko dla niezerowych elementów w macierzy $SLA$. 
+    Teoretyczna złożoność obliczeniowa algorytmów \texttt{NodeSketch} i \texttt{EdgeSketch} została skomentowana w rozdziale \ref{sec:complexity}. Analiza ta obejmowała wszystkie kroki wykonywane w trakcie działania algorytmów. Jednak w praktyce, pewne operacje mogą mieć o wiele istotniejszy wpływ na ostateczny czas działania niż inne.     
+    W szczególności, przy dużej liczbie wywołań, koszt obliczenia wartości funkcji haszującej
+    %JL , choć odbywa się w czasie $O(1)$, to
+    ma znaczący wpływ na czas działania algorytmu. 
+    \JL{Trochę zmodyfikowałem powyższe zdanie}
+    W poniższym eksperymencie zbadano średnią liczbę obliczonych wartości funkcji haszujących w zależności od liczby krawędzi w grafie. W tym celu wygenerowano grafy w stochastycznym modelu blokowym o różnych rozmiarach, od $200$ do $8000$ wierzchołków. Wszystkie z nich miały $4$ bloki, a prawdopodobieństwa krawędzi wewnątrz bloku i pomiędzy blokami wynosiły odpowiednio $0.5$ i $0.001$. Podobnie jak w innych eksperymentach, rozmiar szkicu $m$ wynosił $10$ i przyjęto $\alpha = 0.3$. Wyniki przedstawiono na Rysunku \ref{fig:calculated_hashes_vs_edges_all}. Dodatkowo, Rysunek \ref{fig:calculated_hashes_vs_edges_relative} przedstawia te same wyniki, ale znormalizowane względem liczby krawędzi w grafie. Warto zaznaczyć, że w implementacji algorytmu \texttt{NodeSketch} zastosowano podobną optymalizację jak w algorytmie \texttt{EdgeSketch}, polegającą na obliczaniu wartości funkcji haszującej tylko dla niezerowych elementów w macierzy $SLA$. 
+    \JL{Nie wiem czy nie ciekawszy byłby faktyczny czas rekonstrukcji krawędzi w NodeSketch i EdgeSketch, zwłaszcza dla większych k ?}
 
 \begin{figure}[!ht]
     \includegraphics[width=16cm]{img/calculated_hashes_vs_edges_all.png}
@@ -268,7 +277,9 @@ która w rozważanym modelu jest stała. Ostatecznie otrzymujemy więc:
 \[
     O(|V| \frac{|E|}{|V|} \ln(\rho)) = O(|E| \ln(\rho)) = O(|E|)
 \]
+\JL{Wyjaśnić dokładniej skąd się bierze powyższa formuła}
 
 Wraz ze wzrostem parametru $k$, \texttt{NodeSketch} wykonuje więcej operacji ze względu na rekurencyjną procedurę szkicowania. Oczywiście \texttt{EdgeSketch} generuje zanurzenia tylko raz, co daje mu przewagę przy rozważaniu wyższych stopni sąsiedztwa. Jednak nawet dla $k = 2$, \texttt{EdgeSketch} wykonuje wyraźnie mniej wywołań funkcji haszującej niż \texttt{NodeSketch}.
 
 Na drugim wykresie widać ukazującym liczbę wywołań podzieloną przez liczbę krawędzi, widać, że stosunek ten jest rzeczywiście liniowy. Jedynie dla małych grafów odznaczają się nieco większe wartości. Wynika to z faktu, że algorytmy wykorzystują macierz $SLA$, a nie zwykłą macierz sąsiedztwa, a więc biorą pod uwagę sztuczną pętle od wierzchołka do siebie samego, nie ujętą w zaprezentowanej liczbie krawędzi. Dla algorytmu \texttt{NodeSketch} stosunek ten stabilizuję się na ok $20$. Wynika to z faktu, że szkic ma rozmiar $10$, a każdą z krawędzi rozważamy dla dokładnie dwóch wierzchołków. Wykorzystanie procedury \texttt{FastExpSketch} pozwala zredukować tę wartość prawie dwukrotnie, choć jest to okupione większą wariancją.  
+\JL{Warto by chyba jednak zrobić porównanie faktycznych czasów działania algorytmów}
