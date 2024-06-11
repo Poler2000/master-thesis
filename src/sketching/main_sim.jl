@@ -4,7 +4,7 @@ include("ExperimentsSimilarity.jl")
 
 using .Experiments
 
-#datasets = ["block_5000_2"]
-#run_all_similarity(datasets)
+datasets = ["bin_1000_0005"]
+run_all_similarity(datasets)
 
-run_tests_all_datasets()
+#run_tests_all_datasets()

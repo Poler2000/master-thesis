@@ -14,7 +14,7 @@ function load_matrix_mat(path::String, key = "network")
     file = matopen(path)
     varkeys = keys(file)
 
-    log_info("loaded data from file: $path\nvariable keys: $varkeys\n")
+    #log_info("loaded data from file: $path\nvariable keys: $varkeys\n")
 
     data = read(file)
 

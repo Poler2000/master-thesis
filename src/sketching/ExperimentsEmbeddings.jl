@@ -35,7 +35,7 @@ module Experiments
             for k in orders
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
 
@@ -55,7 +55,7 @@ module Experiments
             for sketch_size in sketch_sizes
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha = $alpha, L = $sketch_size")
-                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_size, alpha) : nodesketch(matrix, k, sketch_size, alpha)
+                @time sketch = use_expsketch ? edgesketch(matrix, k, sketch_size, alpha) : nodesketch(matrix, k, sketch_size, alpha)
                 
                 embs = sketch.embeddings'
 
@@ -75,7 +75,7 @@ module Experiments
             for alpha in alphas
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k, alpha = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
 
