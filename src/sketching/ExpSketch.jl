@@ -1,8 +1,12 @@
 
 module ExpSketch
 
+include("Logger.jl")
+
 using Random
-export StreamElement, expsketch, fast_expsketch
+using .Logger
+
+export StreamElement, expsketch, fast_expsketch, fast_fast_expsketch, get_calculated_hashes,  reset_calculated_hashes, calculated_hashes
 
 struct StreamElement
     id1::Number
@@ -49,6 +53,8 @@ function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
         binNode1 = bitstring(element.id1)
         binNode2 = bitstring(element.id2)
         binI = element.id1 > element.id2 ? binNode2 * binNode1 : binNode1 * binNode2
+        Random.seed!(element.id2)
+
         for k in 1:m
             binK = bitstring(k)
 
@@ -60,7 +66,56 @@ function fast_expsketch(stream::Vector{<:StreamElement}, m::Number, h::Function)
                 break
             end
 
-            Random.seed!(hash(binI))
+            r = rand(k:m)
+
+            tmp = P[k];
+            P[k] = P[r]
+            P[r] = tmp;
+
+            j = P[k]
+
+            if M[k] == maxValue
+                updateMax = true
+            end
+
+            if S < M[j]
+                M[j] = S
+            end
+        end
+
+        if updateMax
+            maxValue = maximum(M)
+        end
+    end
+    
+    return M
+end
+
+function fast_fast_expsketch(elements, stream, m::Number, h::Function, i::Number)
+    M = fill(Inf, m)
+    permInit = collect(1:m)
+    maxValue = Inf
+    binNode1 = bitstring(i)
+
+    for element in stream
+        S = 0
+        updateMax = false
+        P = copy(permInit)
+        binNode2 = bitstring(element)
+        binI = i > element ? binNode2 * binNode1 : binNode1 * binNode2
+        Random.seed!(i)
+
+        for k in 1:m
+            binK = bitstring(k)
+
+            hashValue = h(binI * binK)
+            sampleValue = -log(hashValue) / elements[element]
+
+            S += sampleValue / (m - k + 1)
+            if S > maxValue
+                break
+            end
+
             r = rand(k:m)
 
             tmp = P[k];

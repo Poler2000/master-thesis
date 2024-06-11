@@ -100,65 +100,65 @@ densities = [0.01, 0.005, 0.001, 0.0005]
 ms = [2,8,16]
 block_counts = [2,4,8]
 
-for n in ns
-    for m in ms
-        println("Barabasi-Albert: $n, $m")
-        matrix = generate_barabasi_albert_matrix(n, m, m)
-
-        for y in 1:10
-            for x in 1:10
-                print("$(matrix[x,y]) ")
-            end
-            println()
-        end
-        println()
-
-        edges = count(!iszero, matrix) / 2
-        println("edges: $edges")
-        save_matrix_network(matrix, "$DATA_FOLDER/baralb_$(n)_$(m).mat")
-    end
-end
-
-for n in ns
-    for block_count in block_counts
-        println("Stochastic block: $n, $block_count")
-        matrix = generate_stochastic_block_matrix(n, block_count, 0.5, 0.001)
-
-        for y in 1:10
-            for x in 1:10
-                print("$(matrix[x,y]) ")
-            end
-            println()
-        end
-        println()
-
-        edges = count(!iszero, matrix) / 2
-        println("edges: $edges")
-        save_matrix_network(matrix, "$DATA_FOLDER/block_$(n)_$(block_count).mat")
-    end
-end
-
-for n in ns
-    for density in densities
-        println("Erods-Renyi: $n, $density")
-        matrix_binary = generate_erods_renyi_matrix(n, density, 1)
-        matrix_weighted = generate_erods_renyi_matrix(n, density, 100)
-
-        density_str = replace(string(density), "0." => "")
-        for y in 1:10
-            for x in 1:10
-                print("$(matrix_binary[x,y]) ")
-            end
-            println()
-        end
-        println()
-        for y in 1:10
-            for x in 1:10
-                print("$(matrix_weighted[x,y]) ")
-            end
-            println()
-        end
-        save_matrix_network(matrix_binary, "$DATA_FOLDER/bin_$(n)_$(density_str).mat")
-        save_matrix_network(matrix_weighted, "$DATA_FOLDER/weighted_$(n)_$(density_str).mat")
-    end
-end
+#for n in ns
+#    for m in ms
+#        println("Barabasi-Albert: $n, $m")
+#        matrix = generate_barabasi_albert_matrix(n, m, m)
+#
+#        for y in 1:10
+#            for x in 1:10
+#                print("$(matrix[x,y]) ")
+#            end
+#            println()
+#        end
+#        println()
+#
+#        edges = count(!iszero, matrix) / 2
+#        println("edges: $edges")
+#        save_matrix_network(matrix, "$DATA_FOLDER/baralb_$(n)_$(m).mat")
+#    end
+#end
+#
+#for n in ns
+#    for block_count in block_counts
+#        println("Stochastic block: $n, $block_count")
+#        matrix = generate_stochastic_block_matrix(n, block_count, 0.5, 0.001)
+#
+#        for y in 1:10
+#            for x in 1:10
+#                print("$(matrix[x,y]) ")
+#            end
+#            println()
+#        end
+#        println()
+#
+#        edges = count(!iszero, matrix) / 2
+#        println("edges: $edges")
+#        save_matrix_network(matrix, "$DATA_FOLDER/block_$(n)_$(block_count).mat")
+#    end
+#end
+#
+#for n in ns
+#    for density in densities
+#        println("Erods-Renyi: $n, $density")
+#        matrix_binary = generate_erods_renyi_matrix(n, density, 1)
+#        matrix_weighted = generate_erods_renyi_matrix(n, density, 100)
+#
+#        density_str = replace(string(density), "0." => "")
+#        for y in 1:10
+#            for x in 1:10
+#                print("$(matrix_binary[x,y]) ")
+#            end
+#            println()
+#        end
+#        println()
+#        for y in 1:10
+#            for x in 1:10
+#                print("$(matrix_weighted[x,y]) ")
+#            end
+#            println()
+#        end
+#        save_matrix_network(matrix_binary, "$DATA_FOLDER/bin_$(n)_$(density_str).mat")
+#        save_matrix_network(matrix_weighted, "$DATA_FOLDER/weighted_$(n)_$(density_str).mat")
+#    end
+#end

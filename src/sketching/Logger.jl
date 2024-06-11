@@ -2,7 +2,7 @@ module Logger
 
 export log_info, log_debug, LOG_TO_CONSOLE, LOGFILE
 
-ENABLE_DEBUG_LOGGING = true
+ENABLE_DEBUG_LOGGING = false
 LOG_TO_CONSOLE = true
 LOGFILE = nothing
 

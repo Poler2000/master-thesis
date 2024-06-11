@@ -24,6 +24,7 @@ module Experiments
         sim_top_1000::Number
         sim_top_10000::Number
         sim_all::Number
+        calculated_hashes::Int
     end
 
     function run_tests_all_datasets()
@@ -37,9 +38,9 @@ module Experiments
         default_alpha = 0.3
         default_size = 10
 
-        run_similarity_var_k(datasets, [2, 3, 4], default_alpha, default_size)
-        run_similarity_var_L(datasets, 2, default_alpha, [8, 16, 32, 64, 128, 256])
-        run_similarity_var_alpha(datasets, 4, [0.3, 0.5, 0.7], default_size)
+        #run_similarity_var_k(datasets, [2, 3, 4], default_alpha, default_size)
+        #run_similarity_var_L(datasets, 2, default_alpha, [8, 16, 32, 64, 128, 256])
+        run_similarity_var_alpha(datasets, 4, [0.0, 0.15, 0.3, 0.45], default_size)
     end
 
     function run_similarity_var_k(datasets::Array{String}, orders::Vector{<:Integer}, 
@@ -92,11 +93,11 @@ module Experiments
         for dataset in datasets
             log_info("\nSummary for dataset: $dataset, sketch size = $(res1[1].L), alpha = $(res1[1].alpha)", path)
             log_info("\t|\t\t\t\t\t $alg1 \t\t\t\t\t\t|\t\t\t\t\t$alg2", path)
-            log_info("$label\t|\tt = 100 \t|\tt = 1000 \t|\tt = 10000 \t|\tt = |E| \t|\tt = 100 \t|\tt = 1000 \t|\tt = 10000 \t|\tt = |E|\t", path)
+            log_info("$label\t|\tt = 100 \t|\tt = 1000 \t|\tt = 10000 \t|\tt = |E| \t|\t #hashes \t|\tt = 100 \t|\tt = 1000 \t|\tt = 10000 \t|\tt = |E|\t|\t #hashes ", path)
             
             for variable in variables
                 i += 1
-                log_info("$variable\t|\t$(res1[i].sim_top_100) \t\t|\t$(res1[i].sim_top_1000) \t\t|\t$(res1[i].sim_top_10000) \t\t|\t$(res1[i].sim_all)\t\t|\t$(res2[i].sim_top_100) \t\t|\t$(res2[i].sim_top_1000) \t\t|\t$(res2[i].sim_top_10000) \t\t|\t$(res2[i].sim_all)\t", path)
+                log_info("$variable\t|\t$(res1[i].sim_top_100) \t\t|\t$(res1[i].sim_top_1000) \t\t|\t$(res1[i].sim_top_10000) \t\t|\t$(res1[i].sim_all)\t\t|\t $(res1[i].calculated_hashes) \t|\t$(res2[i].sim_top_100) \t\t|\t$(res2[i].sim_top_1000) \t\t|\t$(res2[i].sim_top_10000) \t\t|\t$(res2[i].sim_all)\t|\t $(res2[i].calculated_hashes) \t", path)
             end
         end
     end
@@ -119,7 +120,7 @@ module Experiments
             for k in orders
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
                 similarity = sketch.similarity_matrix'
@@ -179,7 +180,7 @@ module Experiments
                     end
                 end
 
-                push!(results, SimResult(dataset, use_expsketch ? "EdgeSketch" : "NodeSketch", k, sketch_dimensions, alpha, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4)))
+                push!(results, SimResult(dataset, use_expsketch ? "EdgeSketch" : "NodeSketch", k, sketch_dimensions, alpha, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4), sketch.calculated_hashes))
             
                 log_info("correctly predicted: $correctly_predicted / $sample_size ($(correctly_predicted / sample_size))")
                 log_info("correctly predicted per 100: $correctly_predicted_100 / 100 ($(correctly_predicted_100 / 100))")
@@ -209,7 +210,7 @@ module Experiments
             for sketch_dimensions in dimensions
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
                 similarity = sketch.similarity_matrix'
@@ -254,7 +255,7 @@ module Experiments
                     end
                 end
 
-                push!(results, SimResult(dataset, use_expsketch ? "EdgeSketch" : "NodeSketch", k, sketch_dimensions, alpha, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4)))
+                push!(results, SimResult(dataset, use_expsketch ? "EdgeSketch" : "NodeSketch", k, sketch_dimensions, alpha, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4), sketch.calculated_hashes))
             
                 log_info("correctly predicted: $correctly_predicted / $sample_size ($(correctly_predicted / sample_size))")
                 log_info("correctly predicted per 100: $correctly_predicted_100 / 100 ($(correctly_predicted_100 / 100))")
@@ -284,7 +285,7 @@ module Experiments
             for alpha in alphas
                 log_info("Executing $(use_expsketch ? "expsketch-based" : "basic") algorithm for dataset: $dataset")
                 log_info("k = $k = $alpha, L = $sketch_dimensions")
-                @time sketch = use_expsketch ? edgeketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
+                @time sketch = use_expsketch ? edgesketch(matrix, k, sketch_dimensions, alpha) : nodesketch(matrix, k, sketch_dimensions, alpha)
                 
                 embs = sketch.embeddings'
                 similarity = sketch.similarity_matrix'
@@ -329,7 +330,7 @@ module Experiments
                     end
                 end
 
-                push!(results, SimResult(dataset, use_expsketch ? "EdgeSketch" : "NodeSketch", k, sketch_dimensions, alpha, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4)))
+                push!(results, SimResult(dataset, use_expsketch ? "EdgeSketch" : "NodeSketch", k, sketch_dimensions, alpha, (correctly_predicted_100 / 100), (correctly_predicted_1000 / 1000), (correctly_predicted_10000 / 10000), round(correctly_predicted / sample_size, digits=4), sketch.calculated_hashes))
             
                 log_info("correctly predicted: $correctly_predicted / $sample_size ($(correctly_predicted / sample_size))")
                 log_info("correctly predicted per 100: $correctly_predicted_100 / 100 ($(correctly_predicted_100 / 100))")
