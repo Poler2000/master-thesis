@@ -28,6 +28,7 @@
             \]
             gdzie $op \in \{+, -\}$ indykuje typ operacji, a więc czy dana krawędź jest dodawana, czy usuwana z grafu\cite{Pacaci_Bonifati_Özsu_2020}.  
             \JL{cytowanie się nie pokazuje}  
+            \PP{U mnie pokazuje się normalnie, być może była to kwestia brakującego pliku na githubie, poprawiłem to.}
         
     \subsection{Model półstrumieniowy}
         Model półstrumieniowy\cite{Feigenbaum_Kannan_McGregor_Suri_Zhang_2005} (ang. \textit{semi-streaming model}) różni się modelu strumieniowego w dwóch głównych kwestiach. Po pierwsze, narzuca on konkretne ograniczenia na pamięć wykorzystywaną przez algorytm, najczęściej $O(|V| polylog(|V|))$, a więc dla gęstych grafów znacznie mniejszą niż rozmiar grafu. Po drugie, wejście może być skanowane wielokrotnie, zwykle stałą lub logarytmiczną liczbę razy. Model ten można uznać więc za rodzaj pomostu między klasyczną analizą grafów, w których dane znane są od początku i nie istnieją ograniczenia na dostęp do nich, a modelem strumieniowym, który nie pozwala na wielokrotne przeglądanie wcześniejszych krawędzi. Model ten jest często wybierany przez badaczy analizujących konkretne, złożone problemy grafowe takie, jak np.  wyznaczanie najkrótszych ścieżek \cite{Elkin_Trehan_2022} lub minimalnego drzewa rozpinającego \cite{Ahn_Guha_McGregor_2012} przy rygorystycznych ograniczeniach pamięciowych. Podobnie jak w przypadku strumieni grafowych, możemy w tym modelu rozważać grafy statyczne i dynamiczne.
