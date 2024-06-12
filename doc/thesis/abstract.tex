@@ -2,14 +2,16 @@
 
 %\mbox{}\vspace{2cm} % można przesunąć, w zależności od długości streszczenia
 \begin{abstract}
-Polski 
+Szkice danych stanowią potężne narzędzie w analizie wielkich zbiorów danych, w tym grafów. W niniejszej pracy definiujemy model strumieni grafowych i dokonujemy przeglądu istniejących rozwiązań w tej dziedzinie. Rozważamy metody polegające na tworzeniu zanurzeń wierzchołków grafu, w szczególności algorytm \texttt{NodeSketch}, który wykorzystuje próbki generowane z rozkładu wykładniczego do rekurencyjnego szkicowania wierzchołków na podstawie ich $k$-sąsiedztwa. Proponujemy także ulepszenie metody \texttt{NodeSketch} poprzez wykorzystanie schematu szkicowania opartego na algorytmie \texttt{ExpSketch}, co pozwala na wykonywanie szerszej gamy operacji na szkicach. Przeprowadzamy analizę teoretyczną złożoności obliczeniowej powstałego w ten sposób algorytmu \texttt{EdgeSketch} oraz przeprowadzamy liczne eksperymenty, aby ocenić jego skuteczność praktyce. Wyniki uzyskane w zadaniu rekonstrukcji grafu pokazują, że \texttt{EdgeSketch} 
+przewyższa \texttt{NodeSketch} pod względem precyzji.
+
 \end{abstract}
 \mykeywords
 
 {
 \selectlanguage{english}
 \begin{abstract}
-English
+Data Sketches are a powerful tool for analyzing large datasets, including graphs. In this thesis, we define the graph streaming model and review existing solutions in this field. We focus on methods that create embeddings of graph nodes. In particular, we discuss the \texttt{NodeSketch} algorithm, which uses samples generated from exponential distribution to recursively create sketches based on the $k$-neighborhood of a node. We then propose a way to augment \texttt{NodeSketch} with the different sketching scheme, based on \texttt{ExpSketch} algorithm, which allows more operations to be performed on data sketches. We call resulting algorithm \texttt{EdgeSketch}. We provide a theoretical analysis of its complexity and perform extensive experiments to evaluate it in practice. Results from node reconstruction task show that \texttt{EdgeSketch} consistently outperforms \texttt{NodeSketch} in terms of precision.
 \end{abstract}
 \mykeywords
 }
