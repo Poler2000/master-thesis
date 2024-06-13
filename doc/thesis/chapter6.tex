@@ -243,32 +243,31 @@
     Odpowiedni dobór parametru rozkładu wykładniczego zależy od konkretnego grafu. W badanym modelu dla algorytmu \texttt{NodeSketch} najlepsze wyniki uzyskano ignorując sąsiedztwa wyższych rzędów. Inaczej było w przypadku \texttt{EdgeSketcha}, gdzie niewielkie wartości parametru, zwłaszcza $\alpha = 0.15$ lub $\alpha = 0.3$ wpływały korzystnie na uzyskiwane wyniki. Pogarszały się one jednak przy wyborze większych współczynników. Większa $\alpha$ pozwala na ujęcie większej ilości informacji o dalszym sąsiedztwie, ale może również przykrywać informacje o najbliższych sąsiadach wierzchołka, co później zaburza proces rekonstrukcji krawędzi. W większości przypadków wybór małych wartości $\alpha$ wydaje się więc najskuteczniejszą strategią dla algorytmu \texttt{NodeSketch}. 
     \JL{Chyba dla algorytmu EdgeSketch ?}
 
-\section{Liczba operacji w zależności od liczby krawędzi w grafie}
+\section{Złożoność obliczeniowa}
 \label{sec:performance}
 
+\subsection{Liczba operacji w zależności od liczby krawędzi w grafie}
     Teoretyczna złożoność obliczeniowa algorytmów \texttt{NodeSketch} i \texttt{EdgeSketch} została skomentowana w rozdziale \ref{sec:complexity}. Analiza ta obejmowała wszystkie kroki wykonywane w trakcie działania algorytmów. Jednak w praktyce, pewne operacje mogą mieć o wiele istotniejszy wpływ na ostateczny czas działania niż inne.     
     W szczególności, przy dużej liczbie wywołań, koszt obliczenia wartości funkcji haszującej
-    %JL , choć odbywa się w czasie $O(1)$, to
     ma znaczący wpływ na czas działania algorytmu. 
-    \JL{Trochę zmodyfikowałem powyższe zdanie}
     W poniższym eksperymencie zbadano średnią liczbę obliczonych wartości funkcji haszujących w zależności od liczby krawędzi w grafie. W tym celu wygenerowano grafy w stochastycznym modelu blokowym o różnych rozmiarach, od $200$ do $8000$ wierzchołków. Wszystkie z nich miały $4$ bloki, a prawdopodobieństwa krawędzi wewnątrz bloku i pomiędzy blokami wynosiły odpowiednio $0.5$ i $0.001$. Podobnie jak w innych eksperymentach, rozmiar szkicu $m$ wynosił $10$ i przyjęto $\alpha = 0.3$. Wyniki przedstawiono na Rysunku \ref{fig:calculated_hashes_vs_edges_all}. Dodatkowo, Rysunek \ref{fig:calculated_hashes_vs_edges_relative} przedstawia te same wyniki, ale znormalizowane względem liczby krawędzi w grafie. Warto zaznaczyć, że w implementacji algorytmu \texttt{NodeSketch} zastosowano podobną optymalizację jak w algorytmie \texttt{EdgeSketch}, polegającą na obliczaniu wartości funkcji haszującej tylko dla niezerowych elementów w macierzy $SLA$. 
     \JL{Nie wiem czy nie ciekawszy byłby faktyczny czas rekonstrukcji krawędzi w NodeSketch i EdgeSketch, zwłaszcza dla większych k ?}
 
 \begin{figure}[!ht]
-    \includegraphics[width=16cm]{img/calculated_hashes_vs_edges_all.png}
+    \includegraphics[width=14cm]{img/calculated_hashes_vs_edges_all.png}
     \centering
     \caption[Liczba operacji]{Liczba obliczonych wartości funkcji haszującej w zależności od liczby krawędzi w grafie}
     \label{fig:calculated_hashes_vs_edges_all}
 \end{figure}
 
 \begin{figure}[!ht]
-    \includegraphics[width=16cm]{img/calculated_hashes_vs_edges_relative.png}
+    \includegraphics[width=14cm]{img/calculated_hashes_vs_edges_relative.png}
     \centering
     \caption[Liczba operacji znormalizowana]{Liczba obliczonych wartości funkcji haszującej znormalizowana względem liczby krawędzi w grafie}
     \label{fig:calculated_hashes_vs_edges_relative}
 \end{figure}
 
-\subsection{Wnioski}
+\subsubsection*{Wnioski}
 W przypadku obu algorytmów, liczba wywołań funkcji haszującej rośnie liniowo wraz z liczbą krawędzi w grafie. Jest to spodziewany wynik, ponieważ każda krawędź może być wykorzystywana tylko przy generowaniu zanurzeń dla dwóch wierzchołków, które ją wyznaczają. Jest to także zgodne z teoretyczną złożonością obliczeniową algorytmu \texttt{EdgeSketch}. Zauważmy, że procedura \texttt{FastExpSketch} jest wywoływana $|V|$ razy, a średnia liczba przekazywanych do niej elementów to iloraz liczby krawędzi i liczby wierzchołków, a więc gęstość grafu 
 \[
     \rho = \frac{|E|}{|V|},
@@ -283,3 +282,41 @@ Wraz ze wzrostem parametru $k$, \texttt{NodeSketch} wykonuje więcej operacji ze
 
 Na drugim wykresie widać ukazującym liczbę wywołań podzieloną przez liczbę krawędzi, widać, że stosunek ten jest rzeczywiście liniowy. Jedynie dla małych grafów odznaczają się nieco większe wartości. Wynika to z faktu, że algorytmy wykorzystują macierz $SLA$, a nie zwykłą macierz sąsiedztwa, a więc biorą pod uwagę sztuczną pętle od wierzchołka do siebie samego, nie ujętą w zaprezentowanej liczbie krawędzi. Dla algorytmu \texttt{NodeSketch} stosunek ten stabilizuję się na ok $20$. Wynika to z faktu, że szkic ma rozmiar $10$, a każdą z krawędzi rozważamy dla dokładnie dwóch wierzchołków. Wykorzystanie procedury \texttt{FastExpSketch} pozwala zredukować tę wartość prawie dwukrotnie, choć jest to okupione większą wariancją.  
 \JL{Warto by chyba jednak zrobić porównanie faktycznych czasów działania algorytmów}
+
+\subsection{Rzeczywisty czas działania algorytmów}
+
+Asymptotyczna analiza złożoności obliczeniowej jest źródłem cennych informacji o efektywności algorytmów. Jednak w calu lepszego uchwycenia charakterystyki ich działania, przydatne jest eksperymentalne zbadanie czasu wykonania na rzeczywistych danych. Oczywiście dokładny czas działania zależy od konkretnej implementacji, a także wybranej platformy testowej. W przypadku niniejszego eksperymentu, testy przeprowadzono na komputerze z procesorem AMD Ryzen 7 5700X oraz 32GB pamięci RAM. Testowane grafy były generowane w modelu Erdosa-Renyiego z parametrem $p = 0.01$. Przeprowadzono dwa eksperymenty. Pierwszy z nich obejmował zasadniczą część obu algorytmów, czyli generowanie zanurzeń wierzchołków. Wyniki zilustrowano na wykresach \ref{fig:time_vs_vertices} oraz \ref{fig:time_vs_vertices_nomralized}. Na drugim z nich czas działania został podzielony przez kwadrat liczby wierzchołków, aby lepiej zobrazować złożoność obliczeniową. Drugi eksperyment zakładał dodatkowo obliczenie macierzy podobieństwa dla obu algorytmów, co lepiej odzwierciedla ich rzeczywiste zastosowanie oraz odpowiada przedstawionym w niniejszej pracy eksperymentom. Uzyskane wyniki przedstawiono na wykresach \ref{fig:time_matrix_vs_vertices} oraz \ref{fig:time_matrix_vs_vertices_nomralized}.
+
+\begin{figure}[!ht]
+    \includegraphics[width=14cm]{img/time_all.png}
+    \centering
+    \caption[Czas działania algorytmów]{Czas działania w sekundach dla obu algorytmów w zależności od liczby wierzchołków w grafie}
+    \label{fig:time_vs_vertices}
+\end{figure}
+
+\begin{figure}[!ht]
+    \includegraphics[width=14cm]{img/time_normalized.png}
+    \centering
+    \caption[Znormalizowany czas działania algorytmów]{Czas działania algorytmów znormalizowany względem kwadratu liczby wierzchołków w grafie}
+    \label{fig:time_vs_vertices_nomralized}
+\end{figure}
+
+\begin{figure}[!ht]
+    \includegraphics[width=14cm]{img/time_matrix_all.png}
+    \centering
+    \caption[Czas działania z macierzą podobieństwa]{Czas działania w sekundach dla obu algorytmów w zależności od liczby wierzchołków w grafie, wliczając obliczanie macierzy podobieństwa}
+    \label{fig:time_matrix_vs_vertices}
+\end{figure}
+
+\begin{figure}[!ht]
+    \includegraphics[width=14cm]{img/time_matrix_normalized.png}
+    \centering
+    \caption[Znormalizowany czas działania z macierzą podobieństwa]{Czas działania algorytmów, wliczając obliczanie macierzy podobieństwa, znormalizowany względem kwadratu liczby wierzchołków w grafie}
+    \label{fig:time_matrix_vs_vertices_nomralized}
+\end{figure}
+
+\subsubsection*{Wnioski}
+
+Eksperymenty pokazują, że algorytm \texttt{EdgeSketch} działa w ogólności wolniej od algorytmu \texttt{NodeSketch} dla tych samych wartości $k$. Może to wynikać ze stosunkowo wysokich kosztów operacji wykonywanych w ramach metody \texttt{FastExpSketch}, takich jak tworzenie i łączenie ze sobą łańcuchów znakowych, kopiowanie tablicy, czy praca z generatorem liczb pseudolosowych. W praktyce różnice nie były jednak bardzo znaczące. W przypadku właściwego algorytmu bez obliczania macierzy podobieństwa, \texttt{ExpSketch} osiąga podobny czas działania jak \texttt{NodeSketch} dla $k = 3$. Dla grafu o $6000$ wierzchołków i około $180000$ krawędzi, nie przekraczał on $2$ sekund. Wykres \ref{fig:time_vs_vertices_nomralized} pokazuje, że złożoność dla obu algorytmów jest kwadratowa względem liczby wierzchołków. 
+
+Obliczanie macierzy podobieństwa okazuje się tanią operacją dla algorytmu \texttt{NodeSketch}, gdyż wykonywane jest tylko raz, w czasie kwadratowym. Podobnie jest w przypadku \texttt{EdgeSketcha}, dla $k=2$. Koszt ten rośnie jednak wyraźnie dla wyższych wartości $k$. Jak pokazuje wykres \ref{fig:time_matrix_vs_vertices_nomralized}, obliczanie macierzy podobieństwa wyższych rzędów ma w tej implementacji złożoność ponadkwadratową. Wynika to z zastosowanego schematu wyznaczania $k$-sąsiedztwa, który opiera się na potęgowaniu macierzy, odbywającym się w czasie $O(|V|^3)$. Potencjalna optymalizacja tego procesu może stanowić rozwinięcie nieniniejszej pracy.  
