@@ -27,8 +27,8 @@ struct PerfResult
 end
 
 function test_number_of_calculated_hashes()
-    ns = collect(1000:100:4000)
-    rep = 3
+    ns = collect(1000:50:2000)
+    rep = 5
     m = 10
     alpha = 0.3
 
@@ -37,50 +37,31 @@ function test_number_of_calculated_hashes()
         
         for i in 1:rep
             matrix = generate_erods_renyi_matrix(n, 0.01, 1)
-            #matrix = generate_stochastic_block_matrix(n, 4, 0.5, 0.001)
             edges = count(!iszero, matrix) / 2
-            println("Stochastic block: $n, $i")
+            println("Erdos-Renyi: $n, $i")
             println("edges: $edges")
-
-            time_node_4 = @timed begin 
-                hello = nodesketch(matrix, 4, m, alpha) 
-            end#.calculated_hashes
-            time_node_3 = @timed begin 
-                hello = nodesketch(matrix, 3, m, alpha) 
-            end#.calculated_hashes
-            time_node_2 = @timed begin 
-                hello = nodesketch(matrix, 2, m, alpha) 
-            end#.calculated_hashes
             time_edge_2 = @timed begin 
-                hello = edgesketch(matrix, 2, m, alpha) 
-            end#.calculated_hashes
+                calculated_hashes_edge = edgesketch(matrix, 2, m, alpha).calculated_hashes
+            end
             time_edge_3 = @timed begin 
-                hello = edgesketch(matrix, 3, m, alpha) 
-            end#.calculated_hashes
+                res = edgesketch(matrix, 3, m, alpha) 
+            end
             time_edge_4 = @timed begin 
-                hello = edgesketch(matrix, 4, m, alpha) 
-            end#.calculated_hashes
-            println("Time node 4: $(time_node_4.time)")
-
-            #time_node_4 = @timed begin
-            #    hashes_node_4 = 0#nodesketch_pure(matrix, 4, m, alpha).calculated_hashes
-            #end
-            #
-            #time_node_3 = @timed begin 
-            #    hashes_node_3 = 0#nodesketch_pure(matrix, 3, m, alpha).calculated_hashes
-            #end
-#
-            #time_node_2 = @timed begin 
-            #    hashes_node_2 = 0#nodesketch_pure(matrix, 2, m, alpha).calculated_hashes
-            #end
-#
-            #time_edge = @timed begin 
-            #    hashes_fast_exp = 0#edgesketch_pure(matrix, 2, m, alpha).calculated_hashes
-            #end
-            push!(results, PerfResult(n, edges, m, alpha, 0, 0, 0, 0, time_node_2.time, time_node_3.time, time_node_4.time, time_edge_2.time, time_edge_3.time, time_edge_4.time))
+                res = edgesketch(matrix, 4, m, alpha) 
+            end
+            time_node_4 = @timed begin 
+                calculated_hashes_node_4 = nodesketch(matrix, 4, m, alpha).calculated_hashes
+            end
+            time_node_3 = @timed begin 
+                calculated_hashes_node_3 = nodesketch(matrix, 3, m, alpha).calculated_hashes
+            end
+            time_node_2 = @timed begin 
+                calculated_hashes_node_2 = nodesketch(matrix, 2, m, alpha).calculated_hashes
+            end
+            push!(results, PerfResult(n, edges, m, alpha, calculated_hashes_node_2, calculated_hashes_node_3, calculated_hashes_node_4, calculated_hashes_edge, time_node_2.time, time_node_3.time, time_node_4.time, time_edge_2.time, time_edge_3.time, time_edge_4.time))
         end
     end
-    path = "$RESULTS_FOLDER/summary_time_9.csv"
+    path = "$RESULTS_FOLDER/summary_time.csv"
     save_csv(to_df(results), path)
 end
 

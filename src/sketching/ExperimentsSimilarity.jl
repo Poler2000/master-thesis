@@ -38,8 +38,8 @@ module Experiments
         default_alpha = 0.3
         default_size = 10
 
-        #run_similarity_var_k(datasets, [2, 3, 4], default_alpha, default_size)
-        #run_similarity_var_L(datasets, 2, default_alpha, [8, 16, 32, 64, 128, 256])
+        run_similarity_var_k(datasets, [2, 3, 4], default_alpha, default_size)
+        run_similarity_var_L(datasets, 2, default_alpha, [8, 16, 32, 64, 128, 256])
         run_similarity_var_alpha(datasets, 4, [0.0, 0.15, 0.3, 0.45], default_size)
     end
 
@@ -106,7 +106,7 @@ module Experiments
         orders::Vector{<:Integer}, alpha::Number, sketch_dimensions::Number, use_order_estimations::Bool )::Vector{SimResult}
         results = Vector{SimResult}()
         for dataset in datasets
-            matrix = load_matrix_mat("$DATA_FOLDER$dataset.mat")
+            matrix = Matrix(load_matrix_mat("$DATA_FOLDER$dataset.mat"))
             sample_size = 0
             n = size(matrix, 1)
             for i in 1:n-1
@@ -271,7 +271,7 @@ module Experiments
         k::Integer, alphas::Vector{<:Number}, sketch_dimensions::Number)::Vector{SimResult}
         results = Vector{SimResult}()
         for dataset in datasets
-            matrix = load_matrix_mat("$DATA_FOLDER$dataset.mat")
+            matrix = Matrix(load_matrix_mat("$DATA_FOLDER$dataset.mat"))
             sample_size = 0
             n = size(matrix, 1)
             for i in 1:n-1
