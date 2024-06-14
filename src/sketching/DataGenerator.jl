@@ -7,7 +7,7 @@ using .DataManager
 
 const DATA_FOLDER = "../data"
 
-function generate_erods_renyi_matrix(n::Int, density::Float64, max_value::Int)
+function generate_erdos_renyi_matrix(n::Int, density::Float64, max_value::Int)
     matrix = zeros(Float64, n, n)
 
     for y in 1:n
@@ -140,9 +140,9 @@ function generate_all()
 
     for n in ns
         for density in densities
-            println("Erods-Renyi: $n, $density")
-            matrix_binary = generate_erods_renyi_matrix(n, density, 1)
-            matrix_weighted = generate_erods_renyi_matrix(n, density, 100)
+            println("Erdos-Renyi: $n, $density")
+            matrix_binary = generate_erdos_renyi_matrix(n, density, 1)
+            matrix_weighted = generate_erdos_renyi_matrix(n, density, 100)
 
             density_str = replace(string(density), "0." => "")
             for y in 1:10

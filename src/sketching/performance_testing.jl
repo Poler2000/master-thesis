@@ -36,7 +36,7 @@ function test_number_of_calculated_hashes()
     for n in ns
         
         for i in 1:rep
-            matrix = generate_erods_renyi_matrix(n, 0.01, 1)
+            matrix = generate_erdos_renyi_matrix(n, 0.01, 1)
             edges = count(!iszero, matrix) / 2
             println("Erdos-Renyi: $n, $i")
             println("edges: $edges")

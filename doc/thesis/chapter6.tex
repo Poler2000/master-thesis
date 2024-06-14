@@ -240,8 +240,7 @@
     \end{table}
 
     \subsection{Wnioski}
-    Odpowiedni dobór parametru rozkładu wykładniczego zależy od konkretnego grafu. W badanym modelu dla algorytmu \texttt{NodeSketch} najlepsze wyniki uzyskano ignorując sąsiedztwa wyższych rzędów. Inaczej było w przypadku \texttt{EdgeSketcha}, gdzie niewielkie wartości parametru, zwłaszcza $\alpha = 0.15$ lub $\alpha = 0.3$ wpływały korzystnie na uzyskiwane wyniki. Pogarszały się one jednak przy wyborze większych współczynników. Większa $\alpha$ pozwala na ujęcie większej ilości informacji o dalszym sąsiedztwie, ale może również przykrywać informacje o najbliższych sąsiadach wierzchołka, co później zaburza proces rekonstrukcji krawędzi. W większości przypadków wybór małych wartości $\alpha$ wydaje się więc najskuteczniejszą strategią dla algorytmu \texttt{NodeSketch}. 
-    \JL{Chyba dla algorytmu EdgeSketch ?}
+    Odpowiedni dobór parametru rozkładu wykładniczego zależy od konkretnego grafu. W badanym modelu dla algorytmu \texttt{NodeSketch} najlepsze wyniki uzyskano ignorując sąsiedztwa wyższych rzędów. Inaczej było w przypadku \texttt{EdgeSketcha}, gdzie niewielkie wartości parametru, zwłaszcza $\alpha = 0.15$ lub $\alpha = 0.3$ wpływały korzystnie na uzyskiwane wyniki. Pogarszały się one jednak przy wyborze większych współczynników. Większa $\alpha$ pozwala na ujęcie większej ilości informacji o dalszym sąsiedztwie, ale może również przykrywać informacje o najbliższych sąsiadach wierzchołka, co później zaburza proces rekonstrukcji krawędzi. W większości przypadków wybór małych wartości $\alpha$ wydaje się więc najskuteczniejszą strategią dla algorytmu \texttt{EdgeSketch}. 
 
 \section{Złożoność obliczeniowa}
 \label{sec:performance}
@@ -251,7 +250,6 @@
     W szczególności, przy dużej liczbie wywołań, koszt obliczenia wartości funkcji haszującej
     ma znaczący wpływ na czas działania algorytmu. 
     W poniższym eksperymencie zbadano średnią liczbę obliczonych wartości funkcji haszujących w zależności od liczby krawędzi w grafie. W tym celu wygenerowano grafy w stochastycznym modelu blokowym o różnych rozmiarach, od $200$ do $8000$ wierzchołków. Wszystkie z nich miały $4$ bloki, a prawdopodobieństwa krawędzi wewnątrz bloku i pomiędzy blokami wynosiły odpowiednio $0.5$ i $0.001$. Podobnie jak w innych eksperymentach, rozmiar szkicu $m$ wynosił $10$ i przyjęto $\alpha = 0.3$. Wyniki przedstawiono na Rysunku \ref{fig:calculated_hashes_vs_edges_all}. Dodatkowo, Rysunek \ref{fig:calculated_hashes_vs_edges_relative} przedstawia te same wyniki, ale znormalizowane względem liczby krawędzi w grafie. Warto zaznaczyć, że w implementacji algorytmu \texttt{NodeSketch} zastosowano podobną optymalizację jak w algorytmie \texttt{EdgeSketch}, polegającą na obliczaniu wartości funkcji haszującej tylko dla niezerowych elementów w macierzy $SLA$. 
-    \JL{Nie wiem czy nie ciekawszy byłby faktyczny czas rekonstrukcji krawędzi w NodeSketch i EdgeSketch, zwłaszcza dla większych k ?}
 
 \begin{figure}[!ht]
     \includegraphics[width=14cm]{img/calculated_hashes_vs_edges_all.png}
@@ -281,7 +279,6 @@ która w rozważanym modelu jest stała. Ostatecznie otrzymujemy więc:
 Wraz ze wzrostem parametru $k$, \texttt{NodeSketch} wykonuje więcej operacji ze względu na rekurencyjną procedurę szkicowania. Oczywiście \texttt{EdgeSketch} generuje zanurzenia tylko raz, co daje mu przewagę przy rozważaniu wyższych stopni sąsiedztwa. Jednak nawet dla $k = 2$, \texttt{EdgeSketch} wykonuje wyraźnie mniej wywołań funkcji haszującej niż \texttt{NodeSketch}.
 
 Na drugim wykresie widać ukazującym liczbę wywołań podzieloną przez liczbę krawędzi, widać, że stosunek ten jest rzeczywiście liniowy. Jedynie dla małych grafów odznaczają się nieco większe wartości. Wynika to z faktu, że algorytmy wykorzystują macierz $SLA$, a nie zwykłą macierz sąsiedztwa, a więc biorą pod uwagę sztuczną pętle od wierzchołka do siebie samego, nie ujętą w zaprezentowanej liczbie krawędzi. Dla algorytmu \texttt{NodeSketch} stosunek ten stabilizuję się na ok $20$. Wynika to z faktu, że szkic ma rozmiar $10$, a każdą z krawędzi rozważamy dla dokładnie dwóch wierzchołków. Wykorzystanie procedury \texttt{FastExpSketch} pozwala zredukować tę wartość prawie dwukrotnie, choć jest to okupione większą wariancją.  
-\JL{Warto by chyba jednak zrobić porównanie faktycznych czasów działania algorytmów}
 
 \subsection{Rzeczywisty czas działania algorytmów}
 
