@@ -92,7 +92,7 @@
               \end{tabular}
             };
         \end{tikzpicture}
-        \caption{\textcolor{black}{Graf wraz z odpowiadającymi wierzchołkom wartościami haszy, podpisami oraz adresami. W tym wypadku ustalono $F = 8$, $m = 4$ oraz $M = 32$. Przykład został zaczerpnięty z \cite{Gou_Zou_Zhao_Yang_2019}.}}
+        \caption[Graf z podpisami i adresami]{Graf wraz z odpowiadającymi wierzchołkom wartościami funkcji haszującej, podpisami oraz adresami. W tym wypadku ustalono $F = 8$, $m = 4$ oraz $M = 32$. Przykład został zaczerpnięty z \cite{Gou_Zou_Zhao_Yang_2019}.}
         \label{fig:gss_graph}
         \end{figure} 
 
@@ -186,7 +186,7 @@
   };
 
     \end{tikzpicture}
-            \caption{\textcolor{black}{Struktura GSS dla grafu przedstawionego na rysunku \ref{fig:gss_graph}. Skompresowana macierz sąsiedztwa składa się z kubełków zawierających podpisy wierzchołków tworzących krawędź oraz łączną wagę krawędzi pomiędzy nimi. Dodatkowy bufor przechowuje krawędzie, które nie mogły zostać wstawione do macierzy. Przykładowo, informacja o krawędzi $<a,b>$ jest zawarta w komórce $M_{0,1}$, gdyż adresy wierzchołków $a$ i $b$ to odpowiednio $0$ i $1$. Krawędź $<a,e>$ ma ten sam adres, ale inny podpis, dlatego została ona przekierowana do bufora.}}
+            \caption[Struktura GSS]{Struktura GSS dla grafu przedstawionego na rysunku \ref{fig:gss_graph}. Skompresowana macierz sąsiedztwa składa się z kubełków zawierających podpisy wierzchołków tworzących krawędź oraz łączną wagę krawędzi pomiędzy nimi. Dodatkowy bufor przechowuje krawędzie, które nie mogły zostać wstawione do macierzy. Przykładowo, informacja o krawędzi $<a,b>$ jest zawarta w komórce $M_{0,1}$, gdyż adresy wierzchołków $a$ i $b$ to odpowiednio $0$ i $1$. Krawędź $<a,e>$ ma ten sam adres, ale inny podpis, dlatego została ona przekierowana do bufora.}
     \label{fig:gss_structure}
     \end{figure}
 
@@ -199,7 +199,7 @@
     \]
     gdzie $\gamma(t_i) = \lfloor \frac{t_i}{gl} \rfloor$ i $gl$ jest długością przedziałów czasowych. Intuicyjnie, zapytanie o pojawienie się krawędzi w zakresie czasowym $[T_b, T_e]$ może być transformowane w sekwencję zapytań o pojedyncze zakresy, których wyniki są sumowane, a więc $Q([T_b, T_e]) = Q([T_b]), Q([T_{b+1}]), \dots Q([T_e])$. Jednak dla takiego algorytmu złożoność czasowa jest liniowa względem liczby zakresów. Autorzy starają sie poprawić ten aspekt, zauważając, iż przedział długości $L$ może zostać zdekomponowany do co najwyżej $2\log{L}$ podprzedziałów podsiadających dwie szczególne cechy. Po pierwsze, wszystkie zakresy czasowe w danym podprzedziale mają wspólny prefiks binarny. Po drugie, prefiksy różnych podprzedziałów mają różne długości. Z tego względu Horae zapamiętuje $O(\log(T))$ identycznych skompresowanych macierzy, gdzie $T$ jest liczbą rozróżnialnych zakresów czasowych. Każda z nich jest utożsamiana z jedną warstwą struktury. Warstwy odpowiadają z kolei różnym długościom prefiksów. Dzięki temu zamiast wykonywać liniową względem długości przedziału czasowego liczbę zapytań, wystarczy zdekomponować przedział na podprzedziały i na ich podstawie wykonać co najwyżej jedno zapytanie na warstwę. 
     
-    Metody oparte na macierzach w większości przypadków nie czynią założeń co do struktury grafu. Takie ogólne podejście oczywiście zapewnia wysoką uniwersalność, jednak w niektórych przypadkach może być nieefektywne. Przykładowo, jeśli wierzchołki w grafie są mocno zróżnicowane pod względem stopnia, a więc bardziej obrazowo, da się wyróżnić obszary gęste i rzadkie w grafie, to kolizje haszy mogą zdarzać się często. Struktura Scube\cite{Chen_Zhou_Chen_Jin_2022} używa probabilistycznego zliczania do identyfikacji wierzchołków wysokiego stopnia. Przeznaczane jest dla nich więcej kubełków w macierzy niż dla wierzchołków o niskich stopniach, co pozwala bardziej efektywnie zarządzać zapełnieniem macierzy. 
+    Metody oparte na macierzach w większości przypadków nie czynią założeń co do struktury grafu. Takie ogólne podejście oczywiście zapewnia wysoką uniwersalność, jednak w niektórych przypadkach może być nieefektywne. Przykładowo, jeśli wierzchołki w grafie są mocno zróżnicowane pod względem stopnia, a więc bardziej obrazowo, da się wyróżnić obszary gęste i rzadkie w grafie, to kolizje wartości funkcji haszującej mogą zdarzać się często. Struktura Scube\cite{Chen_Zhou_Chen_Jin_2022} używa probabilistycznego zliczania do identyfikacji wierzchołków wysokiego stopnia. Przeznaczane jest dla nich więcej kubełków w macierzy niż dla wierzchołków o niskich stopniach, co pozwala bardziej efektywnie zarządzać zapełnieniem macierzy. 
 
     Metody takie jak GSS czy Horae, choć często dają przyzwoite wyniki przy odpowiednim dobraniu parametrów do badanego grafu, to ostatecznie cierpią z uwagi na ograniczoną skalowalność. Jedną z prób odpowiedzi na ten problem jest struktura AUXO\cite{Jiang_Chen_Jin_2023}. Korzysta ona z macierzy przechowujących podpisy wierzchołków, podobnie jak GSS. Jednak zamiast wstawiać nadmiarowe krawędzie do bufora o liniowym czasie dostępu, AUXO wykorzystuje wiele macierzy ustawionych w strukturę drzewa. Konkretnie, jest to binarne lub czwórkowe drzewo prefiksowe, w którego strukturę zaszyte zostały prefiksy podpisów wierzchołków. W ten sposób na każdym kolejnym poziomie drzewa podpisy przechowywane w komórkach mogą być coraz krótsze, gdyż informacja ta jest wbudowana w kształt struktury. Pozwala to osiągnąć logarytmiczny względem liczby krawędzi czas odpowiedzi na zapytania. \textcolor{black}{Rysunek \ref{fig:auxo_structure} ukazuje ogólny schemat działania Auxo. Autorzy pokazują, że koszt pamięciowy struktury Auxo o $l$ poziomach można wyrazić za pomocą wzoru:
     \[
@@ -242,7 +242,7 @@
     \draw[arrow] (l1) -- (l2);
     
     \end{tikzpicture}
-    \caption{\textcolor{black}{Drzewo prefiksowe dla struktury AUXO o 3 poziomach. W tym wypadku zastosowano drzewo binarne, gdzie prefiksy wierzchołka docelowego i startowego są wbudowywane w strukturę naprzemiennie. Obok ukazano, jak para podpisów w kubełku różni się, zależnie od poziomu, na którym dana krawędź jest przechowywana.}}
+    \caption[Drzewo prefiksowe dla struktury AUXO]{Drzewo prefiksowe dla struktury AUXO o 3 poziomach. W tym wypadku zastosowano drzewo binarne, gdzie prefiksy wierzchołka docelowego i startowego są wbudowywane w strukturę naprzemiennie. Obok ukazano, jak para podpisów w kubełku różni się, zależnie od poziomu, na którym dana krawędź jest przechowywana.}
     \label{fig:auxo_structure}
 \end{figure}
 
@@ -377,7 +377,7 @@
                     \end{tabular}
                 };
             \end{tikzpicture}
-            \caption{\textcolor{black}{Przykładowy graf wraz z odpowiadającą mu macierzą SLA oraz macierzą wartości podobieństw min-max, obliczonych przy pomocy równania \ref{eq:sim_mm}. Można spostrzec, że np. dla wierzchołka $4$, jego sąsiedztwo jest najbardziej zbliżone do sąsiedztwa wierzchołka $5$, czemu odpowiada wartość $0.33$ podobieństwa min-max. Warto też zauważyć, że $Sim_{NMM}(V,V)$, czyli podobieństwo wierzchołka do siebie samego jest zawsze równe $1$.}}
+            \caption[Graf z macierzą SLA i podobieństwami min-max]{Przykładowy graf wraz z odpowiadającą mu macierzą SLA oraz macierzą wartości podobieństw min-max, obliczonych przy pomocy równania \ref{eq:sim_mm}. Można spostrzec, że np. dla wierzchołka $4$, jego sąsiedztwo jest najbardziej zbliżone do sąsiedztwa wierzchołka $5$, czemu odpowiada wartość $0.33$ podobieństwa min-max. Warto też zauważyć, że $Sim_{NMM}(V,V)$, czyli podobieństwo wierzchołka do siebie samego jest zawsze równe $1$.}
             \label{fig:node_sketch_sla}
             \end{figure}
 

@@ -11,7 +11,7 @@
         \item $\alpha$ - parametr rozkładu wykładniczego. Decyduje on, jakie wagi nadawane są sąsiedztwom wyższych rzędów.
     \end{itemize}
 
-    Jednak uzyskiwane wyniki zależą też w naturalny sposób od grafu, na którym przeprowadzane są eksperymenty. W związku z tym, testy przeprowadzono na różnorodnych grafach i z różnymi parametrami. Główną badaną statystyką była precyzja, czyli stosunek liczby poprawnie odgadniętych krawędzi do wartości $t$, a więc wielkości próbki. Rozważano próbki wielkości $t \in \{100, 1000, 10000, |E|\}$, gdzie $|E|$ to liczba krawędzi w grafie. Algorytmy zostały zaimplementowane w języku Julia\cite{Julia}.
+    Jednak uzyskiwane wyniki zależą też w naturalny sposób od grafu, na którym przeprowadzane są eksperymenty. W związku z tym, testy przeprowadzono na różnorodnych grafach i z różnymi parametrami. Główną badaną statystyką była precyzja, czyli stosunek liczby poprawnie odgadniętych krawędzi do wartości $t$, a więc wielkości próbki. Rozważano próbki wielkości $t \in \{100, 1000, 10000, |E|\}$, gdzie $|E|$ to liczba krawędzi w grafie. Algorytmy zostały zaimplementowane w języku \texttt{Julia}\cite{Julia}.
 
 \section{Badanie uzyskiwanych wyników w zależności od struktury grafów}
 
@@ -134,8 +134,9 @@
     
     W przypadku algorytmu \texttt{NodeSketch}, wybór większej wartości parametru $k$ zazwyczaj albo nie zmienia znacząco precyzji albo ją pogarsza, niezależnie od $t$. Inaczej jest w przypadku \texttt{EdgeSketch}, gdzie dobór optymalnego $k$ zależy od konkretnego zbioru oraz wartości $t$. O ile w przypadku małych próbek, np. $t = 100$, najlepiej sprawdza się $k = 2$, o tyle dla $t = |E|$, dobór większego $k$ może poprawić wyniki, co widać szczególnie wyraźnie w stochastycznym modelu blokowym oraz w rzadkich grafach w modelu Erdosa-Renyiego. 
 
-    W przypadku grafów ważonych, różnica pomiędzy algorytmami jest szczególnie wyraźna. \texttt{EdgeSketch} uzyskuje wyniki bardzo zbliżone do tych osiąganych dla grafów nieważonych o podobnej strukturze. Pozostaje on więc skuteczny w przewidywaniu krawędzi. W przypadku \texttt{NodeSketcha}, wyniki są natomiast znacznie gorsze, często bliskie zeru. Wynikać to może z faktu, że algorytm ten tworzy szkic, w którym przechowywane są indeksy wierzchołków, a nie próbki z rozkładu wykładniczego, jak w przypadku \texttt{EdgeSketcha}.
+    W przypadku grafów ważonych, różnica pomiędzy algorytmami jest szczególnie wyraźna. \texttt{EdgeSketch} uzyskuje wyniki bardzo zbliżone do tych osiąganych dla grafów nieważonych o podobnej strukturze. Pozostaje on więc skuteczny w przewidywaniu krawędzi. W przypadku \texttt{NodeSketcha}, wyniki są natomiast znacznie gorsze, często bliskie zeru. Wynikać to może z faktu, że algorytm ten tworzy szkic, w którym przechowywane są indeksy wierzchołków, a nie próbki z rozkładu wykładniczego, jak w przypadku \texttt{EdgeSketcha}. Prowadzi to do sytuacji, gdy w zanurzeniu danego wierzchołka nadreprezentowani są sąsiedzi, z którymi łączą go krawędzie o dużych wagach. z kolei informacje o innych sąsiadach pojawiają się w szkicu rzadziej, co może prowadzić do gorszych wyników.
         \JL{Trochę dziwne, że aż tak kiepsko w NodeSketch - oni też używają rozkładu wykładniczego do wyboru indeksów, więc wagi powinny być uwzględniane przy odpowiedniej implementacji? W sumie to nie rozumiem tego ostatniego zdania.}
+        \PP{Wyjaśniłem trochę dokładniej, z czego to może wynikać.}
 
 \section{Wykorzystanie stopnia wierzchołków przy rekonstrukcji}
     Jak wspomniano w rozdziale \ref{sec:weight_sum_estimator}, szkice generowane przez algorytm \texttt{ExpSketch} pozwalają na zdefiniowanie nieobciążonego estymatora sumy wag elementów w strumieniu. W przypadku algorytmu \texttt{EdgeSketch}, \texttt{ExpSketch} jest wywoływany dla pojedynczego wierzchołka, a w strumieniu znajdują się wychodzące z niego krawędzie. Jeśli graf jest nieważony, to suma wag krawędzi jest po prostu stopniem wierzchołka. 
@@ -266,15 +267,18 @@
 \end{figure}
 
 \subsubsection*{Wnioski}
-W przypadku obu algorytmów, liczba wywołań funkcji haszującej rośnie liniowo wraz z liczbą krawędzi w grafie. Jest to spodziewany wynik, ponieważ każda krawędź może być wykorzystywana tylko przy generowaniu zanurzeń dla dwóch wierzchołków, które ją wyznaczają. Jest to także zgodne z teoretyczną złożonością obliczeniową algorytmu \texttt{EdgeSketch}. Zauważmy, że procedura \texttt{FastExpSketch} jest wywoływana $|V|$ razy, a średnia liczba przekazywanych do niej elementów to iloraz liczby krawędzi i liczby wierzchołków, a więc gęstość grafu 
+W przypadku obu algorytmów, liczba wywołań funkcji haszującej rośnie liniowo wraz z liczbą krawędzi w grafie. Jest to spodziewany wynik, ponieważ każda krawędź może być wykorzystywana tylko przy generowaniu zanurzeń dla dwóch wierzchołków, które ją wyznaczają. Jest to także zgodne z teoretyczną złożonością obliczeniową algorytmu \texttt{EdgeSketch}. Zauważmy, że procedura \texttt{FastExpSketch} jest wywoływana $|V|$ razy, a średnia liczba przekazywanych do niej elementów to iloraz liczby krawędzi i liczby wierzchołków, a więc gęstość grafu:
 \[
     \rho = \frac{|E|}{|V|},
 \]
-która w rozważanym modelu jest stała. Ostatecznie otrzymujemy więc:
+która w rozważanym modelu jest stała. Otrzymujemy więc łączną złożoność:
 \[
-    O(|V| \frac{|E|}{|V|} \ln(\rho)) = O(|E| \ln(\rho)) = O(|E|)
+    O(|V|(|V| + \frac{|E|}{|V|} \ln(\rho))) = O(|V|^2 + |E| \ln(\rho)),
 \]
-\JL{Wyjaśnić dokładniej skąd się bierze powyższa formuła}
+gdzie zewnętrzny składnik $|V|$ wynika z liczby iteracji głównej pętli algorytmu \texttt{EdgeSketch}. W sumie $(|V| + \frac{|E|}{|V|} \ln(\rho))$ składnik $|V|$ wynika z wyszukiwaniem sąsiadów w macierzy sąsiedztwa, natomiast $\frac{|E|}{|V|} \ln(\rho)$ to wyznaczony narzut obliczeniowy metody \texttt{FastExpSketch}. Ponieważ w stochastycznym modelu blokowym liczba krawędzi zależy kwadratowo od liczby wierzchołków, możemy przyjąć $O(|V|^2) = O(|E|)$. Z tego faktu, oraz traktując gęstość jako stałą, otrzymujemy ostatecznie:
+\[
+    O(|V|^2 + |E| \ln(\rho)) = O(|E|).
+\]
 
 Wraz ze wzrostem parametru $k$, \texttt{NodeSketch} wykonuje więcej operacji ze względu na rekurencyjną procedurę szkicowania. Oczywiście \texttt{EdgeSketch} generuje zanurzenia tylko raz, co daje mu przewagę przy rozważaniu wyższych stopni sąsiedztwa. Jednak nawet dla $k = 2$, \texttt{EdgeSketch} wykonuje wyraźnie mniej wywołań funkcji haszującej niż \texttt{NodeSketch}.
 

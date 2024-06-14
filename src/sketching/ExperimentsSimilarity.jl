@@ -196,7 +196,7 @@ module Experiments
         k::Integer, alpha::Number, dimensions::Vector{<:Integer})::Vector{SimResult}
         results = Vector{SimResult}()
         for dataset in datasets
-            matrix = load_matrix_mat("$DATA_FOLDER$dataset.mat")
+            matrix = Matrix(load_matrix_mat("$DATA_FOLDER$dataset.mat"))
             sample_size = 0
             n = size(matrix, 1)
             for i in 1:n-1

@@ -27,7 +27,7 @@ Część implementacyjna pracy zawarta jest w folderze \texttt{src}. Jego strukt
 
 \subsection*{Przykład użycia}
 
-Poniżej przedstawiono przykładowe użycie biblioteki wraz z wyjściem konsoli. Wszystkie komendy zostały w tym przypadku wykonane w interaktywnej konsoli języka \texttt{Julia}. Pierwszym krokiem jest wczytanie pliku \texttt{DataGenerator.jl}, i wygenerowanie grafu w modelu Erdosa-Renyiego o $6$ wierzchołkach, prawdopodobieństwie krawędzi $p = 0.5$ oraz maksymalną wagą krawędzi równą $1$.
+Poniżej przedstawiono przykładowe użycie biblioteki. Wszystkie polecenia zostały w tym przypadku wykonane w interaktywnej konsoli języka \texttt{Julia}. Pierwszym krokiem jest wczytanie pliku \texttt{DataGenerator.jl}, i wygenerowanie grafu w modelu Erdosa-Renyiego o $6$ wierzchołkach, prawdopodobieństwie krawędzi $p = 0.5$ oraz maksymalną wagą krawędzi równą~$1$.
 
 \begin{lstlisting}[basicstyle=\footnotesize]
     julia> include("DataGenerator.jl")
@@ -43,7 +43,7 @@ Poniżej przedstawiono przykładowe użycie biblioteki wraz z wyjściem konsoli.
      0.0  1.0  1.0  0.0  1.0  0.0
 \end{lstlisting}
 
-Następnie należy wczytać plik \texttt{NodeSketch.jl}. Poniżej ukazano także wywołania algorytmu \texttt{NodeSketch} dla wygenerowanej macierzy, z parametrami $k = 2$, $m = 4$ oraz $\alpha = 0.3$.
+Następnie należy wczytać plik \texttt{NodeSketch.jl}. Poniżej ukazano także wywołanie algorytmu \texttt{NodeSketch} dla wygenerowanej macierzy, z parametrami $k = 2$, $m = 4$ oraz $\alpha = 0.3$.
 
 \begin{lstlisting}[basicstyle=\footnotesize]
     julia> include("NodeSketch.jl")

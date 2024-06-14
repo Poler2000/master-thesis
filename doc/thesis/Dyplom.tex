@@ -893,20 +893,7 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 \setcounter{tocdepth}{1} 
 \tableofcontents* 
 \clearpage
-% SPIS RYSUNKÓW (zostanie wygenerowany automatycznie)
-\pdfbookmark[0]{Spis rysunków}{spisRysunkow.1} % jeśli chcemy mieć w spisie treści, to zamarkować tę linię, a odmarkować linie poniższe
-%%\phantomsection
-%%\addcontentsline{toc}{chapter}{Spis rysunków}
-\listoffigures*
-\clearpage
-% SPIS TABEL (zostanie wygenerowany automatycznie)
-\pdfbookmark[0]{Spis tabel}{spisTabel.1} %
-%%\phantomsection
-%%\addcontentsline{toc}{chapter}{Spis tabel}
-\listoftables*
-\clearpage
-% SPIS LISTINGÓW (zostanie wygenerowany automatycznie)
-\pdfbookmark[0]{Spis listingów}{spisListingow.1} %
+%
 %%\phantomsection
 %%\addcontentsline{toc}{chapter}{Spis listingów}
 \clearpage
@@ -936,6 +923,22 @@ Specjalność: & {\bfseries \@specjalnosc}\\
 %       Nazwę pliku przygotowanej biblioteki wpisuje się bez rozszerzenia .bib
 %       (linia poniżej załaduje rekordy z pliku "dokumentacja.bib")
 \bibliography{bibliography}
+\clearpage
+% SPIS RYSUNKÓW (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis rysunków}{spisRysunkow.1} % jeśli chcemy mieć w spisie treści, to zamarkować tę linię, a odmarkować linie poniższe
+%%\phantomsection
+\addcontentsline{toc}{chapter}{Spis rysunków}
+\listoffigures*
+\clearpage
+% SPIS TABEL (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis tabel}{spisTabel.1} %
+%%\phantomsection
+\addcontentsline{toc}{chapter}{Spis tabel}
+\listoftables*
+\clearpage
+% SPIS LISTINGÓW (zostanie wygenerowany automatycznie)
+\pdfbookmark[0]{Spis listingów}{spisListingow.1} 
+
 \appendix
 \include{appendixA}
 

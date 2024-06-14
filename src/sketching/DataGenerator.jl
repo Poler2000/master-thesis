@@ -7,6 +7,8 @@ using .DataManager
 
 const DATA_FOLDER = "../data"
 
+export generate_erdos_renyi_matrix, generate_stochastic_block_matrix, generate_barabasi_albert_matrix, generate_all
+
 function generate_erdos_renyi_matrix(n::Int, density::Float64, max_value::Int)
     matrix = zeros(Float64, n, n)
 
