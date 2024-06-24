@@ -1,0 +1,30 @@
+\begin{frame}[squeeze]{ExpSketch (Lemiesz, 2021)}
+    Metoda generowania próbek dla krawędzi $i$ o wadze $\lambda_i$ w algorytmie \texttt{ExpSketch}:
+    \[
+        E = - \frac{\ln(h(i || k))}{\lambda_i} \sim Exp(\lambda_i).
+    \]
+
+    \begin{twierdzenie}[Suma szkiców]
+        Niech $A, B$ - szkice zbiórów $\mathbb{A}, \mathbb{B}$. Wtedy szkic ich sumy możemy wyznaczyć (z własności rozkładu wykładniczego) jako:
+        \[
+            A \mathbin{\mathaccent\cdot\cup} B = (\min{\{A_1, B_1\}}, \min{\{A_2, B_2\}}, \dots, \min{\{A_m, B_m\}}).
+        \]
+    \end{twierdzenie}
+
+\end{frame}
+
+\begin{frame}[squeeze]{ExpSketch (Lemiesz, 2021)}
+    \begin{definicja}[Ważone podobieństwo Jaccarda]
+        Ważone podobieństwo Jaccarda to miara podobieństwa dwóch zbiorów, zdefiniowanae jako stosunek sumy wag elementów wspólnych do sumy wag elementów w sumie mnogościowej zbiorów.
+        \[
+            J_w(\mathbb{A}, \mathbb{B}) = \frac{|\mathbb{A} \cap \mathbb{B}|_w}{|\mathbb{A} \cup \mathbb{B}|_w}.
+        \]
+    \end{definicja}
+
+    \begin{twierdzenie}
+        Nieobciążony estymator ważonego podobieństwa Jaccarda zbiorów $\mathbb{A}$ i $\mathbb{B}$ można otrzymać, wykorzystując ich szkice:
+        \[
+            \hat{J}_w(A, B) = \frac{1}{m} \sum\limits_{k = 1}^{m} \mathbbm{1}[A_k = B_k].  
+        \]
+    \end{twierdzenie}
+\end{frame}

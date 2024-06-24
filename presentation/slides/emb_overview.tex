@@ -1,0 +1,12 @@
+\begin{frame}[squeeze]{Zanurzenia wierzchołków}
+    \begin{definicja}
+        Zanurzeniem wierzchołka $v$ nazywamy wektor $\overline{S}^v \in \mathbb{R}^m_{+}$, wyznaczany na podstawie cech danego wierzchołka. Będziemy przyjmować $m \ll |V|$.
+    \end{definicja}
+
+    \begin{itemize}
+        \setlength\itemsep{1em}
+        \item Zanurzenia wierzchołków stanowią efektywną pamięciowo reprezentację grafu -- złożoność $O(m|V|)$. 
+        \item Mogą być tworzone na różne sposoby, np. próbkowanie wierzchołków i spacery losowe, faktoryzacja macierzy sąsiedztwa, \textbf{wykorzystanie funkcji haszujących do generowania próbek z rozkładu wykładniczego}.
+        \item Taka reprezentacja może zostać łatwo wykorzystana jako dane w uczeniu maszynowym. 
+    \end{itemize}
+\end{frame}

@@ -1,0 +1,125 @@
+% !TEX program = xelatex
+% !TEX spellcheck = en_US
+
+% !TeX TXS-program:compile = txs:///xelatex/[--shell-escape] 
+
+\documentclass{beamer}
+\mode<presentation>
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{theorems}[numbered]
+\setbeamertemplate{items}[default]
+\setbeamercovered{dynamic}
+\setlength{\unitlength}{1cm}
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{setspace}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{pgf,pgfarrows}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{fontspec}
+\usepackage{polski}
+\usepackage{graphics}
+\usepackage{tikz}
+\usetikzlibrary{positioning,decorations.pathreplacing}
+\usepackage[ruled]{algorithm}
+\usepackage{scalefnt}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{lipsum}
+\usepackage{subcaption}
+\usepackage{multicol} 
+\usepackage{multirow}
+\usepackage[ruled,vlined]{algorithm2e}
+%\usepackage{algorithmic}
+\usepackage{float}
+\usepackage{appendix}
+%
+\usetikzlibrary{arrows,automata,snakes}
+\usetheme{Frankfurt}
+\usecolortheme{seahorse} %crane
+\useinnertheme{circles}
+
+
+\newtheorem*{lemat}{Lemat}
+\newtheorem{twierdzenie}{Twierdzenie}
+\newtheorem{fakt}{Fakt}
+\newtheorem{definicja}{Definicja}
+\newtheorem{przyklad}{Przykład}
+\newcommand{\myitem}{\item[$\vartriangleright$]}
+\newcommand{\nota}[1]{{\color{gray} \emph{#1}}}
+\newcommand{\HarmonicN}[1]{H_{#1}}
+\newcommand{\BALL}[2]{\mathbf{B}(#1,#2)}
+\newcommand{\DISC}[2]{\mathbf{D}(#1,#2)}
+\newcommand{\SPHERE}[2]{\mathbf{S}(#1,#2)}
+\newcommand{\BigO}[1]{\mathcal{O}\left(#1\right)}
+\newcommand{\BigTh}[1]{\Theta\left(#1\right)}
+\newcommand{\slfrac}[2]{\left.#1\middle/#2\right.}
+\newcommand{\PR}[1]{\mathrm{Pr}\left[#1\right]}
+\newcommand{\EE}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\var}[1]{\mathbb{V}\mathrm{ar}\left[#1\right]}
+\newcommand{\RR}{\mathbb{R}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+% Skrócony symbol liczb naturalnych
+\newcommand{\NN}{\mathbb{N}}
+
+% Skrócony symbol liczb wymiernych
+\newcommand{\QQ}{\mathbb{Q}}
+
+% Skrócony symbol liczb całkowitych
+\newcommand{\ZZ}{\mathbb{Z}}
+
+\newcolumntype{C}{>{\centering\arraybackslash}p{0.5cm}}
+\newcolumntype{Y}{>{\columncolor{blue!5}}C}
+
+%\pgfpagesuselayout{4 on 1 with notes}[a4paper,border shrink=3mm]
+
+
+\title{Zastosowanie szkiców danych w analizie dużych grafów}
+
+\author{
+	\textbf{Paweł Polerowicz}
+	\newline \newline
+	Praca napisana pod kierunkiem \textbf{dr. inż. Jakuba Lemiesza}
+}
+
+\date{\today}
+
+
+\begin{document}
+
+\begin{frame}[plain]{}
+	\titlepage
+\end{frame}
+
+
+ \section{Wstęp}
+ \input{slides/intro_models.tex}
+ \input{slides/intro_goals.tex}
+
+ \section{Zanurzenia wierzchołków}
+ \input{slides/emb_overview.tex}
+ 
+ \section{Algorytmy}
+ \input{slides/alg_nodesketch.tex}
+ \input{slides/alg_expsketch.tex}
+ \input{slides/alg_edgesketch.tex}
+
+ \section{Wyniki}
+ \input{slides/res_precision.tex}
+ \input{slides/res_precision_weighted.tex}
+ \input{slides/res_sketch_size.tex}
+ \input{slides/res_complexity.tex}
+
+
+\section{}
+\begin{frame}{}
+	\begin{center}
+		\large{Dziękuję za uwagę.}
+	\end{center}
+\end{frame}
+
+\end{document} 

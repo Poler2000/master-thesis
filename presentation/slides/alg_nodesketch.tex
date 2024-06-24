@@ -1,0 +1,14 @@
+\begin{frame}[squeeze]{NodeSketch (Yang, Rosso, Li, Cudre-Mauroux, 2019)}
+    \begin{definicja}[$k$-sąsiedztwo]
+        $k$-sąsiedztwem wierzchołka $v$ w grafie $G = (V,E)$ nazywamy maksymalny podzbiór $V$ taki, że między $v$, a każdym z tworzących go wierzchołków istnieje ścieżka długości co najwyżej $k - 1$. 
+    \end{definicja}
+
+    Algorytm \texttt{NodeSketch} wykorzystuje $m$ niezależnych funkcji haszujących do rekurencyjnego generowania próbek z rozkładu wykładniczego na podstawie ich $k$-sąsiedztwa.
+
+
+    Schemat obliczania $j$-tej próbki dla wektora $V = [V_1, V_2, \dots, V_D]$:
+    \[
+        S_j = \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}.
+    \]
+
+\end{frame}

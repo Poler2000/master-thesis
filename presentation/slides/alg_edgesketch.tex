@@ -1,0 +1,35 @@
+\begin{frame}[squeeze]{EdgeSketch}
+    \small
+    \begin{algorithm}[H]
+        \caption{EdgeSketch($\tilde{A},m$)}\label{alg:edge_sketch}
+        \ForEach{\textnormal{rząd} $r$ \textnormal{w} $\tilde{A}$}{
+            $ns \gets [\,]$ \tcp*{lista sąsiadów}
+            \ForEach{$i \in \{1,\dots,|V|\}$}{
+                \If{$\tilde{A}[r,i] \neq 0$}{
+                    $ns \gets ns \cup \{((\min(i,r) || \max(i,r)),\tilde{A}[r,i])\}$\;
+                }
+            }
+            $S^{r} \gets FastExpSketch(ns, m)$\;
+        }
+        \Return{$S$}
+    \end{algorithm}
+
+    \begin{definicja}[Złożoność czasowa]
+        Złożoność czasowa \texttt{EdgeSketch} wynosi ogółem $O(m(|V|)^2)$, a w średnim przypadku dla grafów nieważonych:
+        \[
+            O((|V|)^2 + |V|(m \ln(m) \ln(|V|)))
+        \]
+    \end{definicja}
+\end{frame}
+
+\begin{frame}[squeeze]{EdgeSketch}
+    \begin{itemize}
+        \item Skuteczność algorytmów została zmierzona poprzez precyzję rekonstrukcji krawędzi w grafie. 
+        \item Prawdopodobieństwo wystąpienia krawędzi jest oceniane na podstawie podobieństwa Jaccarda między wierzchołkami -- w eksperymentach obliczano macierz podobieństwa Jaccarda na podstawie zanurzeń i wybierano z niej $t$ najwyższych wartości.
+        \item W algorytmie \texttt{NodeSketch} jest ona obliczana raz, na podstawie zanurzeń wygenerowanych dla danego $k$.  
+        \item Ostateczna macierz podobieństwa w algorytmie \texttt{EdgeSketch} powstaje przez połączenie macierzy niższych rzędów z odpowiednimi wagami:
+        \[
+            simM = \sum\limits_{k = 2}^{K} \alpha^{k-2} simM_{k}.
+        \]
+    \end{itemize}
+\end{frame}
