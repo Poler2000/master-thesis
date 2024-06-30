@@ -6,19 +6,19 @@
         \resizebox{\columnwidth}{!}{%
         \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
             \hline
-            & & \multicolumn{4}{c|}{NodeSketch} & \multicolumn{4}{c|}{EdgeSketch} \\ \cline{1-10}
-            \textbf{$b$} & \textbf{k} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} & \textbf{t = 100} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} \\ \hline\hline
-            \multirow{3}{*}{2} & 2 & 0.57 & 0.525 & 0.5136 & 0.5072 & 1 & 1 & 0.4391 & 0.2616 \\ \cline{2-10}
-             & 3 & 0.47 & 0.527 & 0.5089 & 0.5016 & 1 & 1 & 0.4545 & 0.3426 \\ \cline{2-10}
-             & 4 & 0.44 & 0.523 & 0.5079 & 0.5022 & 1 & 1 & 0.4545 & 0.3426 \\ \hline\hline
-            \multirow{3}{*}{4} & 2 & 0.5 & 0.542 & 0.5343 & 0.5131 & 1 & 1 & 0.3352 & 0.1547 \\ \cline{2-10}
-             & 3 & 0.53 & 0.483 & 0.4991 & 0.5003 & 1 & 1 & 0.5342 & 0.4087 \\ \cline{2-10}
-             & 4 & 0.46 & 0.499 & 0.4983 & 0.5008 & 1 & 1 & 0.5342 & 0.4087 \\ \hline\hline
-            \multirow{3}{*}{8} & 2 & 0.66 & 0.594 & 0.5521 & 0.5234 & 1 & 1 & 0.2831 & 0.1289 \\ \cline{2-10}
-             & 3 & 0.51 & 0.528 & 0.5158 & 0.5063 & 1 & 0.884 & 0.5825 & 0.4762 \\ \cline{2-10}
-             & 4 & 0.5 & 0.496 & 0.5002 & 0.5029 & 1 & 0.884 & 0.5821 & 0.4755 \\ \hline
+            & & \multicolumn{3}{c|}{NodeSketch} & \multicolumn{3}{c|}{EdgeSketch} \\ \cline{1-8}
+            \textbf{$b$} & \textbf{k} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} & \textbf{t = 1000} & \textbf{t = 10000} & \textbf{t = |E|} \\ \hline\hline
+            \multirow{3}{*}{4} & 2 & 0.542 & 0.5343 & 0.5131 & 1 & 0.3352 & 0.1547 \\ \cline{2-8}
+             & 3 & 0.483 & 0.4991 & 0.5003 & 1 & 0.5342 & 0.4087 \\ \cline{2-8}
+             & 4 & 0.499 & 0.4983 & 0.5008 & 1 & 0.5342 & 0.4087 \\ \hline\hline
         \end{tabular}}
-        \caption{Precyzja uzyskiwana przez algorytmy NodeSketch i EdgeSketch dla grafów w stochastycznym modelu blokowym dla różnych liczb bloków $b$ oraz wielkości próbek $t$.}
+        \caption{Precyzja uzyskiwana przez algorytmy NodeSketch i EdgeSketch dla grafu w stochastycznym modelu blokowym w zależności od wielkości próbek $t$. Parametry grafu: \\
+        \begin{itemize}
+            \item $1000$ wierzchołków podzielonych na $b = 4$ bloki.
+            \item Prawdopodobieństwo krawędzi wewnątrz bloku $p = 0.5$ i pomiędzy blokami $q = 0.001$.
+            \item Średni stopień wierzchołka ok. $125$.
+            \item Rozmiar szkicu $m = 10$.
+        \end{itemize}}
         \label{tab:stochastic_block_model}
     \end{table}
 \end{frame}

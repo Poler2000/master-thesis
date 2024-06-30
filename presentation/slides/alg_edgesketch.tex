@@ -14,22 +14,22 @@
         \Return{$S$}
     \end{algorithm}
 
-    \begin{definicja}[Złożoność czasowa]
+    \begin{lemat}[Złożoność czasowa]
         Złożoność czasowa \texttt{EdgeSketch} wynosi ogółem $O(m(|V|)^2)$, a w średnim przypadku dla grafów nieważonych:
         \[
             O((|V|)^2 + |V|(m \ln(m) \ln(|V|)))
         \]
-    \end{definicja}
+    \end{lemat}
 \end{frame}
 
 \begin{frame}[squeeze]{EdgeSketch}
     \begin{itemize}
-        \item Skuteczność algorytmów została zmierzona poprzez precyzję rekonstrukcji krawędzi w grafie. 
-        \item Prawdopodobieństwo wystąpienia krawędzi jest oceniane na podstawie podobieństwa Jaccarda między wierzchołkami -- w eksperymentach obliczano macierz podobieństwa Jaccarda na podstawie zanurzeń i wybierano z niej $t$ najwyższych wartości.
-        \item W algorytmie \texttt{NodeSketch} jest ona obliczana raz, na podstawie zanurzeń wygenerowanych dla danego $k$.  
-        \item Ostateczna macierz podobieństwa w algorytmie \texttt{EdgeSketch} powstaje przez połączenie macierzy niższych rzędów z odpowiednimi wagami:
+        \item Miarą skuteczności algorytmów była precyzja rekonstrukcji krawędzi grafu. 
+        \item Rekonstrukcja wierzchołków -- oblicznie macierzy podobieństw Jaccarda zbiorów reprezentujących k-sąsiedztwa wierzchołków i wybór $t$ najwyższych wartości.
+        \item Ostateczna macierz podobieństw w algorytmie \texttt{EdgeSketch} powstaje na podstawie macierzy niższych rzędów:
         \[
             simM = \sum\limits_{k = 2}^{K} \alpha^{k-2} simM_{k}.
         \]
+        \item W algorytmie \texttt{NodeSketch} jest ona obliczana raz, na podstawie zanurzeń wygenerowanych dla danego $k$.  
     \end{itemize}
 \end{frame}

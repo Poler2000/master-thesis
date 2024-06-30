@@ -1,14 +1,20 @@
 \begin{frame}[squeeze]{NodeSketch (Yang, Rosso, Li, Cudre-Mauroux, 2019)}
-    \begin{definicja}[$k$-sąsiedztwo]
-        $k$-sąsiedztwem wierzchołka $v$ w grafie $G = (V,E)$ nazywamy maksymalny podzbiór $V$ taki, że między $v$, a każdym z tworzących go wierzchołków istnieje ścieżka długości co najwyżej $k - 1$. 
-    \end{definicja}
-
-    Algorytm \texttt{NodeSketch} wykorzystuje $m$ niezależnych funkcji haszujących do rekurencyjnego generowania próbek z rozkładu wykładniczego na podstawie ich $k$-sąsiedztwa.
-
-
-    Schemat obliczania $j$-tej próbki dla wektora $V = [V_1, V_2, \dots, V_D]$:
-    \[
-        S_j = \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{V_i}.
-    \]
+    \begin{algorithm}[H]
+        \small
+        \caption{NodeSketch($\tilde{A},k,\alpha$)}\label{alg:node_sketch}
+        \uIf{$k > 2$}{
+            $S(k-1) \gets NodeSketch(\tilde{A},k - 1,\alpha)$\;
+            \ForEach{rząd $r$ w $\tilde{A}$}{
+                $\color{black} \tilde{V}_{i}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{m} \sum\limits_{j = 1}^{m} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;
+                $\color{black} S_{j}^{r}(k) \gets \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, m\}$\;
+            }
+        }
+        \ElseIf{$k = 2$}{
+            \ForEach{rząd $r$ w $\tilde{A}$}{
+                $\color{black} S_{j}^{r}(2) \gets \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(2)}, j \in \{1,2, \dots, m\}$\;
+            }
+        }
+        \Return{$S(k)$}
+    \end{algorithm}
 
 \end{frame}
