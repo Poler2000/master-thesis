@@ -5,7 +5,7 @@
         \uIf{$k > 2$}{
             $S(k-1) \gets NodeSketch(\tilde{A},k - 1,\alpha)$\;
             \ForEach{rząd $r$ w $\tilde{A}$}{
-                $\color{black} \tilde{V}_{i}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{m} \sum\limits_{j = 1}^{m} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;
+                $\color{black} \tilde{V}_{i}^{r}(k) \gets \tilde{V}_{i}^{r} + \sum\limits_{n \in 	\Gamma(r)} \frac{\alpha}{m} \sum\limits_{j = 1}^{m} \mathbbm{1}_{[S_{j}^{n}(k - 1) = i]}, i \in \{1,2, \dots, D\}$\;\\
                 $\color{black} S_{j}^{r}(k) \gets \argmin_{i \in \{1,2,\dots, D\}} \frac{-\log h_{j}(i)}{\tilde{V}_{i}^{r}(k)}, j \in \{1,2, \dots, m\}$\;
             }
         }
