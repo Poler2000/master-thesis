@@ -138,7 +138,7 @@ function nodesketch_core(
                     element_dict[embeddings[j, n]] += 1
                 end
             end
-#
+
             for l in 1:col_count
                 s = element_dict[l]
                 s *= alpha / sketch_dimensions

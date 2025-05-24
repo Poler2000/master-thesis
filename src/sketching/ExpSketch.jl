@@ -6,7 +6,7 @@ include("Logger.jl")
 using Random
 using .Logger
 
-export StreamElement, expsketch, fast_expsketch, fast_fast_expsketch, get_calculated_hashes,  reset_calculated_hashes
+export StreamElement, expsketch, fast_expsketch, get_calculated_hashes,  reset_calculated_hashes
 
 struct StreamElement
     id1::Number
